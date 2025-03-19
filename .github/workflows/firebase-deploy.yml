@@ -3,20 +3,23 @@ name: Deploy to Firebase Hosting
 on:
   push:
     branches:
-      - main
+      - main  # Deploy on push to the main branch
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Install Firebase CLI
-        run: npm install -g firebase-tools
+    - name: Install Firebase CLI
+      run: npm install -g firebase-tools
 
-      - name: Authenticate with Firebase
-        run: echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > /tmp/firebase-key.json
+    - name: Authenticate with Firebase
+      run: firebase use --add sigai-backend
+      working-directory: ./firebase-SigaiPage  # Change this to your Firebase directory
 
-      - name: Deploy to Firebase
-        run: firebase deploy --token "$(cat /tmp/firebase-key.json)"
+    - name: Deploy to Firebase
+      run: firebase deploy --token "${{ secrets.FIREBASE_TOKEN }}"
+      working-directory: ./firebase-SigaiPage  # Ensure this is correct
