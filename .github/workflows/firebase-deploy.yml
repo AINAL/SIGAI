@@ -3,7 +3,7 @@ name: Deploy to Firebase Hosting
 on:
   push:
     branches:
-      - main  # Deploy when pushing to main branch
+      - main  # Runs when pushing to the main branch
 
 jobs:
   deploy:
@@ -18,8 +18,6 @@ jobs:
 
     - name: Authenticate with Firebase
       run: firebase use --add sigai-backend
-      working-directory: ./  # Make sure this path is correct (or remove it)
 
     - name: Deploy to Firebase
       run: firebase deploy --token "${{ secrets.FIREBASE_TOKEN }}"
-      working-directory: ./  # Adjust this path if needed
