@@ -1,35 +1,25 @@
 name: Deploy to Firebase Hosting
 
 on:
-  push:
-    branches:
-      - main
+push:
+branches:
+      - main  # Runs when pushing to the main branch
+      - main  # Change this to your branch if needed
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+deploy:
+runs-on: ubuntu-latest
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18  # Use LTS version
+steps:
+- name: Checkout repository
+uses: actions/checkout@v3
 
-      - name: Install project dependencies
-        run: npm ci
+- name: Install Firebase CLI
+run: npm install -g firebase-tools
 
-      - name: Install Firebase CLI Globally
-        run: npm install -g firebase-tools
+- name: Authenticate with Firebase
+      run: firebase use --add sigai-backend
+      run: firebase use --add sigai-backend --token "${{ secrets.FIREBASE_TOKEN }}"
 
-      - name: Reinstall `sql-formatter`
-        run: npm install sql-formatter@15.5.0
-
-      - name: Authenticate with Firebase
-        run: echo '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}' > $HOME/service-account.json
-
-      - name: Deploy to Firebase Hosting
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: $HOME/service-account.json
-        run: firebase deploy --only hosting --project=sigai-backend
+- name: Deploy to Firebase
+run: firebase deploy --token "${{ secrets.FIREBASE_TOKEN }}"
