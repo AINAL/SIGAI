@@ -27,7 +27,9 @@ jobs:
         run: |
           echo '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}' | jq '.' > $HOME/service-account.json
           echo "Service Account JSON saved at: $HOME/service-account.json"
-          ls -l $HOME/service-account.json  # Confirm file exists
+          ls -l $HOME/service-account.json
+          echo "Printing first few lines of service-account.json for debugging:"
+          head -n 10 $HOME/service-account.json
 
       - name: Deploy to Firebase Hosting
         env:
