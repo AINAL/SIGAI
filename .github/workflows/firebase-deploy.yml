@@ -17,17 +17,13 @@ jobs:
         with:
           node-version: 18  # Use LTS version
 
-      - name: Clean Install
-        run: rm -rf node_modules package-lock.json && npm install
-        
       - name: Install project dependencies
         run: npm ci
 
       - name: Install Firebase CLI Globally
         run: npm install -g firebase-tools
 
-      - name: Authenticate with Firebase
-        run: firebase login:ci --token "${{ secrets.FIREBASE_TOKEN }}"
-
       - name: Deploy to Firebase Hosting
-        run: firebase deploy --only hosting
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: firebase deploy --only hosting --token "$FIREBASE_TOKEN"
