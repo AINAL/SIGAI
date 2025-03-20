@@ -3,31 +3,21 @@ name: Deploy to Firebase Hosting
 on:
   push:
     branches:
-      - main
+      - main  # Change this to your branch if needed
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+    - name: Install Firebase CLI
+      run: npm install -g firebase-tools
 
-      - name: Install Firebase CLI
-        run: npm install -g firebase-tools
+    - name: Authenticate with Firebase
+      run: firebase use --add sigai-backend --token "${{ secrets.FIREBASE_TOKEN }}"
 
-      - name: Save Service Account JSON Securely
-        run: |
-          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > $HOME/service-account.json
-          echo "Service Account JSON saved at: $HOME/service-account.json"
-          ls -l $HOME/service-account.json
-          head -n 10 $HOME/service-account.json  # Print first 10 lines for debugging
-
-      - name: Deploy to Firebase Hosting
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: $HOME/service-account.json
-        run: firebase deploy --only hosting --project=sigai-backend
+    - name: Deploy to Firebase
+      run: firebase deploy --token "${{ secrets.FIREBASE_TOKEN }}"
