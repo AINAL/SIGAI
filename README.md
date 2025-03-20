@@ -1,3 +1,3 @@
 # SIGAI
 SIGAI project app development
-ainal syazwan
+ainal syazwan itamta
