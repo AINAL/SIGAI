@@ -316,7 +316,7 @@ button:hover {
     font-weight: bold;
     text-decoration: none;
     color: white;
-    background-color: #008c5a;
+    background-color: black;
     border-radius: 50px;
     border: none;
     transition: all 0.3s ease-in-out;
@@ -335,7 +335,7 @@ button:hover {
 
 /* Icon before text */
 .back-home::before {
-    content: "🏠";
+    content: "X";
     font-size: 1.2rem;
     margin-right: 10px;
 }
