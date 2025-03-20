@@ -20,9 +20,22 @@ jobs:
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
 
-      - name: Save Service Account JSON
+      - name: Save Service Account JSON (Hardcoded)
         run: |
-          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_SIGAI_BACKEND }}' > $HOME/service-account.json
+          echo '{
+  "type": "service_account",
+  "project_id": "sigai-backend",
+  "private_key_id": "16969b99364ed4ce791f7c8b0c8a62d9822a37a6",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC+e1431xFVG+no\ngFFpQ7D5rsd23PjIBlHnX7uWa7+l5vfAfryMVly+K2PyiDv08RxaCI4c9B7SoWJs\nNOisZR5FoWxw1GjxPXWgAN2s/eObdEnQ1ttuwO77W8Dmqrkn/G42t8PW8Tmqlnlu\nnKgKb4kiuw2oZtr8+c35dT5sYvoEXzh93p7uhzbwKkIhFMKrnSg8Ukk0jAIVS/8K\n6K771xXJbGz3oWQ6k0Z/S0IUcz+/GUmvsDDzSx3IM5mIKbkzqt0jEdVMXRaCVYt1\nlUEDz+2Ptjevh9OY0aND4krLppiWa27Az1hbNGgYsjtU+HqKO+UtS6NFwk+A6r6P\nRAgJOmFhAgMBAAECggEAVX1eEHbEjyurhA+POkzIsY75c8YCHBgGC2+CbCToy0dJ\nm4nmCqA6GJm1zmTJcAoEvP3I9oK0ELmgyErIwJLTjtG/rzYN8XOxhoHM+/apAByl\ngobjziXmPEb2YTBvUFxxhLpeOWpjhMXrMzM5EhHz/PPx0cpz74UYJiUyQof7iRkD\nNDBnjqYafEHir9npLB2fmsPm9PsmNBAMcuugtO9Sd+2uxljfI8SzPtNBvm2I1m3o\nn4xUCQtjwG1kNEgGScxbBkoxmMV2f9uhTgesz9XgdcXXRJIpVBH1dHDT/X6XF656\nhH2QoN/9PJkO4dMzTyugQEuA27pf7DhEhgMztLRM7wKBgQDdUBnMGMS1XlAHLk4R\nvL+IDEoYzSvH8gYFtdZJ8QZqIQlqGbhEWNbjhPRT02ARlWWB1tZOS57xjZHkQYK2\nAceI0Sd5+YVXYXy1sCzeXHfF/5GuXNR1wlcoBAFbNW0FzVljMKOK5K36Jo9NLAs4\nPmS8lh4NJej7C/SElf6BZXhjOwKBgQDcVjaHM4RGaLQYr1zIViW9q/GHEd4YZrbm\nzqVVpS4OMS2a1pFm916q2MHUpZ18MKHoV4fhYYpexZKonGSOcGvakwh1bzK9O4Wm\naf/jabjWyOHqTE3gRmKnyl22yhaZAG/lwWfwNBcjE+PuKBK40krgXqRxupB/cUzj\nqcSDIyjMEwKBgQCvDXK6S0UcqJLoeynpQcDF3eKmJ3Nf3gIBdkkfh3QpciQ+NkXY\nWeTvZfTUcTdl8SOvRb2RhKMeMXqab27yhAnOIJH3GvTrnwLDu6xh3gYnKPWUU30C\nAExsLG7eNC4eDsWLfad+b09ltCZZRmNBg6iuupbek4PrPxOT5AjBVP+ajQKBgQCT\n/Uvuj0l+yQB9u/sDi+kZdg1pfTTBCuw6Jf2igqlmWt2YrBlJIUjyU1gM7ZfTPA7j\nMTdQx+TaNrWEjlZz3UpzqmH6Dk/0DbB8z6FRK0c86/vhFJMR2fSVYjSDe0SmS0bc\n+IRJL5OCue9TnJLGlGg6PxcQVBCNqJnOJ86XjdvvBQKBgG7dfiE6z251ZfJdiwfW\n25Es7lrihYrKGV1Mx0K7QQeZIDeB6mzZxwIpLtIro/KCzdxuazxPDTbdcvtH2k3k\n3r5tDkvKdctrx+ngrgesVspIdqs4LYPnfo05C0ooO2mEXEjTbBvil22H6dcSxR3R\nz9RRnxQY9uyUNmLDnfRaNQ3G\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fbsvc@sigai-backend.iam.gserviceaccount.com",
+  "client_id": "108337523081108254676",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40sigai-backend.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
+' > $HOME/service-account.json
           echo "Service Account JSON saved at: $HOME/service-account.json"
           ls -l $HOME/service-account.json
 
