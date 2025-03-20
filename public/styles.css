@@ -1,19 +1,22 @@
-/* 🌍 Fix for full height across all browsers (Safari, Chrome, Mobile) */
+/* 🌍 Fix for full height across all browsers */
 html, body {
     height: 100%;
     margin: 0;
     padding: 0;
 }
-
-/* Ensures the entire page takes full height */
+/* Enable Smooth Scrolling for all browsers */
+html {
+    scroll-behavior: smooth;
+}
+/* Ensure the entire layout fills the viewport */
 .wrapper {
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Fix for most browsers */
+    min-height: 100vh;
     height: -webkit-fill-available; /* Fix for Safari */
 }
 
-/* Expands main content to push footer down */
+/* Main content should expand to push footer down */
 main {
     flex-grow: 1;
 }
@@ -25,7 +28,7 @@ footer {
     color: #d1d1d1;
     text-align: center;
     width: 100%;
-    margin-top: auto; /* The key fix */
+    margin-top: auto;
 }
 
 /* General Styles */
@@ -96,6 +99,7 @@ ul li a:hover {
     color: #666;
 }
 
+/* Buttons */
 button {
     background-color: #00d084;
     color: #fff;
@@ -117,37 +121,35 @@ button:hover {
     text-align: center;
     background-color: #fff;
     border-radius: 1rem;
-    margin: 2rem;
+    margin: 2rem auto;
+    max-width: 900px; /* ✅ Adjusted to center properly */
 }
 
-.features h2 {
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
-}
-
-/* 🔲 Fix for Feature Boxes */
+/* Ensures the grid itself is fully centered */
 .feature-grid {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1.5rem;
-    max-width: 1200px;
-    margin: 0 auto;
+    flex-direction: column; /* ✅ Ensures single-column alignment */
+    align-items: center; /* ✅ Perfectly centers all boxes */
+    gap: 2rem; /* ✅ Even spacing */
+    width: 100%;
+    max-width: 600px; /* ✅ Ensures content stays centered */
+    margin: 0 auto; /* ✅ Center the grid itself */
 }
 
+/* Ensures each feature box is centered properly */
 .feature-item {
     background-color: #f1f3f5;
-    padding: 1.5rem;
+    padding: 2rem;
     border-radius: 1rem;
     width: 100%;
-    max-width: 300px;
-    border: 2px solid #ccc; /* ✅ Fix: Adds proper border */
-    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1); /* ✅ Adds a soft shadow */
-}
-
-.feature-item h3 {
-    font-size: 1.5rem;
-    color: #00d084;
+    max-width: 300px; /* ✅ Adjusted to match proper alignment */
+    border: 3px solid #ccc; /* ✅ Adds a proper border */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* ✅ Adds a soft shadow */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* ✅ Centers text inside */
+    align-items: center; /* ✅ Ensures all items inside are centered */
 }
 
 /* Download Section */
@@ -198,11 +200,158 @@ button:hover {
 .footer-content a:hover {
     color: #00d084;
 }
+/* Privacy Policy Section */
+.privacy-policy {
+    padding: 4rem 2rem;
+    text-align: left;
+    background-color: #fff;
+    border-radius: 1rem;
+    margin: 2rem auto;
+    max-width: 800px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Policy Title */
+.privacy-policy h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #2c2c2e;
+}
+
+/* Policy Intro */
+.policy-intro {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 2rem;
+}
+
+/* Policy Content */
+/* Privacy Policy Section */
+.privacy-policy {
+    padding: 4rem 2rem;
+    text-align: left;
+    background-color: #fff;
+    border-radius: 12px;
+    margin: 2rem auto;
+    max-width: 800px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Policy Title */
+.privacy-policy h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #2c2c2e;
+    font-weight: bold;
+}
+
+/* Policy Intro */
+.policy-intro {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 2rem;
+}
+
+/* Policy Content */
+.policy-content h2 {
+    font-size: 1.5rem;
+    color: #000; /* Changed to black */
+    font-weight: bold;
+    margin-top: 2rem;
+}
+
+/* Ensure List Stacks Vertically */
+.policy-content ul {
+    list-style: none; /* Remove default bullets */
+    padding-left: 0;
+    margin-top: 10px;
+    display: block; /* Ensure list itself is a block */
+    width: 100%; /* Ensure full width */
+}
+
+/* Vertical Boxed List Items */
+.policy-content ul li {
+    background-color: #f4f4f4; /* Light gray background */
+    padding: 15px;
+    border-radius: 8px; /* Rounded edges */
+    margin-bottom: 12px;
+    font-size: 1rem;
+    color: #333;
+    display: block; /* Ensures vertical stacking */
+    width: 100%; /* Ensures each box takes full width */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow */
+}
+
+/* Ensure Parent Container Does Not Use Flexbox */
+.policy-content {
+    display: block; /* Remove flex behavior */
+    width: 100%;
+    max-width: 800px; /* Ensures proper centering */
+    margin: auto;
+}
+
+/* Contact Link */
+.contact-link {
+    display: inline-block;
+    font-size: 1rem;
+    color: #00d084;
+    font-weight: bold;
+    text-decoration: none;
+    margin-top: 1rem;
+}
+
+.contact-link:hover {
+    color: #008c5a;
+}
+
+/* Back to Home Button */
+.back-home {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: #fff;
+    background-color: #f4f4f4;
+    border-radius: 80px;
+    border: none;
+    transition: all 0.3s ease-in-out;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.back-home:hover {
+    background-color: #008c5a;
+    transform: scale(1.05);
+}
+
+/* Add an icon inside the button */
+.back-home::before {
+    content: "🏠 ";
+    font-size: 1.1rem;
+    margin-right: 8px;
+}
 
 /* Responsive */
 @media (max-width: 768px) {
     .feature-grid {
         flex-direction: column;
+        align-items: center; /* ✅ Fix: Ensures centering on mobile */
+	max-width: 100%;
+	/*width: 90%; /* ✅ Ensures better centering on smaller screens */
+    }
+
+    .feature-item {
+	flex-direction: column;
+        align-items: center; /* ✅ Fix: Ensures centering on mobile */
+	width: 90%; /* ✅ Ensures better centering on smaller screens */
+        
     }
 
     .footer-content {
