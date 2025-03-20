@@ -25,6 +25,7 @@ jobs:
           echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > $HOME/service-account.json
           echo "Service Account JSON saved at: $HOME/service-account.json"
           ls -l $HOME/service-account.json
+          head -n 10 $HOME/service-account.json  # Print first 10 lines for debugging
 
       - name: Deploy to Firebase Hosting
         env:
