@@ -18,10 +18,10 @@ jobs:
           node-version: 18  # Use LTS version
 
       - name: Install project dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Install Firebase CLI Locally
-        run: npm install firebase-tools
+      - name: Install Firebase CLI Globally
+        run: npm install -g firebase-tools
 
       - name: Authenticate with Firebase
         run: npx firebase login:ci --token "${{ secrets.FIREBASE_TOKEN }}"
