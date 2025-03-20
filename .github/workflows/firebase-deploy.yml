@@ -17,6 +17,9 @@ jobs:
         with:
           node-version: 18  # Use LTS version
 
+      - name: Clean Install
+        run: rm -rf node_modules package-lock.json && npm install
+        
       - name: Install project dependencies
         run: npm ci
 
