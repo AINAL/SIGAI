@@ -206,41 +206,14 @@ button:hover {
 .footer-content a:hover {
     color: #00d084;
 }
-/* Privacy Policy Section */
-.privacy-policy {
-    padding: 4rem 2rem;
-    text-align: left;
-    background-color: #fff;
-    border-radius: 1rem;
-    margin: 2rem auto;
-    max-width: 800px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-/* Policy Title */
-.privacy-policy h1 {
-    text-align: center;
-    font-size: 2.5rem;
-    color: #2c2c2e;
-}
-
-/* Policy Intro */
-.policy-intro {
-    text-align: center;
-    font-size: 1.2rem;
-    color: #666;
-    margin-bottom: 2rem;
-}
 
 /* Policy Content */
 /* Privacy Policy Section */
 .privacy-policy {
     padding: 4rem 2rem;
     text-align: left;
-    background-color: #fff;
     border-radius: 12px;
     margin: 2rem auto;
-    max-width: 800px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
