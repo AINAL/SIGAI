@@ -121,8 +121,9 @@ button:hover {
     text-align: center;
     background-color: #fff;
     border-radius: 1rem;
-    margin: 2rem auto;
-    max-width: 900px; /* ✅ Adjusted to center properly */
+    margin: 2rem;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 /* Ensures the grid itself is fully centered */
