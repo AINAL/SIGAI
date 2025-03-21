@@ -142,7 +142,6 @@ button:hover {
 /* Ensures each feature box is centered properly */
 .feature-item {
     background-color: #f1f3f5;
-    padding: 2rem;
     border-radius: 1rem;
     width: 75%;
     max-width: 300px; /* ✅ Adjusted to match proper alignment */
@@ -346,10 +345,14 @@ button:hover {
 /* Responsive */
 @media (max-width: 768px) {
     .feature-grid {
-        flex-direction: column;
-        align-items: center; /* ✅ Fix: Ensures centering on mobile */
-	max-width: 100%;
-	/*width: 90%; /* ✅ Ensures better centering on smaller screens */
+    	display: flex;
+    	flex-direction: column; /* ✅ Ensures single-column alignment */
+    	align-items: center; /* ✅ Perfectly centers all boxes */
+    	gap: 2rem; /* ✅ Even spacing */
+    	width: 100%;
+    	max-width: 600px; /* ✅ Ensures content stays centered */
+    	margin: 0 auto; /* ✅ Center the grid itself */
+    	flex-wrap: wrap; /* Allows wrap on small screens */
     }
 
     .feature-item {
