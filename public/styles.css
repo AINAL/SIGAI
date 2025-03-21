@@ -115,44 +115,30 @@ button:hover {
     background-color: #00a368;
 }
 
-/* Features Section */
 .features {
-    padding: 4rem 2rem;
-    text-align: center;
-    background-color: #fff;
-    border-radius: 1rem;
-    margin: 2rem;
-    max-width: 100%;
-    box-sizing: border-box;
-}
-
-/* Ensures the grid itself is fully centered */
-.feature-grid {
-    display: flex;
-    flex-direction: row;    /* 🔄 Horizontal layout */
-    flex-wrap: wrap;        /* ✅ Wrap on small screens */
-    justify-content: center;/* ✅ Center items horizontally */
-    align-items: stretch;   /* Optional: make all items same height */
-    gap: 2rem;
-    width: 100%;
-    max-width: 100%;      /* 🔄 Wider for more room */
-    margin: 0 auto;
-}
-
-/* Ensures each feature box is centered properly */
-.feature-item {
-    background-color: #f1f3f5;
-    padding: 2rem;
-    border-radius: 1rem;
-    width: 75%;
-    max-width: 300px; /* ✅ Adjusted to match proper alignment */
-    border: 3px solid #ccc; /* ✅ Adds a proper border */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* ✅ Adds a soft shadow */
-    text-align: center;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* ✅ Centers text inside */
-    align-items: center; /* ✅ Ensures all items inside are centered */
+    align-items: center; /* Centers the grid inside */
+    justify-content: center;
+    text-align: center; /* Ensures the heading is also centered */
+}
+
+.feature-grid {
+    display: flex;
+    flex-wrap: wrap; /* Allows wrapping on small screens */
+    gap: 2rem;
+    justify-content: center; /* Ensures items are centered */
+    align-items: center; /* Keeps items balanced */
+    width: 100%;
+    max-width: 1200px; /* Adjust as needed */
+    margin: 0 auto; /* Centers the grid */
+    padding: 0 1rem; /* Prevents items from touching screen edges */
+}
+
+.feature-item {
+    max-width: 300px; /* Ensures consistent sizing */
+    width: 100%;
+    text-align: center; /* Centers text inside each box */
 }
 
 /* Download Section */
