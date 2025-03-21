@@ -124,6 +124,7 @@ button:hover {
     margin: 2rem;
     max-width: 100%;
     box-sizing: border-box;
+    align-items: center;
 }
 
 /* Ensures the grid itself is fully centered */
@@ -137,6 +138,7 @@ button:hover {
     width: 100%;
     max-width: 100%;      /* 🔄 Wider for more room */
     margin: 0 auto;
+    padding: 0 1rem;
 }
 
 /* Ensures each feature box is centered properly */
