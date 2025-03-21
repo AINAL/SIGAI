@@ -135,6 +135,7 @@ button:hover {
     width: 100%;
     max-width: 600px; /* ✅ Ensures content stays centered */
     margin: 0 auto; /* ✅ Center the grid itself */
+    flex-wrap: wrap; /* Allows wrap on small screens */
 }
 
 /* Ensures each feature box is centered properly */
@@ -151,9 +152,6 @@ button:hover {
     flex-direction: column;
     justify-content: center; /* ✅ Centers text inside */
     align-items: center; /* ✅ Ensures all items inside are centered */
-    display: flex;
-    flex-wrap: wrap; /* Allows wrap on small screens */
-    gap: 2rem; /* Space between items */
 }
 
 /* Download Section */
