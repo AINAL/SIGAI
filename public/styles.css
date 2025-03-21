@@ -129,13 +129,14 @@ button:hover {
 /* Ensures the grid itself is fully centered */
 .feature-grid {
     display: flex;
-    flex-direction: column; /* ✅ Ensures single-column alignment */
-    align-items: center; /* ✅ Perfectly centers all boxes */
-    gap: 2rem; /* ✅ Even spacing */
+    flex-direction: row;    /* 🔄 Horizontal layout */
+    flex-wrap: wrap;        /* ✅ Wrap on small screens */
+    justify-content: center;/* ✅ Center items horizontally */
+    align-items: stretch;   /* Optional: make all items same height */
+    gap: 2rem;
     width: 100%;
-    max-width: 600px; /* ✅ Ensures content stays centered */
-    margin: 0 auto; /* ✅ Center the grid itself */
-    flex-wrap: wrap; /* Allows wrap on small screens */
+    max-width: 100%;      /* 🔄 Wider for more room */
+    margin: 0 auto;
 }
 
 /* Ensures each feature box is centered properly */
