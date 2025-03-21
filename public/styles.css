@@ -151,6 +151,9 @@ button:hover {
     flex-direction: column;
     justify-content: center; /* ✅ Centers text inside */
     align-items: center; /* ✅ Ensures all items inside are centered */
+    display: flex;
+    flex-wrap: wrap; /* Allows wrap on small screens */
+    gap: 2rem; /* Space between items */
 }
 
 /* Download Section */
