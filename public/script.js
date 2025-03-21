@@ -1,5 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Smooth Scroll for Navigation Links
+    const toggle = document.querySelector('.menu-toggle');
+    const nav = document.querySelector('.nav-links'); // ✅ now works
+
+    if (toggle && nav) {
+        toggle.addEventListener('click', function () {
+            nav.classList.toggle('show');
+        });
+    }
+
     document.querySelectorAll('.scroll-link').forEach(link => {
         link.addEventListener('click', function (e) {
             e.preventDefault();
@@ -13,13 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
             }
 
-            // Close the mobile menu after clicking a link (for mobile users)
-            document.querySelector('.nav-links').classList.remove('nav-active');
+            nav.classList.remove('show');
         });
-    });
-
-    // Toggle mobile menu
-    document.querySelector('.menu-toggle').addEventListener('click', function () {
-        document.querySelector('.nav-links').classList.toggle('nav-active');
     });
 });
