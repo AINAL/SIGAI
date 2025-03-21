@@ -443,6 +443,7 @@ button:hover {
 
 .carousel-wrapper {
   display: flex;
+  position: relative;
 }
 
 .carousel-track {
@@ -465,7 +466,7 @@ button:hover {
   cursor: pointer;
 }
 
-/* 🟢 Bigger clickable buttons outside carousel */
+/* 🟢 Make buttons always visible */
 .carousel-btn {
   background: rgba(0, 0, 0, 0.2);
   color: white;
@@ -481,12 +482,30 @@ button:hover {
   background: rgba(0, 0, 0, 0.4);
   transform: scale(1.1);
 }
+
 /* Show hamburger only on small screens */
 .menu-toggle {
     display: none;
     font-size: 2rem;
     cursor: pointer;
     margin-right: 2rem;
+}
+
+.center-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.center-logo img {
+  display: block;
+  margin: 0 auto;
+  max-width: 500px; /* Adjust size */
+  height: auto;
+  object-fit: contain; /* Ensures no extra space */
+  vertical-align: middle;
 }
 
 /* Responsive */
@@ -534,23 +553,25 @@ button:hover {
         display: block;
     }
 
-    .carousel-wrapper {
-        max-width: 280px;
-    }
+    .carousel-container {
+    width: 100%;
+  }
 
-    .carousel-item img {
-        max-width: 250px;
-    }
+  .carousel-item {
+    min-width: calc(50% - 0.5rem);
+  }
 
-    .carousel-btn {
-        padding: 8px;
-        font-size: 1.8rem;
-        width: 35px;
-        height: 35px;
-    }
-    
+  .carousel-btn {
+    font-size: 1.5rem;
+    padding: 0.5rem 0.8rem;
+  }    
     .zoom-img.fullscreen {
         width: 95%;
         max-height: 80%;
     }
+
+    .center-logo img {
+  max-width: 300px; /* Adjust size */
+}
+
 }

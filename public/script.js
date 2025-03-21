@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll('.scroll-link').forEach(link => {
         link.addEventListener('click', function (e) {
             e.preventDefault();
-            const targetId = this.getAttribute('href');
+            const targetId = this.getAttribute('href') || this.getAttribute('data-target');
             const targetElement = document.querySelector(targetId);
 
             if (targetElement) {
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // 🎠 Fixed Centering & Move by 2 Images with Accurate Width
+    // 🎠 Infinite Loop Carousel
     const track = document.querySelector('.carousel-track');
     const btnLeft = document.querySelector('.carousel-btn.left');
     const btnRight = document.querySelector('.carousel-btn.right');
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let index = 0;
     const imagesPerView = 2;
     const totalItems = items.length;
-
+    
     function getItemFullWidth() {
         const item = items[0];
         const style = getComputedStyle(item);
@@ -45,20 +45,40 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateCarousel() {
         const fullWidth = getItemFullWidth();
+        track.style.transition = "transform 0.4s ease-in-out";
         track.style.transform = `translateX(-${index * fullWidth}px)`;
     }
 
     btnLeft.addEventListener('click', () => {
-        index -= imagesPerView;
-        if (index < 0) index = 0;
-        updateCarousel();
+        if (index === 0) {
+            index = totalItems - imagesPerView;
+            track.style.transition = "none"; // Remove animation for instant reset
+            track.style.transform = `translateX(-${index * getItemFullWidth()}px)`;
+            setTimeout(() => {
+                track.style.transition = "transform 0.4s ease-in-out";
+                index -= imagesPerView;
+                updateCarousel();
+            }, 50);
+        } else {
+            index -= imagesPerView;
+            updateCarousel();
+        }
     });
 
     btnRight.addEventListener('click', () => {
-        const maxIndex = totalItems - imagesPerView;
-        index += imagesPerView;
-        if (index > maxIndex) index = maxIndex;
-        updateCarousel();
+        if (index >= totalItems - imagesPerView) {
+            index = 0;
+            track.style.transition = "none";
+            track.style.transform = `translateX(0)`;
+            setTimeout(() => {
+                track.style.transition = "transform 0.4s ease-in-out";
+                index += imagesPerView;
+                updateCarousel();
+            }, 50);
+        } else {
+            index += imagesPerView;
+            updateCarousel();
+        }
     });
 
     window.addEventListener('resize', updateCarousel);
