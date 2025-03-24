@@ -546,9 +546,14 @@ button:hover {
   display: flex;
   gap: 1rem; /* This matches the +16px above */
 }
+
 .carousel-item {
   min-width: calc(50% - 0.5rem); /* two per view */
+  flex-direction: column; /* ✅ make content stack vertically */
+  align-items: center;     /* ✅ center the title */
+  text-align: center;      /* ✅ make sure title is centered */
 }
+
 /* Responsive */
 @media (max-width: 768px) {
     .feature-grid {
