@@ -25,64 +25,42 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // 🎠 Infinite Loop Carousel
-    const track = document.querySelector('.carousel-track');
-    const btnLeft = document.querySelector('.carousel-btn.left');
-    const btnRight = document.querySelector('.carousel-btn.right');
-    const items = document.querySelectorAll('.carousel-item');
+// 🖼️ Screenshot Carousel (2 per view, loop without empty space)
+const track = document.querySelector('.carousel-track');
+const btnLeft = document.querySelector('.carousel-btn.left');
+const btnRight = document.querySelector('.carousel-btn.right');
+const items = document.querySelectorAll('.carousel-item');
 
-    let index = 0;
-    const imagesPerView = 2;
-    const totalItems = items.length;
-    
-    function getItemFullWidth() {
-        const item = items[0];
-        const style = getComputedStyle(item);
-        const width = item.offsetWidth;
-        const gap = parseFloat(getComputedStyle(track).gap || 0);
-        return width + gap;
-    }
+let index = 0;
+const itemsPerView = 2;
 
-    function updateCarousel() {
-        const fullWidth = getItemFullWidth();
-        track.style.transition = "transform 0.4s ease-in-out";
-        track.style.transform = `translateX(-${index * fullWidth}px)`;
-    }
+function getItemWidth() {
+  return items[0].offsetWidth + 16; // 16px = approx gap
+}
 
-    btnLeft.addEventListener('click', () => {
-        if (index === 0) {
-            index = totalItems - imagesPerView;
-            track.style.transition = "none"; // Remove animation for instant reset
-            track.style.transform = `translateX(-${index * getItemFullWidth()}px)`;
-            setTimeout(() => {
-                track.style.transition = "transform 0.4s ease-in-out";
-                index -= imagesPerView;
-                updateCarousel();
-            }, 50);
-        } else {
-            index -= imagesPerView;
-            updateCarousel();
-        }
-    });
+function updateCarousel() {
+  const shift = index * getItemWidth();
+  track.style.transition = "transform 0.4s ease-in-out";
+  track.style.transform = `translateX(-${shift}px)`;
+}
 
-    btnRight.addEventListener('click', () => {
-        if (index >= totalItems - imagesPerView) {
-            index = 0;
-            track.style.transition = "none";
-            track.style.transform = `translateX(0)`;
-            setTimeout(() => {
-                track.style.transition = "transform 0.4s ease-in-out";
-                index += imagesPerView;
-                updateCarousel();
-            }, 50);
-        } else {
-            index += imagesPerView;
-            updateCarousel();
-        }
-    });
+function getMaxIndex() {
+  // prevent scrolling to last "incomplete" view
+  return items.length - itemsPerView - 5;
+}
 
-    window.addEventListener('resize', updateCarousel);
-    updateCarousel();
+btnRight.addEventListener('click', () => {
+  index = index >= getMaxIndex() ? 0 : index + itemsPerView;
+  updateCarousel();
+});
+
+btnLeft.addEventListener('click', () => {
+  index = index <= 0 ? getMaxIndex() : index - itemsPerView;
+  updateCarousel();
+});
+
+window.addEventListener('resize', updateCarousel);
+updateCarousel();
 
     // 📸 Zoom Function
     const zoomOverlay = document.querySelector('.fullscreen-overlay');
@@ -105,4 +83,77 @@ document.addEventListener("DOMContentLoaded", function () {
             zoomOverlay.style.display = "none";
         }
     });
+
+	// 🎞️ Video Carousel (1 per view, loop)
+const videoTrack = document.querySelector('.video-track');
+const videoItems = document.querySelectorAll('.video-item');
+const videoBtnLeft = document.querySelector('.carousel-btn.left.video-btn');
+const videoBtnRight = document.querySelector('.carousel-btn.right.video-btn');
+
+let videoIndex = 0;
+
+function updateVideoCarousel() {
+  const itemWidth = videoItems[0].offsetWidth + 16; // include margin
+  videoTrack.style.transform = `translateX(-${videoIndex * itemWidth}px)`;
+}
+
+videoBtnLeft.addEventListener('click', () => {
+  videoIndex = (videoIndex - 1 + videoItems.length) % videoItems.length;
+  updateVideoCarousel();
+});
+
+videoBtnRight.addEventListener('click', () => {
+  videoIndex = (videoIndex + 1) % videoItems.length;
+  updateVideoCarousel();
+});
+
+window.addEventListener('resize', updateVideoCarousel);
+updateVideoCarousel();
+
+// ▶️ Video Modal Popup
+const videoOverlay = document.getElementById('videoOverlay');
+const videoContainer = document.getElementById('videoContainer');
+const closeVideoBtn = document.querySelector('.close-video');
+
+document.querySelectorAll('.video-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const type = item.dataset.type;
+    const id = item.dataset.id;
+    const src = item.dataset.src;
+    videoContainer.innerHTML = '';
+
+    if (type === 'youtube') {
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+      iframe.frameBorder = 0;
+      iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+      iframe.allowFullscreen = true;
+      iframe.width = "100%";
+      iframe.height = "100%";
+      videoContainer.appendChild(iframe);
+    } else if (type === 'local') {
+      const video = document.createElement('video');
+      video.src = src;
+      video.controls = true;
+      video.autoplay = true;
+      video.style.width = '100%';
+      video.style.height = '100%';
+      videoContainer.appendChild(video);
+    }
+
+    videoOverlay.style.display = 'flex';
+  });
+});
+
+closeVideoBtn.addEventListener('click', () => {
+  videoOverlay.style.display = 'none';
+  videoContainer.innerHTML = '';
+});
+
+videoOverlay.addEventListener('click', e => {
+  if (e.target === videoOverlay) {
+    videoOverlay.style.display = 'none';
+    videoContainer.innerHTML = '';
+  }
+});
 });

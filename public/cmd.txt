@@ -1,0 +1,6 @@
+git add XXXX
+git commit -m "almost done"
+git push origin main
+
+
+firebase deploy
