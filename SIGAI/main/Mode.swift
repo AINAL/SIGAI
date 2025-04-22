@@ -55,8 +55,6 @@ extension ContentView {
                     }) {
                         Image(systemName: "arrow.uturn.backward.circle.fill")
                             .font(.system(size: 32))
-                        //.padding()
-                        //.frame(width: 100)
                             .background(Color.clear)
                             .foregroundColor(.gray)
                             .cornerRadius(10)
@@ -179,8 +177,6 @@ extension ContentView {
                     }) {
                         Image(systemName: "eraser.fill")
                             .font(.system(size: 32))
-                        //.padding()
-                        //.frame(width: 100)
                             .background(Color.clear)
                             .foregroundColor(.gray)
                             .cornerRadius(10)
@@ -212,10 +208,8 @@ extension ContentView {
                                 RoundedRectangle(cornerRadius: 10)
                                     .fill(showFeedback ? (showCorrectOverlay ? Color.green.opacity(0.3) : Color.red.opacity(0.3)) : Color.gray.opacity(0.2))
                             )
-                        //.background(Color.gray.opacity(0.2))
                             .cornerRadius(10)
                             .frame(maxWidth: .infinity)
-                        //.frame(width: 300, height: 80)
                             .padding(5)
                         
                         VStack {

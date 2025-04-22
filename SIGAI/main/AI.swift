@@ -73,7 +73,7 @@ struct SIGAI: View {
                 .padding(.horizontal)
             }
 
-            Text("❓ \(5 - aiQuestionCount) free questions left today")
+            Text("❓ \(10 - aiQuestionCount) free questions left today")
                 .font(.caption)
                 .foregroundColor(.gray)
 
@@ -117,7 +117,7 @@ struct SIGAI: View {
             aiQuestionCount = 0
         }
 
-        guard aiQuestionCount < 5 else {
+        guard aiQuestionCount < 10 else {
             messages.append(("❗ You’ve reached your 5 free questions today. Upgrade to continue.", false))
             userInput = ""
             return
@@ -144,7 +144,6 @@ struct SIGAI: View {
     // Function to Call Google Free API
     func fetchAIResponse(for question: String, completion: @escaping (String) -> Void) {
         let apiKey = apiKeychain
-        //let apiKey = Bundle.main.object(forInfoDictionaryKey: "API_KEY") as? String ?? ""
         let urlString = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=\(apiKey)"
         
         guard let url = URL(string: urlString) else {

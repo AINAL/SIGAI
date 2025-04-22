@@ -86,14 +86,10 @@ struct ContentView: View {
     
     func mainContent() -> some View {
         VStack(spacing: 0) {
-            HStack {
-                Spacer(minLength: 0)
-                BannerAdView(adUnitID: "ca-app-pub-5767874163080300~4184957861")
-                    .frame(height: 50)
-                Spacer(minLength: 0)
-            }
-            .padding(.bottom, 5)
-            .background(Color.white)
+            BannerAdView(adUnitID: "ca-app-pub-3940256099942544/2934735716")
+            //BannerAdView(adUnitID: "ca-app-pub-5767874163080300/8639376065") //cannot use need to upload at appstore
+                .frame(maxWidth: .infinity, minHeight: 50, maxHeight: 50)
+                .padding(.bottom, 5)
             TabView {
                 SIGAIHomeView()
                     .tabItem {
@@ -137,7 +133,7 @@ struct ContentView: View {
                     }
             }
             .preferredColorScheme(.light)
-            .accentColor(.black) // Matches Spotify's color scheme
+            .accentColor(.black) 
         }
     }
 }

@@ -11,7 +11,6 @@ import Foundation
 class APISecurity {
     
     private static let serviceIdentifier = Bundle.main.bundleIdentifier! + ".SIGAI.apikey"
-    //private static let serviceIdentifier = "com.yourapp.apikey" // Change to match your app's bundle ID
     
     /// Saves API Key securely in Keychain
     static func saveAPIKey(_ apiKey: String) {
