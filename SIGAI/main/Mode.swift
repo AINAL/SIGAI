@@ -22,7 +22,7 @@ extension ContentView {
                 HStack {
                     Button(action: {
                         let tipsMs = [
-                            "Pilih warna ikut kod: 🟣 -100, 🟡 -10, 🔵 10, 🟢 1, ⚫ 0",
+                            "Pilih warna ikut kod: 🟣 -100, 🟡 -10, ⚫ 0, 🟢 1, 🔵 10, 🔴 100",
                             "Untuk darab, butang kunci telah dimatikan kerana tidak perlu untuk operasi darab",
                             "Untuk bahagi, lukis garisan menegak dahulu, kunci (warna kelabu), kemudian lukis garisan horizontal",
                             "Tekan 'Hantar' untuk semak jawapan!",
@@ -30,7 +30,7 @@ extension ContentView {
                         ]
                         
                         let tipsEn = [
-                            "Pick colors based on code: 🟣 -100, 🟡 -10, 🔵 10, 🟢 1, ⚫ 0",
+                            "Pick colors based on code: 🟣 -100, 🟡 -10, ⚫ 0, 🟢 1, 🔵 10, 🔴 100",
                             "For, multiplication, lock button is disabled due to not applicable",
                             "For division, draw vertical lines first, locked (grey color), then draw horizontal lines",
                             "Press 'Submit' to check the answer!",
