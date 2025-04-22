@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "sigai-backend"
+  },
+  "targets": {
+    "sigai-backend": {
+      "hosting": {
+        "default": [
+          "sigai-backend"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
