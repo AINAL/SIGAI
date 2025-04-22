@@ -88,7 +88,7 @@ struct ContentView: View {
         VStack(spacing: 0) {
             HStack {
                 Spacer(minLength: 0)
-                BannerAdView(adUnitID: "ca-app-pub-3940256099942544/2934735716")
+                BannerAdView(adUnitID: "ca-app-pub-5767874163080300~4184957861")
                     .frame(height: 50)
                 Spacer(minLength: 0)
             }

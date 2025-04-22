@@ -32,12 +32,16 @@ struct SIGAI: View {
                         HStack {
                             if !isUser { Spacer() }
                             if message.contains("[") && message.contains("](") {
-                                if let urlStart = message.range(of: "](")?.upperBound,
-                                   let urlEnd = message.range(of: ")", range: urlStart..<message.endIndex)?.lowerBound,
-                                   let textStart = message.range(of: "[")?.upperBound,
-                                   let textEnd = message.range(of: "]")?.lowerBound {
-                                    let displayText = String(message[textStart...textEnd])
-                                    let url = String(message[urlStart...urlEnd])
+                                if let openBracket = message.firstIndex(of: "["),
+                                   let closeBracket = message.firstIndex(of: "]"),
+                                   let openParen = message.firstIndex(of: "("),
+                                   let closeParen = message.firstIndex(of: ")"),
+                                   closeBracket < openParen,
+                                   openParen < closeParen {
+
+                                    let displayText = String(message[message.index(after: openBracket)..<closeBracket])
+                                    let url = String(message[message.index(after: openParen)..<closeParen])
+
                                     Link(displayText, destination: URL(string: url)!)
                                         .padding()
                                         .background(isUser ? Color.blue.opacity(0.2) : Color.gray.opacity(0.2))
