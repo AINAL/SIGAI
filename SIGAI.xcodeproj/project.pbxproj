@@ -11,6 +11,7 @@
 		2F9FF8A42DB748A900D5B0CC /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 2F9FF8A32DB748A900D5B0CC /* FirebaseAuth */; };
 		2F9FF8A62DB748A900D5B0CC /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 2F9FF8A52DB748A900D5B0CC /* FirebaseDatabase */; };
 		2F9FF8A82DB748BD00D5B0CC /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 2F9FF8A72DB748BD00D5B0CC /* FirebaseRemoteConfig */; };
+		2FBBE72A2DB75FBA00963477 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 2FBBE7292DB75FBA00963477 /* GoogleMobileAds */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,9 +37,22 @@
 		2F9FF8292DB7424600D5B0CC /* SIGAIUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SIGAIUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		2FBBE72C2DB763AB00963477 /* Exceptions for "SIGAI" folder in "SIGAI" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 2F9FF80E2DB7424400D5B0CC /* SIGAI */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		2F9FF8112DB7424400D5B0CC /* SIGAI */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				2FBBE72C2DB763AB00963477 /* Exceptions for "SIGAI" folder in "SIGAI" target */,
+			);
 			path = SIGAI;
 			sourceTree = "<group>";
 		};
@@ -61,6 +75,7 @@
 			files = (
 				2F9FF8A62DB748A900D5B0CC /* FirebaseDatabase in Frameworks */,
 				2F9FF8A22DB7483A00D5B0CC /* FirebaseCore in Frameworks */,
+				2FBBE72A2DB75FBA00963477 /* GoogleMobileAds in Frameworks */,
 				2F9FF8A42DB748A900D5B0CC /* FirebaseAuth in Frameworks */,
 				2F9FF8A82DB748BD00D5B0CC /* FirebaseRemoteConfig in Frameworks */,
 			);
@@ -127,6 +142,7 @@
 				2F9FF8A32DB748A900D5B0CC /* FirebaseAuth */,
 				2F9FF8A52DB748A900D5B0CC /* FirebaseDatabase */,
 				2F9FF8A72DB748BD00D5B0CC /* FirebaseRemoteConfig */,
+				2FBBE7292DB75FBA00963477 /* GoogleMobileAds */,
 			);
 			productName = SIGAI;
 			productReference = 2F9FF80F2DB7424400D5B0CC /* SIGAI.app */;
@@ -212,6 +228,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				2F9FF8942DB7476700D5B0CC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				2FBBE7282DB75FBA00963477 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2F9FF8102DB7424400D5B0CC /* Products */;
@@ -417,6 +434,7 @@
 				DEVELOPMENT_TEAM = P565ZHBVQ4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SIGAI/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -446,6 +464,7 @@
 				DEVELOPMENT_TEAM = P565ZHBVQ4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SIGAI/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -586,6 +605,14 @@
 				minimumVersion = 11.12.0;
 			};
 		};
+		2FBBE7282DB75FBA00963477 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.3.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -608,6 +635,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2F9FF8942DB7476700D5B0CC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseRemoteConfig;
+		};
+		2FBBE7292DB75FBA00963477 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2FBBE7282DB75FBA00963477 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

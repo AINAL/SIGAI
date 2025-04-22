@@ -86,9 +86,14 @@ struct ContentView: View {
     
     func mainContent() -> some View {
         VStack(spacing: 0) {
-            BannerAdView()
-                .frame(maxWidth: .infinity, minHeight: 50, maxHeight: 50)
-                .padding(.bottom, 5)
+            HStack {
+                Spacer(minLength: 0)
+                BannerAdView(adUnitID: "ca-app-pub-3940256099942544/2934735716")
+                    .frame(height: 50)
+                Spacer(minLength: 0)
+            }
+            .padding(.bottom, 5)
+            .background(Color.white)
             TabView {
                 SIGAIHomeView()
                     .tabItem {

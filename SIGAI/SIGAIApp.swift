@@ -10,6 +10,7 @@ import FirebaseCore
 import FirebaseDatabase
 import FirebaseAuth
 import FirebaseRemoteConfigInternal
+import GoogleMobileAds
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication,
@@ -24,6 +25,7 @@ struct SIGAI_v3App: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
 
     init() {
+        MobileAds.shared.start(completionHandler: nil)
         // Ensure Firebase is initialized before fetching API key
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             SIGAI_v3App.fetchAPIKey()

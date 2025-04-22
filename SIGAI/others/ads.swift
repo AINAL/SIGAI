@@ -6,20 +6,22 @@
 //
 
 import SwiftUI
+import GoogleMobileAds
 
 extension ContentView {
-    struct BannerAdView: View {
-        var body: some View {
-            RoundedRectangle(cornerRadius: 8)
-                .fill(Color.yellow.opacity(0.6))
-                .frame(maxWidth: .infinity, minHeight: 50, maxHeight: 50)
-                .overlay(
-                    Text("Dummy Ad Banner")
-                        .font(.caption)
-                        .foregroundColor(.black)
-                )
-                .shadow(radius: 2)
-                .padding()
+    struct BannerAdView: UIViewRepresentable {
+        let adUnitID: String
+
+        func makeUIView(context: Context) -> BannerView {
+            let banner = BannerView(adSize: AdSizeBanner)
+            banner.adUnitID = adUnitID
+            banner.rootViewController = UIApplication.shared.connectedScenes
+                .compactMap { ($0 as? UIWindowScene)?.keyWindow?.rootViewController }
+                .first
+            banner.load(Request())
+            return banner
         }
+
+        func updateUIView(_ uiView: BannerView, context: Context) {}
     }
 }
