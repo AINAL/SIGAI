@@ -17,7 +17,7 @@ extension ContentView {
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .foregroundColor(.primary)
-                .padding(.top, 200)
+                .padding(.top, 230)
 
             // Dropdown for Color Selection
             HStack {
@@ -152,7 +152,6 @@ extension ContentView {
                         }
                         .padding(5)
                     }
-                    .frame(width: 250, height: 100)
                     .padding(.horizontal)
                 }
             }

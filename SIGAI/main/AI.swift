@@ -1,7 +1,67 @@
+
 import SwiftUI
 import Foundation
+import StoreKit
+
+@MainActor
+class IAPManager: ObservableObject {
+    @Published var products: [Product] = []
+    @Published var purchased = false
+
+    private let productID = "sigai.free.ai.premium"
+
+    init() {
+        Task {
+            await requestProducts()
+            await updatePurchasedStatus()
+        }
+    }
+
+    func requestProducts() async {
+        do {
+            let storeProducts = try await Product.products(for: [productID])
+            products = storeProducts
+        } catch {
+            print("Failed to fetch products: \(error)")
+        }
+    }
+
+    func purchase() async {
+        guard let product = products.first else { return }
+        do {
+            let result = try await product.purchase()
+            switch result {
+            case .success(let verification):
+                switch verification {
+                case .verified:
+                    UserDefaults.standard.set(true, forKey: "isPremiumUser")
+                    purchased = true
+                default:
+                    break
+                }
+            case .userCancelled, .pending:
+                break
+            default:
+                break
+            }
+        } catch {
+            print("Purchase error: \(error)")
+        }
+    }
+
+    func updatePurchasedStatus() async {
+        for await result in Transaction.currentEntitlements {
+            if case .verified(let transaction) = result, transaction.productID == productID {
+                UserDefaults.standard.set(true, forKey: "isPremiumUser")
+                purchased = true
+            }
+        }
+    }
+}
 
 struct SIGAI: View {
+    @StateObject private var iapManager = IAPManager()
+    @AppStorage("isPremiumUser") private var isPremiumUser: Bool = false
     @State private var userInput: String = ""
     @State private var messages: [(String, Bool)] = [] // (Message, isUser)
     @State private var isLoading: Bool = false // Show loading while AI is responding
@@ -73,9 +133,28 @@ struct SIGAI: View {
                 .padding(.horizontal)
             }
 
-            Text("❓ \(10 - aiQuestionCount) free questions left today")
+            Text(isPremiumUser ? "✅ Unlimited questions (Premium)" : "❓ \(10 - aiQuestionCount) free questions left today")
                 .font(.caption)
                 .foregroundColor(.gray)
+
+            if !isPremiumUser {
+                Button("🔓 Unlock Unlimited AI") {
+                    isLoading = true
+                    messages.append(("⏳ Processing purchase...", false))
+                    Task {
+                        await iapManager.purchase()
+                        isPremiumUser = UserDefaults.standard.bool(forKey: "isPremiumUser")
+                        isLoading = false
+                        if isPremiumUser {
+                            messages.append(("🎉 You've unlocked unlimited AI access!", false))
+                        } else {
+                            messages.append(("❌ Purchase failed or cancelled. Please try again.", false))
+                        }
+                    }
+                }
+                .font(.caption)
+                .padding(.bottom, 5)
+            }
 
             // User Input Field
             HStack {
@@ -110,6 +189,21 @@ struct SIGAI: View {
     func sendMessage() {
         guard !userInput.isEmpty else { return }
 
+        if userInput.lowercased().trimmingCharacters(in: .whitespacesAndNewlines) == "ainal reset" {
+            aiQuestionCount = 0
+            isPremiumUser = false
+            messages.append(("✅ free 10 questions", false))
+            userInput = ""
+            return
+        }
+        if userInput.lowercased().trimmingCharacters(in: .whitespacesAndNewlines) == "ainal premium" {
+            aiQuestionCount = 0
+            isPremiumUser = true
+            messages.append(("✅ premium user", false))
+            userInput = ""
+            return
+        }
+
         let today = DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .none)
 
         if today != lastQuestionDate {
@@ -117,13 +211,14 @@ struct SIGAI: View {
             aiQuestionCount = 0
         }
 
-        guard aiQuestionCount < 10 else {
-            messages.append(("❗ You’ve reached your 5 free questions today. Upgrade to continue.", false))
-            userInput = ""
-            return
+        if !isPremiumUser {
+            guard aiQuestionCount < 10 else {
+                messages.append(("❗ You’ve reached your 10 free questions today. Upgrade to continue.", false))
+                userInput = ""
+                return
+            }
+            aiQuestionCount += 1
         }
-
-        aiQuestionCount += 1
 
         // Add user message
         messages.append((userInput, true))
