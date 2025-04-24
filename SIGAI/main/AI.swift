@@ -30,8 +30,10 @@ class IAPManager: ObservableObject {
         guard let product = products.first else { return }
         do {
             let result = try await product.purchase()
+            print("Purchase result: \(result)")
             switch result {
             case .success(let verification):
+                print("Verification status: \(verification)")
                 switch verification {
                 case .verified:
                     UserDefaults.standard.set(true, forKey: "isPremiumUser")

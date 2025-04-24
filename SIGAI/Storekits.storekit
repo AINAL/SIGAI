@@ -1,0 +1,10 @@
+{
+    "products": [
+        {
+            "id": "sigai.premium.free.ai",
+            "displayName": "SIGAI Unlimited AI",
+            "type": "non-consumable",
+            "price": "RM3.90"
+        }
+    ]
+}
