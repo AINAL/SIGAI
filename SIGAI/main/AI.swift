@@ -8,7 +8,7 @@ class IAPManager: ObservableObject {
     @Published var products: [Product] = []
     @Published var purchased = false
 
-    private let productID = "sigai.premium.free.ai"
+    private let productID = "sigai.free.ai"
 
     init() {
         Task {

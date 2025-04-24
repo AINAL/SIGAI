@@ -9,32 +9,29 @@
       }
     ]
   },
-  "identifier" : "49F6F6AD",
+  "identifier" : "181C38D6",
   "nonRenewingSubscriptions" : [
 
   ],
   "products" : [
     {
-      "displayPrice" : "0.99",
+      "displayPrice" : "2.50",
       "familyShareable" : false,
-      "internalID" : "6744974296",
+      "internalID" : "E7400323",
       "localizations" : [
         {
-          "description" : "Free AI for SIGAI questions",
-          "displayName" : "SIGAI Unlimited AI Access",
+          "description" : "Unlimited AI Question",
+          "displayName" : "SIGAI Free AI",
           "locale" : "en_US"
         }
       ],
-      "productID" : "sigai.premium.free.ai",
-      "referenceName" : "SIGAI Unlimited AI Access",
+      "productID" : "sigai.free.ai",
+      "referenceName" : "SIGAI Free AI",
       "type" : "NonConsumable"
     }
   ],
   "settings" : {
-    "_applicationInternalID" : "6744947896",
-    "_developerTeamID" : "P565ZHBVQ4",
     "_failTransactionsEnabled" : false,
-    "_lastSynchronizedDate" : 767168860.52430701,
     "_locale" : "en_US",
     "_storefront" : "USA",
     "_storeKitErrors" : [
