@@ -1,4 +1,3 @@
-
 import SwiftUI
 import Foundation
 import StoreKit
@@ -7,6 +6,16 @@ import StoreKit
 class IAPManager: ObservableObject {
     @Published var products: [Product] = []
     @Published var purchased = false
+
+    enum RestoreStatus {
+        case none
+        case restoring
+        case success
+        case failed(String)
+        case noPurchases
+    }
+
+    @Published var restoreStatus: RestoreStatus = .none
 
     private let productID = "sigai.free.ai"
 
@@ -64,11 +73,17 @@ class IAPManager: ObservableObject {
     }
 
     func restorePurchases() async {
+        restoreStatus = .restoring
         do {
             try await AppStore.sync()
             await updatePurchasedStatus()
+            if purchased {
+                restoreStatus = .success
+            } else {
+                restoreStatus = .noPurchases
+            }
         } catch {
-            print("Failed to restore purchases: \(error)")
+            restoreStatus = .failed(error.localizedDescription)
         }
     }
 
@@ -91,6 +106,9 @@ struct SIGAI: View {
     @AppStorage("appLanguage") private var appLanguage: String = "ms" // Default language is Malay
     @AppStorage("aiQuestionCount") private var aiQuestionCount: Int = 0
     @AppStorage("lastQuestionDate") private var lastQuestionDate: String = ""
+
+    @State private var showRestoreAlert = false
+    @State private var restoreMessage = ""
 
     var body: some View {
         VStack {
@@ -161,30 +179,52 @@ struct SIGAI: View {
                 .foregroundColor(.gray)
 
             if !isPremiumUser {
-                Button("🔓 Unlock Unlimited AI") {
-                    isLoading = true
-                    messages.append(("⏳ Processing purchase...", false))
-                    Task {
-                        await iapManager.purchase()
-                        isPremiumUser = UserDefaults.standard.bool(forKey: "isPremiumUser")
-                        isLoading = false
-                        if isPremiumUser {
-                            messages.append(("🎉 You've unlocked unlimited AI access!", false))
-                        } else {
-                            messages.append(("❌ Purchase failed or cancelled. Please try again.", false))
+                HStack{
+                    Button("🔓 Unlock Unlimited AI") {
+                        isLoading = true
+                        messages.append(("⏳ Processing purchase...", false))
+                        Task {
+                            await iapManager.purchase()
+                            isPremiumUser = UserDefaults.standard.bool(forKey: "isPremiumUser")
+                            isLoading = false
+                            if isPremiumUser {
+                                messages.append(("🎉 You've unlocked unlimited AI access!", false))
+                            } else {
+                                messages.append(("❌ Purchase failed or cancelled. Please try again.", false))
+                            }
                         }
                     }
+                    .font(.caption)
+                    .padding(.bottom, 5)
+                    Button("🔄 Restore Purchases") {
+                        isLoading = true
+                        messages.append(("⏳ Restoring purchase...", false))
+                        Task {
+                            await iapManager.restorePurchases()
+                            isPremiumUser = UserDefaults.standard.bool(forKey: "isPremiumUser")
+                            
+                            switch iapManager.restoreStatus {
+                            case .success:
+                                restoreMessage = "✅ Purchases restored successfully!"
+                            case .noPurchases:
+                                restoreMessage = "ℹ️ No previous purchases found to restore."
+                            case .failed(let error):
+                                restoreMessage = "❌ Restore failed: \(error)"
+                            default:
+                                restoreMessage = ""
+                            }
+
+                            showRestoreAlert = true
+                            isLoading = false
+                            messages.append((restoreMessage, false))
+                        }
+                    }
+                    .font(.caption)
+                    .padding(.bottom, 5)
+                    //.alert(isPresented: $showRestoreAlert) {
+                    //    Alert(title: Text("Restore Purchases"), message: Text(restoreMessage), dismissButton: .default(Text("OK")))
+                    //}
                 }
-                .font(.caption)
-                .padding(.bottom, 5)
-                //Button("🔄 Restore Purchases") {
-                //    Task {
-                //        await iapManager.restorePurchases()
-                //        isPremiumUser = UserDefaults.standard.bool(forKey: "isPremiumUser")
-                //    }
-                //}
-                //.font(.caption)
-                //.padding(.bottom, 5)
             }
 
             // User Input Field
