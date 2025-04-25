@@ -14,6 +14,7 @@ class IAPManager: ObservableObject {
         Task {
             await requestProducts()
             await updatePurchasedStatus()
+            await listenForTransactions()
         }
     }
 
@@ -35,9 +36,10 @@ class IAPManager: ObservableObject {
             case .success(let verification):
                 print("Verification status: \(verification)")
                 switch verification {
-                case .verified:
+                case .verified(let transaction):
                     UserDefaults.standard.set(true, forKey: "isPremiumUser")
                     purchased = true
+                    await transaction.finish()
                 default:
                     break
                 }
@@ -48,6 +50,25 @@ class IAPManager: ObservableObject {
             }
         } catch {
             print("Purchase error: \(error)")
+        }
+    }
+
+    func listenForTransactions() async {
+        for await result in Transaction.updates {
+            if case .verified(let transaction) = result, transaction.productID == productID {
+                UserDefaults.standard.set(true, forKey: "isPremiumUser")
+                purchased = true
+                await transaction.finish()
+            }
+        }
+    }
+
+    func restorePurchases() async {
+        do {
+            try await AppStore.sync()
+            await updatePurchasedStatus()
+        } catch {
+            print("Failed to restore purchases: \(error)")
         }
     }
 
@@ -156,6 +177,14 @@ struct SIGAI: View {
                 }
                 .font(.caption)
                 .padding(.bottom, 5)
+                //Button("🔄 Restore Purchases") {
+                //    Task {
+                //        await iapManager.restorePurchases()
+                //        isPremiumUser = UserDefaults.standard.bool(forKey: "isPremiumUser")
+                //    }
+                //}
+                //.font(.caption)
+                //.padding(.bottom, 5)
             }
 
             // User Input Field
