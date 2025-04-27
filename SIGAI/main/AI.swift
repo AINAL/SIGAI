@@ -109,6 +109,7 @@ struct SIGAI: View {
 
     @State private var showRestoreAlert = false
     @State private var restoreMessage = ""
+    @State private var typingIndicator = ""
 
     var body: some View {
         VStack {
@@ -126,52 +127,88 @@ struct SIGAI: View {
                 .shadow(radius: 10)
                 .padding(.horizontal, 20)
             
-            // Chat Messages
-            ScrollView {
-                VStack(alignment: .leading) {
-                    ForEach(messages, id: \.0) { message, isUser in
-                        HStack {
-                            if !isUser { Spacer() }
-                            if message.contains("[") && message.contains("](") {
-                                if let openBracket = message.firstIndex(of: "["),
-                                   let closeBracket = message.firstIndex(of: "]"),
-                                   let openParen = message.firstIndex(of: "("),
-                                   let closeParen = message.firstIndex(of: ")"),
-                                   closeBracket < openParen,
-                                   openParen < closeParen {
+            // Chat Messages (with auto-scroll)
+            ScrollViewReader { proxy in
+                ScrollView {
+                    VStack(alignment: .leading) {
+                        ForEach(messages.indices, id: \.self) { index in
+                            let message = messages[index]
+                            let text = message.0
+                            let isUser = message.1
+                            HStack {
+                                if !isUser { Spacer() }
+                                if text.contains("[") && text.contains("](") {
+                                    if let openBracket = text.firstIndex(of: "["),
+                                       let closeBracket = text.firstIndex(of: "]"),
+                                       let openParen = text.firstIndex(of: "("),
+                                       let closeParen = text.firstIndex(of: ")"),
+                                       closeBracket < openParen,
+                                       openParen < closeParen {
 
-                                    let displayText = String(message[message.index(after: openBracket)..<closeBracket])
-                                    let url = String(message[message.index(after: openParen)..<closeParen])
+                                        let displayText = String(text[text.index(after: openBracket)..<closeBracket])
+                                        let url = String(text[text.index(after: openParen)..<closeParen])
 
-                                    Link(displayText, destination: URL(string: url)!)
+                                        Link(displayText, destination: URL(string: url)!)
+                                            .padding()
+                                            .background(isUser ? Color.blue.opacity(0.2) : Color.gray.opacity(0.2))
+                                            .cornerRadius(10)
+                                            .foregroundColor(isUser ? .blue : .black)
+                                            .frame(maxWidth: .infinity, alignment: isUser ? .trailing : .leading)
+                                    }
+                                } else {
+                                    Text(text)
                                         .padding()
                                         .background(isUser ? Color.blue.opacity(0.2) : Color.gray.opacity(0.2))
                                         .cornerRadius(10)
                                         .foregroundColor(isUser ? .blue : .black)
                                         .frame(maxWidth: .infinity, alignment: isUser ? .trailing : .leading)
                                 }
-                            } else {
-                                Text(message)
-                                    .padding()
-                                    .background(isUser ? Color.blue.opacity(0.2) : Color.gray.opacity(0.2))
-                                    .cornerRadius(10)
-                                    .foregroundColor(isUser ? .blue : .black)
-                                    .frame(maxWidth: .infinity, alignment: isUser ? .trailing : .leading)
+                                if isUser { Spacer() }
                             }
-                            if isUser { Spacer() }
+                            .id(index)
+                        }
+                        if isLoading {
+                            HStack {
+                                Text("✍️\(typingIndicator)")
+                                    .padding()
+                                    .cornerRadius(10)
+                                    .foregroundColor(.gray)
+                                    .onAppear {
+                                        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { timer in
+                                            if !isLoading {
+                                                timer.invalidate()
+                                            } else {
+                                                switch typingIndicator {
+                                                case "":
+                                                    typingIndicator = "."
+                                                case ".":
+                                                    typingIndicator = ".."
+                                                case "..":
+                                                    typingIndicator = "..."
+                                                case "...":
+                                                    typingIndicator = "...."
+                                                case "....":
+                                                    typingIndicator = "....."
+                                                case ".....":
+                                                    typingIndicator = "......"
+                                                default:
+                                                    typingIndicator = ""
+                                                }
+                                            }
+                                        }
+                                    }
+                                Spacer()
+                            }
+                            .id(messages.count)
                         }
                     }
-                    if isLoading {
-                        HStack {
-                            Spacer()
-                            ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle(tint: .blue))
-                                .padding()
-                            Spacer()
-                        }
+                    .padding(.horizontal)
+                }
+                .onChange(of: messages.count) { _ in
+                    withAnimation {
+                        proxy.scrollTo(isLoading ? messages.count : max(messages.count - 1, 0), anchor: .bottom)
                     }
                 }
-                .padding(.horizontal)
             }
 
             Text(isPremiumUser ? "✅ Unlimited questions (Premium)" : "❓ \(10 - aiQuestionCount) free questions left today")
@@ -295,11 +332,26 @@ struct SIGAI: View {
         messages.append((userInput, true))
         isLoading = true // Show loading indicator
 
+
         // Fetch AI Response
         fetchAIResponse(for: userInput) { response in
             DispatchQueue.main.async {
-                messages.append((response, false))
-                isLoading = false // Hide loading indicator
+                var animatedResponse = ""
+                isLoading = false // Hide loading indicator after starting typing
+
+                Timer.scheduledTimer(withTimeInterval: 0.02, repeats: true) { timer in
+                    if animatedResponse.count < response.count {
+                        let index = response.index(response.startIndex, offsetBy: animatedResponse.count)
+                        animatedResponse.append(response[index])
+                        if messages.indices.contains(messages.count - 1), messages[messages.count - 1].1 == false {
+                            messages[messages.count - 1].0 = animatedResponse
+                        } else {
+                            messages.append((animatedResponse, false))
+                        }
+                    } else {
+                        timer.invalidate()
+                    }
+                }
             }
         }
 
@@ -307,23 +359,26 @@ struct SIGAI: View {
         userInput = ""
     }
 
-    // Function to Call Google Free API
+    // Function to Call Google Free API (Optimized Version)
     func fetchAIResponse(for question: String, completion: @escaping (String) -> Void) {
-        let apiKey = apiKeychain
+        guard let apiKey = apiKeychain.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
+            completion("Error: Invalid API Key")
+            return
+        }
+
         let urlString = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=\(apiKey)"
-        
+
         guard let url = URL(string: urlString) else {
             completion("Error: Invalid API URL")
             return
         }
 
-        let systemMessage_language = (appLanguage == "ms" ) ? "use Bahasa Melayu" : "use English"
-        let systemMessageAll0 = systemMessage_language + systemMessageAll
-        let fullPrompt = "\(systemMessageAll0)\n\nUser: \(question)"
+        let systemLanguage = (appLanguage == "ms") ? "use Bahasa Melayu" : "use English"
+        let prompt = "\(systemLanguage)\n\nUser: \(question)"
 
         let body: [String: Any] = [
             "contents": [
-                ["parts": [["text": fullPrompt]]]
+                ["parts": [["text": prompt]]]
             ],
             "generationConfig": [
                 "temperature": 0.7,
@@ -333,60 +388,46 @@ struct SIGAI: View {
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
 
-        URLSession.shared.dataTask(with: request) { data, response, error in
+        let session = URLSession(configuration: .default)
+        let task = session.dataTask(with: request) { data, response, error in
             if let error = error {
                 completion("Network Error: \(error.localizedDescription)")
                 return
             }
 
             guard let data = data else {
-                completion("Error: No data received from Google API.")
+                completion("Error: No data received.")
                 return
             }
 
             do {
-                let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-                print("API Response:", json ?? "Invalid JSON") // Debugging print
-                
-                if let candidates = json?["candidates"] as? [[String: Any]],
+                if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+                   let candidates = json["candidates"] as? [[String: Any]],
                    let output = candidates.first?["content"] as? [String: Any],
-                   let text = output["parts"] as? [[String: Any]],
-                   let responseText = text.first?["text"] as? String {
+                   let parts = output["parts"] as? [[String: Any]],
+                   let responseText = parts.first?["text"] as? String {
+                    
+                    var filteredText = responseText.trimmingCharacters(in: .whitespacesAndNewlines)
 
-                    var filteredResponse = responseText.trimmingCharacters(in: .whitespacesAndNewlines)
-
-                    // List of offensive words (can be expanded)
-                    let offensiveWords = ["fuck", "offensive-word"]
-                    for word in offensiveWords {
-                        if filteredResponse.localizedCaseInsensitiveContains(word) {
-                            filteredResponse = "This response has been filtered for safety."
-                            break
-                        }
+                    // Filter bad words
+                    let bannedWords = ["fuck", "offensive-word"]
+                    if bannedWords.contains(where: { filteredText.localizedCaseInsensitiveContains($0) }) {
+                        filteredText = "This response has been filtered for safety."
                     }
 
-                    completion(filteredResponse)
-
-                    let regex = try? NSRegularExpression(pattern: "(https?:\\/\\/[^\\s]+)", options: [])
-                    let matches = regex?.matches(in: filteredResponse, range: NSRange(location: 0, length: filteredResponse.utf16.count)) ?? []
-
-                    for match in matches {
-                        if let range = Range(match.range, in: filteredResponse) {
-                            let url = filteredResponse[range]
-                            DispatchQueue.main.async {
-                                messages.append(("[\(url)](\(url))", false))
-                            }
-                        }
-                    }
-
+                    completion(filteredText)
+                    
                 } else {
-                    completion("Error: Unable to parse response from Google API.")
+                    completion("Error: Unable to parse AI response.")
                 }
             } catch {
-                completion("Error: Failed to decode response.")
+                completion("Error: Failed to decode AI response.")
             }
-        }.resume()
+        }
+
+        task.resume()
     }
 }
