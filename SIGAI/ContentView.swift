@@ -5,6 +5,7 @@
 //  Created by Ainal syazwan Itamta on 13/03/2025.
 //
 
+
 import SwiftUI
 
 struct ContentView: View {
@@ -33,11 +34,21 @@ struct ContentView: View {
     @AppStorage("appLanguage") var appLanguage: String = "ms" // Default to Malay
     @AppStorage("expProgress") var expProgress: Double = 0.0
     
+    @State private var showLanguageMenu = false
+    @State private var isDarkMode = false
+    
+    @State private var selectedTab = 0
+    
     enum MathMode {
         case multiplication
         case division
     }
     
+    // Multi-layer cloud animation state variables
+    @State private var cloudOffset1: CGFloat = 0.0
+    @State private var cloudOffset2: CGFloat = 0.0
+    @State private var cloudOffset3: CGFloat = 0.0
+
     var body: some View {
         ZStack {
             if showSplash {
@@ -52,34 +63,95 @@ struct ContentView: View {
                     }
             } else {
                 VStack(spacing: 0) {
-                    HStack {
-                        Image("Sigai-removebg-preview") // Ensure you have 'Sigai_logo' in Assets.xcassets
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 125, height: 105)
-                            .offset(x: -10) // Adjust the value as needed
-                        Spacer()
+                    ZStack {
+                        // BACKGROUND CLOUD
+                        CloudShapeB()
+                            .fill(LinearGradient(
+                                gradient: Gradient(colors: [Color.white.opacity(0.6), Color(red: 224/255, green: 247/255, blue: 250/255).opacity(0.6)]),
+                                startPoint: .top,
+                                endPoint: .bottom
+                            ))
+                            .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+                            .frame(height: 50)
+                            .offset(x: cloudOffset1)
+
+                        // MIDDLE CLOUD
+                        CloudShapeM()
+                            .fill(LinearGradient(
+                                gradient: Gradient(colors: [Color.white, Color(red: 224/255, green: 247/255, blue: 250/255)]),
+                                startPoint: .top,
+                                endPoint: .bottom
+                            ))
+                            .shadow(color: Color.black.opacity(0.2), radius: 6, x: 0, y: 3)
+                            .frame(height: 60)
+                            .offset(x: cloudOffset2)
+
+                        // FOREGROUND CLOUD
+                        CloudShapeF()
+                            .fill(LinearGradient(
+                                gradient: Gradient(colors: [Color.white, Color(red: 224/255, green: 247/255, blue: 250/255)]),
+                                startPoint: .top,
+                                endPoint: .bottom
+                            ))
+                            .shadow(color: Color.black.opacity(0.3), radius: 8, x: 0, y: 4)
+                            .frame(height: 70)
+                            .offset(x: cloudOffset3)
                         
-                        // Language Toggle Button (Top Right)
-                        Button(action: {
-                            appLanguage = (appLanguage == "ms") ? "en" : "ms"
-                        }) {
-                            Text(appLanguage == "ms" ? "🇬🇧" : "🇲🇾") // Shows UK flag when Malay is active, vice versa
-                                .font(.title)
-                                .frame(width: 25, height: 15)
-                                .foregroundColor(.blue)
+                        
+
+                        // HStack for Logo and Buttons remains the same
+                        HStack {
+                            Button(action: {
+                                showLanguageMenu = true
+                            }) {
+                                Image("Sigai-removebg-preview")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 125, height: 105)
+                                    .offset(x: -10)
+                            }
+                            .confirmationDialog("Select Language", isPresented: $showLanguageMenu, titleVisibility: .visible) {
+                                Button("🇲🇾 Malay") { appLanguage = "ms" }
+                                Button("🇬🇧 English") { appLanguage = "en" }
+                                Button("Cancel", role: .cancel) { }
+                            }
+
+                            Spacer()
+
+                            Button(action: {
+                                isDarkMode.toggle()
+                            }) {
+                                Image(systemName: isDarkMode ? "moon.fill" : "sun.max.fill")
+                                    .font(.title)
+                                    .foregroundColor(isDarkMode ? .yellow : .orange)
+                            }
+                            .padding(.trailing, 15)
                         }
-                        .padding(.trailing, 15)
+                        .padding(.horizontal)
                     }
-                    .padding(3)
-                    .frame(height: 30)
-                    .background(Color.white)
-                    .shadow(radius: 2)
-                    .zIndex(1)
-                    
+                    .frame(height: 50)
+                    .onAppear {
+                        withAnimation(Animation.linear(duration: 2).repeatForever(autoreverses: true)) {
+                            cloudOffset1 = 35
+                        }
+                        withAnimation(Animation.linear(duration: 5).repeatForever(autoreverses: true)) {
+                            cloudOffset2 = -40
+                        }
+                        withAnimation(Animation.linear(duration: 60).repeatForever(autoreverses: true)) {
+                            cloudOffset3 = 2
+                        }
+                    }
+
                     mainContent()
                 }
-                .background(Color.white.opacity(0.9))
+                .background(
+                    LinearGradient(
+                        gradient: Gradient(colors: [Color(red: 255/255, green: 200/255, blue: 230/255), Color.black]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .ignoresSafeArea()
+                )
             }
         }
     }
@@ -90,50 +162,54 @@ struct ContentView: View {
             //BannerAdView(adUnitID: "ca-app-pub-5767874163080300/8639376065") //cannot use need to upload at appstore
                 //.frame(maxWidth: .infinity, minHeight: 50, maxHeight: 50)
                 //.padding(.bottom, 5)
-            TabView {
+            TabView(selection: $selectedTab) {
                 SIGAIHomeView()
                     .tabItem {
                         Image(systemName: "house.fill")
                         Text(appLanguage == "ms" ? "Laman Utama" : "Home")
-                            .frame(maxWidth: .infinity)
                     }
-                
+                    .tag(0)
+                    .tint(selectedTab == 0 ? (isDarkMode ? .yellow : .blue) : .gray)
+
                 GeometryReader { geometry in
                     darabTabView(geometry: geometry)
                 }
                 .tabItem {
                     Image(systemName: "multiply")
                     Text(appLanguage == "ms" ? "Darab" : "Multiply")
-                        .frame(maxWidth: .infinity)
                 }
-                
+                .tag(1)
+                .tint(selectedTab == 1 ? (isDarkMode ? .yellow : .blue) : .gray)
+
                 GeometryReader { geometry in
                     ModeView(geometry: geometry)
                 }
                 .tabItem {
                     Image(systemName: "book.fill")
                     Text(appLanguage == "ms" ? "Mod Berpandu" : "Guided Mode" )
-                        .frame(maxWidth: .infinity)
                 }
-                
+                .tag(2)
+                .tint(selectedTab == 2 ? (isDarkMode ? .yellow : .blue) : .gray)
+
                 GeometryReader { geometry in
                     bahagiTabView(geometry: geometry)
                 }
                 .tabItem {
                     Image(systemName: "divide")
                     Text(appLanguage == "ms" ? "Bahagi" : "Divide" )
-                        .frame(maxWidth: .infinity)
                 }
-                
+                .tag(3)
+                .tint(selectedTab == 3 ? (isDarkMode ? .yellow : .blue) : .gray)
+
                 SIGAI()
                     .tabItem {
                         Image(systemName: "brain.head.profile")
                         Text(appLanguage == "ms" ? "Tanya SIGAI" : "Ask SIGAI")
-                            .frame(maxWidth: .infinity)
                     }
+                    .tag(4)
+                    .tint(selectedTab == 4 ? (isDarkMode ? .yellow : .blue) : .gray)
             }
-            .preferredColorScheme(.light)
-            .accentColor(.black) 
+            .preferredColorScheme(isDarkMode ? .dark : .light)
         }
     }
 }

@@ -110,33 +110,218 @@ struct SIGAI: View {
     @State private var showRestoreAlert = false
     @State private var restoreMessage = ""
     @State private var typingIndicator = ""
+    @State private var showPurchaseOptions = false
+    @State private var purchaseLoadingIndicator = ""
+    @State private var isProcessingPurchase = false
+    @State private var isRestoringPurchase = false
 
     var body: some View {
         VStack {
-            // Chat Title
-            HStack{
-                Text("AI SIGAI")
-                Image(systemName: "brain.head.profile")
-            }
-                .font(.system(size: 40, weight: .bold))
-                .foregroundColor(Color.black)
+            // Modern, minimalist, kiddy header
+            VStack(spacing: 0) {
+                HStack(spacing: 10) {
+                    Text("AI SIGAI")
+                        .font(.system(size: 32, weight: .bold, design: .rounded))
+                        .foregroundColor(Color(hex: "#FF4D88"))
+                        .shadow(color: Color(hex: "#FF4D88").opacity(0.0), radius: 0, x: 0, y: 0)
+                    //Image(systemName: "robot")
+                        //.font(.title2)
+                        //.foregroundColor(Color(hex: "#FF4D88"))
+                        //.shadow(color: Color(hex: "#FF4D88").opacity(0.0), radius: 0, x: 0, y: 0)
+                }
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, 30)
-                .background(LinearGradient(gradient: Gradient(colors: [Color.blue.opacity(0.6), Color.gray.opacity(0.6)]), startPoint: .topLeading, endPoint: .bottomTrailing))
-                .cornerRadius(15)
-                .shadow(radius: 10)
-                .padding(.horizontal, 20)
-            
+                .padding(.top, 10)
+                .padding(.bottom, 2)
+                // Question status - minimalist
+                Text(
+                    isPremiumUser
+                        ? "Unlimited questions (Premium)"
+                        : "\(10 - aiQuestionCount) free questions left today"
+                )
+                    .font(.caption2.weight(.medium))
+                    .foregroundColor(Color(hex: "#FFB6C1"))
+                    .padding(.bottom, 12)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal, 18)
+            .padding(.vertical, 10)
+            .background(
+                LinearGradient(
+                    gradient: Gradient(colors: [Color(hex: "#FFD6EC"), Color.white]),
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            )
+            .cornerRadius(16)
+            .shadow(color: Color.black.opacity(0.10), radius: 6, x: 0, y: 4)
+            .padding(.horizontal, 16)
+            .padding(.top, 22)
+            .onTapGesture {
+                withAnimation {
+                    showPurchaseOptions.toggle()
+                }
+            }
+
+            // Unlock/Restore Buttons - vertical, full width, pastel, rounded, shadow
+            if showPurchaseOptions && !isPremiumUser {
+                VStack(spacing: 8) {
+                    Button(action: {
+                        isProcessingPurchase = true
+                        isLoading = true
+                        purchaseLoadingIndicator = ""
+                        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { timer in
+                            if !isLoading {
+                                timer.invalidate()
+                            } else {
+                                switch purchaseLoadingIndicator {
+                                case "": purchaseLoadingIndicator = "."
+                                case ".": purchaseLoadingIndicator = ".."
+                                case "..": purchaseLoadingIndicator = "..."
+                                case "...": purchaseLoadingIndicator = "...."
+                                case "....": purchaseLoadingIndicator = "....."
+                                case ".....": purchaseLoadingIndicator = "......"
+                                default: purchaseLoadingIndicator = ""
+                                }
+                                
+                                if let lastIdx = messages.indices.last, messages[lastIdx].1 == false {
+                                    messages[lastIdx].0 = "⏳ Processing\(purchaseLoadingIndicator)"
+                                } else {
+                                    messages.append(("⏳ Processing\(purchaseLoadingIndicator)", false))
+                                }
+                            }
+                        }
+                        Task {
+                            await iapManager.purchase()
+                            isPremiumUser = UserDefaults.standard.bool(forKey: "isPremiumUser")
+                            isLoading = false
+                            isProcessingPurchase = false
+                            // Animate purchase success/failure message character by character
+                            let fullText = isPremiumUser
+                                ? "🎉 You've unlocked unlimited AI access!"
+                                : "❌ Purchase failed or cancelled. Please try again."
+                            var animatedText = ""
+                            Timer.scheduledTimer(withTimeInterval: 0.02, repeats: true) { timer in
+                                if animatedText.count < fullText.count {
+                                    let index = fullText.index(fullText.startIndex, offsetBy: animatedText.count)
+                                    animatedText.append(fullText[index])
+                                    if let lastIdx = messages.indices.last, messages[lastIdx].1 == false {
+                                        messages[lastIdx].0 = animatedText
+                                    } else {
+                                        messages.append((animatedText, false))
+                                    }
+                                } else {
+                                    timer.invalidate()
+                                }
+                            }
+                        }
+                    }) {
+                        HStack {
+                            Image(systemName: "lock.open.fill")
+                                .font(.system(size: 18, weight: .bold))
+                                .frame(width: 22)
+                            Text("Unlock Unlimited AI")
+                                .font(.system(size: 15, weight: .bold, design: .rounded))
+                        }
+                        .foregroundColor(.black)
+                        .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 44)
+                    }
+                    .background(Color(hex: "#B3E5FC"))
+                    .cornerRadius(20)
+                    .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
+                    .scaleEffect(showPurchaseOptions ? 1 : 0.5)
+                    .animation(.spring(response: 0.4, dampingFraction: 0.6), value: showPurchaseOptions)
+
+                    Button(action: {
+                        isRestoringPurchase = true
+                        isLoading = true
+                        purchaseLoadingIndicator = ""
+                        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { timer in
+                            if !isLoading {
+                                timer.invalidate()
+                            } else {
+                                switch purchaseLoadingIndicator {
+                                case "": purchaseLoadingIndicator = "."
+                                case ".": purchaseLoadingIndicator = ".."
+                                case "..": purchaseLoadingIndicator = "..."
+                                case "...": purchaseLoadingIndicator = "...."
+                                case "....": purchaseLoadingIndicator = "....."
+                                case ".....": purchaseLoadingIndicator = "......"
+                                default: purchaseLoadingIndicator = ""
+                                }
+                                
+                                if let lastIdx = messages.indices.last, messages[lastIdx].1 == false {
+                                    messages[lastIdx].0 = "⏳ Restoring\(purchaseLoadingIndicator)"
+                                } else {
+                                    messages.append(("⏳ Restoring\(purchaseLoadingIndicator)", false))
+                                }
+                            }
+                        }
+                        Task {
+                            await iapManager.restorePurchases()
+                            isPremiumUser = UserDefaults.standard.bool(forKey: "isPremiumUser")
+                            switch iapManager.restoreStatus {
+                            case .success:
+                                restoreMessage = "✅ Purchases restored successfully!"
+                            case .noPurchases:
+                                restoreMessage = "ℹ️ No previous purchases found to restore."
+                            case .failed(let error):
+                                restoreMessage = "❌ Restore failed: \(error)"
+                            default:
+                                restoreMessage = ""
+                            }
+                            showRestoreAlert = true
+                            isLoading = false
+                            isRestoringPurchase = false
+                            // Animate restore message character by character
+                            let fullText = restoreMessage
+                            var animatedText = ""
+                            Timer.scheduledTimer(withTimeInterval: 0.02, repeats: true) { timer in
+                                if animatedText.count < fullText.count {
+                                    let index = fullText.index(fullText.startIndex, offsetBy: animatedText.count)
+                                    animatedText.append(fullText[index])
+                                    if let lastIdx = messages.indices.last, messages[lastIdx].1 == false {
+                                        messages[lastIdx].0 = animatedText
+                                    } else {
+                                        messages.append((animatedText, false))
+                                    }
+                                } else {
+                                    timer.invalidate()
+                                }
+                            }
+                        }
+                    }) {
+                        HStack {
+                            Image(systemName: "arrow.triangle.2.circlepath")
+                                .font(.system(size: 18, weight: .bold))
+                                .frame(width: 22)
+                            Text("Restore Purchases")
+                                .font(.system(size: 15, weight: .bold, design: .rounded))
+                        }
+                        .foregroundColor(.black)
+                        .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 44)
+                    }
+                    .background(Color(hex: "#C8E6C9"))
+                    .cornerRadius(20)
+                    .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
+                    .scaleEffect(showPurchaseOptions ? 1 : 0.5)
+                    .animation(.spring(response: 0.4, dampingFraction: 0.6), value: showPurchaseOptions)
+                }
+                .padding(.horizontal, 18)
+                .padding(.top, 12)
+                .padding(.bottom, 6)
+            }
+
             // Chat Messages (with auto-scroll)
             ScrollViewReader { proxy in
                 ScrollView {
-                    VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 12) {
                         ForEach(messages.indices, id: \.self) { index in
                             let message = messages[index]
                             let text = message.0
                             let isUser = message.1
                             HStack {
                                 if !isUser { Spacer() }
+                                // Use soft pastel bubble for all AI messages (including ❗️, ✅, etc)
                                 if text.contains("[") && text.contains("](") {
                                     if let openBracket = text.firstIndex(of: "["),
                                        let closeBracket = text.firstIndex(of: "]"),
@@ -150,28 +335,33 @@ struct SIGAI: View {
 
                                         Link(displayText, destination: URL(string: url)!)
                                             .padding()
-                                            .background(isUser ? Color.blue.opacity(0.2) : Color.gray.opacity(0.2))
-                                            .cornerRadius(10)
-                                            .foregroundColor(isUser ? .blue : .black)
+                                            .background(isUser ? Color(hex: "#E6F0FF") : Color(hex: "#FFE6E6"))
+                                            .cornerRadius(14)
+                                            .foregroundColor(.gray)
                                             .frame(maxWidth: .infinity, alignment: isUser ? .trailing : .leading)
+                                            .scaleEffect(isUser ? 1.05 : 1.02)
+                                            .animation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0.5), value: messages.count)
                                     }
                                 } else {
                                     Text(text)
                                         .padding()
-                                        .background(isUser ? Color.blue.opacity(0.2) : Color.gray.opacity(0.2))
-                                        .cornerRadius(10)
-                                        .foregroundColor(isUser ? .blue : .black)
+                                        .background(isUser ? Color(hex: "#E6F0FF") : Color(hex: "#FFE6E6"))
+                                        .cornerRadius(14)
+                                        .foregroundColor(.gray)
                                         .frame(maxWidth: .infinity, alignment: isUser ? .trailing : .leading)
+                                        .scaleEffect(isUser ? 1.05 : 1.02)
+                                        .animation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0.5), value: messages.count)
                                 }
                                 if isUser { Spacer() }
                             }
                             .id(index)
                         }
-                        if isLoading {
+                        if isLoading && !isProcessingPurchase && !isRestoringPurchase {
                             HStack {
-                                Text("✍️\(typingIndicator)")
+                                Text("☁️ Thinking\(typingIndicator)")
                                     .padding()
-                                    .cornerRadius(10)
+                                    .background(Color(hex: "#FFE6E6"))
+                                    .cornerRadius(14)
                                     .foregroundColor(.gray)
                                     .onAppear {
                                         Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { timer in
@@ -211,86 +401,51 @@ struct SIGAI: View {
                 }
             }
 
-            Text(isPremiumUser ? "✅ Unlimited questions (Premium)" : "❓ \(10 - aiQuestionCount) free questions left today")
-                .font(.caption)
-                .foregroundColor(.gray)
-
-            if !isPremiumUser {
-                HStack{
-                    Button("🔓 Unlock Unlimited AI") {
-                        isLoading = true
-                        messages.append(("⏳ Processing purchase...", false))
-                        Task {
-                            await iapManager.purchase()
-                            isPremiumUser = UserDefaults.standard.bool(forKey: "isPremiumUser")
-                            isLoading = false
-                            if isPremiumUser {
-                                messages.append(("🎉 You've unlocked unlimited AI access!", false))
-                            } else {
-                                messages.append(("❌ Purchase failed or cancelled. Please try again.", false))
-                            }
-                        }
-                    }
-                    .font(.caption)
-                    .padding(.bottom, 5)
-                    Button("🔄 Restore Purchases") {
-                        isLoading = true
-                        messages.append(("⏳ Restoring purchase...", false))
-                        Task {
-                            await iapManager.restorePurchases()
-                            isPremiumUser = UserDefaults.standard.bool(forKey: "isPremiumUser")
-                            
-                            switch iapManager.restoreStatus {
-                            case .success:
-                                restoreMessage = "✅ Purchases restored successfully!"
-                            case .noPurchases:
-                                restoreMessage = "ℹ️ No previous purchases found to restore."
-                            case .failed(let error):
-                                restoreMessage = "❌ Restore failed: \(error)"
-                            default:
-                                restoreMessage = ""
-                            }
-
-                            showRestoreAlert = true
-                            isLoading = false
-                            messages.append((restoreMessage, false))
-                        }
-                    }
-                    .font(.caption)
-                    .padding(.bottom, 5)
-                    //.alert(isPresented: $showRestoreAlert) {
-                    //    Alert(title: Text("Restore Purchases"), message: Text(restoreMessage), dismissButton: .default(Text("OK")))
-                    //}
-                }
-            }
-
             // User Input Field
-            HStack {
+            HStack(alignment: .center) {
                 TextField("Ask about SIGAI...", text: $userInput)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(8)
-                    .shadow(radius: 5)
+                    .padding(.vertical, 13)
+                    .padding(.horizontal, 14)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(Color.white.opacity(0.8))
+                            .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
+                    )
+                    .foregroundColor(.black) // Add this line
+                    .font(.body)
+                    .frame(minHeight: 44, maxHeight: 48)
 
                 Button(action: {
-                    sendMessage()
+                    if isLoading {
+                        // User wants to stop AI response
+                        isLoading = false
+                    } else {
+                        sendMessage()
+                    }
                 }) {
-                    Image(systemName: "paperplane.fill")
+                    Image(systemName: isLoading ? "stop.fill" : "paperplane.fill")
                         .foregroundColor(.white)
                         .padding(10)
-                        .background(isLoading ? Color.gray : Color.blue)
+                        .background(isLoading ? Color.gray : Color.pink)
                         .cornerRadius(10)
-                        .shadow(radius: 5)
+                        .shadow(color: .gray.opacity(0.2), radius: 4, x: 0, y: 2)
                 }
-                .disabled(isLoading) // Disable while loading
+                .disabled(isLoading && messages.last?.1 == true) // Allow stop button, but block sending new
             }
+            .frame(minHeight: 56)
             .padding(.horizontal)
+            .padding(.top, 10)
+            //.padding(.bottom, 90)
         }
-        .padding(.top)
-        .background(Color(UIColor.systemGray6))
-        .cornerRadius(20)
-        .shadow(radius: 10)
+        .padding(.top, 0)
+        .padding(.bottom, 0)
+        .background(
+            LinearGradient(
+                gradient: Gradient(colors: [Color(hex: "#FFEFF7"), Color.white]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        )
     }
 
     // AI Logic for Generating SIGAI Responses using Google Free API
@@ -300,14 +455,44 @@ struct SIGAI: View {
         if userInput.lowercased().trimmingCharacters(in: .whitespacesAndNewlines) == "ainal reset" {
             aiQuestionCount = 0
             isPremiumUser = false
-            messages.append(("✅ free 10 questions", false))
+            let fullText = "✅ free 10 questions"
+            messages.append((fullText, false))
+            var animatedText = ""
+            Timer.scheduledTimer(withTimeInterval: 0.02, repeats: true) { timer in
+                if animatedText.count < fullText.count {
+                    let index = fullText.index(fullText.startIndex, offsetBy: animatedText.count)
+                    animatedText.append(fullText[index])
+                    if let lastIdx = messages.indices.last, messages[lastIdx].1 == false {
+                        messages[lastIdx].0 = animatedText
+                    } else {
+                        messages.append((animatedText, false))
+                    }
+                } else {
+                    timer.invalidate()
+                }
+            }
             userInput = ""
             return
         }
         if userInput.lowercased().trimmingCharacters(in: .whitespacesAndNewlines) == "ainal premium" {
             aiQuestionCount = 0
             isPremiumUser = true
-            messages.append(("✅ premium user", false))
+            let fullText = "✅ premium user"
+            messages.append((fullText, false))
+            var animatedText = ""
+            Timer.scheduledTimer(withTimeInterval: 0.02, repeats: true) { timer in
+                if animatedText.count < fullText.count {
+                    let index = fullText.index(fullText.startIndex, offsetBy: animatedText.count)
+                    animatedText.append(fullText[index])
+                    if let lastIdx = messages.indices.last, messages[lastIdx].1 == false {
+                        messages[lastIdx].0 = animatedText
+                    } else {
+                        messages.append((animatedText, false))
+                    }
+                } else {
+                    timer.invalidate()
+                }
+            }
             userInput = ""
             return
         }
@@ -321,7 +506,21 @@ struct SIGAI: View {
 
         if !isPremiumUser {
             guard aiQuestionCount < 10 else {
-                messages.append(("❗ You’ve reached your 10 free questions today. Upgrade to continue.", false))
+                let fullText = "❗ You’ve reached your 10 free questions today. Upgrade to continue."
+                var animatedText = ""
+                Timer.scheduledTimer(withTimeInterval: 0.02, repeats: true) { timer in
+                    if animatedText.count < fullText.count {
+                        let index = fullText.index(fullText.startIndex, offsetBy: animatedText.count)
+                        animatedText.append(fullText[index])
+                        if let lastIdx = messages.indices.last, messages[lastIdx].1 == false {
+                            messages[lastIdx].0 = animatedText
+                        } else {
+                            messages.append((animatedText, false))
+                        }
+                    } else {
+                        timer.invalidate()
+                    }
+                }
                 userInput = ""
                 return
             }
@@ -374,14 +573,21 @@ struct SIGAI: View {
         }
 
         let systemLanguage = (appLanguage == "ms") ? "use Bahasa Melayu" : "use English"
-        let prompt = "\(systemLanguage)\n\nUser: \(question)"
+        let cleanedQuestion = question
+            .replacingOccurrences(of: "**", with: "")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        // Pull full systemMessage from training.swift
+        let fullSystemPrompt = systemMessageIntro + systemMessageTeachingGuide + systemMessageMultiplicationExamples + systemMessageDivisionExamples + systemMessageBackground
+
+        let prompt = "\(systemLanguage)\n\n\(fullSystemPrompt)\n\nUser: \(cleanedQuestion)"
 
         let body: [String: Any] = [
             "contents": [
                 ["parts": [["text": prompt]]]
             ],
             "generationConfig": [
-                "temperature": 0.7,
+                "temperature": 0.3,
                 "maxOutputTokens": 800
             ]
         ]
@@ -429,5 +635,32 @@ struct SIGAI: View {
         }
 
         task.resume()
+    }
+}
+
+// MARK: - Pastel Color Helper
+extension Color {
+    init(hex: String) {
+        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var int: UInt64 = 0
+        Scanner(string: hex).scanHexInt64(&int)
+        let a, r, g, b: UInt64
+        switch hex.count {
+        case 3: // RGB (12-bit)
+            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
+        case 6: // RGB (24-bit)
+            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
+        case 8: // ARGB (32-bit)
+            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
+        default:
+            (a, r, g, b) = (255, 255, 255, 255)
+        }
+        self.init(
+            .sRGB,
+            red: Double(r) / 255,
+            green: Double(g) / 255,
+            blue: Double(b) / 255,
+            opacity: Double(a) / 255
+        )
     }
 }
