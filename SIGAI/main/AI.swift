@@ -342,7 +342,33 @@ struct SIGAI: View {
                                             .scaleEffect(isUser ? 1.05 : 1.02)
                                             .animation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0.5), value: messages.count)
                                     }
-                                } else {
+                                }
+                                // Detect plain URLs and make them clickable (improved splitting version)
+                                else if let urlRange = text.range(of: #"https?:\/\/\S+"#, options: .regularExpression) {
+                                    let beforeLink = String(text[..<urlRange.lowerBound])
+                                    let urlString = String(text[urlRange])
+                                    let afterLink = String(text[urlRange.upperBound...])
+
+                                    VStack(alignment: isUser ? .trailing : .leading, spacing: 5) {
+                                        if !beforeLink.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                            Text(beforeLink)
+                                                .foregroundColor(.gray)
+                                        }
+                                        if let url = URL(string: urlString) {
+                                            Link(urlString, destination: url)
+                                                .foregroundColor(.blue)
+                                        }
+                                        if !afterLink.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                            Text(afterLink)
+                                                .foregroundColor(.gray)
+                                        }
+                                    }
+                                    .padding()
+                                    .background(isUser ? Color(hex: "#E6F0FF") : Color(hex: "#FFE6E6"))
+                                    .cornerRadius(14)
+                                    .frame(maxWidth: .infinity, alignment: isUser ? .trailing : .leading)
+                                }
+                                else {
                                     Text(text)
                                         .padding()
                                         .background(isUser ? Color(hex: "#E6F0FF") : Color(hex: "#FFE6E6"))
@@ -587,7 +613,7 @@ struct SIGAI: View {
                 ["parts": [["text": prompt]]]
             ],
             "generationConfig": [
-                "temperature": 0.3,
+                "temperature": 0.2,
                 "maxOutputTokens": 800
             ]
         ]

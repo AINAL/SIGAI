@@ -12,11 +12,11 @@ extension ContentView {
     func headerSection() -> some View {
         VStack(spacing: 10) {
             
-            Text(appLanguage == "ms" ? "Darab" : "Multiplication")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .foregroundColor(.primary)
-                .padding(.top, 215)
+            //Text(appLanguage == "ms" ? "Darab" : "Multiplication")
+                //.font(.largeTitle)
+                //.fontWeight(.bold)
+                //.foregroundColor(.primary)
+                //.padding(.top, 215)
 
             HStack {
                 
@@ -86,66 +86,81 @@ extension ContentView {
     }
 
     func darabTabView(geometry: GeometryProxy) -> some View {
-        VStack {
+        ZStack {
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color(red: 235/255, green: 250/255, blue: 255/255),
+                    Color.white,
+                    Color(red: 220/255, green: 245/255, blue: 255/255), // Very light blue
+                    Color.white,
+                    Color(red: 255/255, green: 220/255, blue: 230/255)  // Softer pink
+                ]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .edgesIgnoringSafeArea(.all)
+            
             VStack {
-                headerSection()
-
-                HStack {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(Color.gray)
-                            .background(Color.gray.opacity(0.2))
-                            .cornerRadius(10)
-                            .frame(maxWidth: .infinity)
-                            .padding(5)
-
-                        VStack {
-                            Text(appLanguage == "ms" ? "Hasil Darab:" : "Multiplication Result:")
-                                .font(.title2)
-                                .fontWeight(.semibold)
-                                .foregroundColor(.primary)
-
-                            Text("\(countIntersections())")
-                                .font(.title2)
-                                .fontWeight(.semibold)
+                VStack {
+                    HStack {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [
+                                            Color(red: 1.0, green: 0.8, blue: 0.9), // Soft pink at top
+                                            Color(red: 210/255, green: 240/255, blue: 255/255) // Slightly stronger light blue at bottom
+                                        ]),
+                                        startPoint: .top,
+                                        endPoint: .bottom
+                                    )
+                                )
+                                .shadow(color: Color.black.opacity(0.1), radius: 6, x: 0, y: 3)
+                                .frame(maxWidth: .infinity)
                                 .padding(5)
-                                .background(Color.clear)
-                                .cornerRadius(5)
-                                .frame(width: 200, height: 40)
-                                .multilineTextAlignment(.center)
-
-                            Text(appLanguage == "ms" ? "Pilih warna dan lukis." : "Pick a color and draw.")
-                                .font(.body)
-                                .multilineTextAlignment(.center)
-                                .foregroundColor(.secondary)
-                                .lineLimit(nil)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .frame(maxWidth: .infinity, alignment: .center)
-                                .padding(.horizontal, 20)
+                            
+                            VStack {
+                                Text(appLanguage == "ms" ? "Hasil Darab:" : "Multiplication Result:")
+                                    .font(.title2)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(Color.blue.opacity(0.7))
+                                    .shadow(color: Color.blue.opacity(0.2), radius: 5, x: 0, y: 2)
+                                
+                                Text("\(countIntersections())")
+                                    .font(.title2)
+                                    .fontWeight(.semibold)
+                                    .padding(5)
+                                    .background(Color.clear)
+                                    .cornerRadius(5)
+                                    .frame(width: 200, height: 40)
+                                    .multilineTextAlignment(.center)
+                                    .foregroundColor(Color.blue.opacity(0.7))
+                                    .shadow(color: Color.blue.opacity(0.2), radius: 5, x: 0, y: 2)
+                                
+                                Text(appLanguage == "ms" ? "Pilih warna dan lukis." : "Pick a color and draw.")
+                                    .font(.body)
+                                    .multilineTextAlignment(.center)
+                                    .foregroundColor(.secondary)
+                                    .lineLimit(nil)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                                    .padding(.horizontal, 20)
+                            }
+                            .padding(5)
                         }
-                        .padding(5)
+                        .padding(.horizontal)
                     }
-                    .padding(.horizontal)
+                    headerSection()
+                    .padding(.top, 20)
                 }
-            }
-            .padding(.top, geometry.safeAreaInsets.top + 20)
-            Spacer()
+                .padding(.top, geometry.safeAreaInsets.top + 20)
 
-            ZStack {
-                drawingCanvas(geometry: geometry)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-
-                if showCorrectOverlay {
-                    Text(appLanguage == "ms" ? "Betul!" : "Correct!")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .foregroundColor(.green)
-                        .padding()
-                        .background(Color.white.opacity(0.8))
-                        .cornerRadius(10)
-                        .transition(.opacity)
-                        .zIndex(2)
+                Spacer()
+                
+                ZStack {
+                    drawingCanvas(geometry: geometry)
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
         .onAppear {
@@ -153,9 +168,7 @@ extension ContentView {
             colors.removeAll()
             currentPath = Path()
         }
-        .frame(width: geometry.size.width, height: geometry.size.height)
         .edgesIgnoringSafeArea(.all)
         .preferredColorScheme(.light)
-        .background(Color.white)
     }
 }

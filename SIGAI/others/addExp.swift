@@ -30,31 +30,34 @@ func sigaiProgressBar(appLanguage: String) -> some View {
         //Text("SIGAI®")
         //    .font(.system(size: 40, weight: .bold, design: .rounded))
 
-        ZStack(alignment: .leading) {
-            Rectangle()
-                .frame(height: 10)
-                .foregroundColor(Color.gray.opacity(0.3))
-                .cornerRadius(5)
+        GeometryReader { geo in
+            ZStack(alignment: .leading) {
+                Rectangle()
+                    .frame(height: 18)
+                    .foregroundColor(Color(red: 220/255, green: 245/255, blue: 255/255))
+                    .cornerRadius(5)
 
-            Rectangle()
-                .frame(width: 200 * CGFloat(progress), height: 10) // Adjust width dynamically
-                .foregroundColor(.blue)
-                .cornerRadius(5)
-        
-            HStack {
-                Text("\(Int(progress * 100))%")
-                    .font(.system(size: 7, weight: .bold, design: .rounded))
-                    .foregroundColor(.white)
-                    .padding(.leading, 5)
-                
-                Text(appLanguage == "ms" ? "Tahap \(EXPManager.level)" :"Level \(EXPManager.level)")
-                    .font(.system(size: 7, weight: .bold, design: .rounded))
+                Rectangle()
+                    .frame(width: geo.size.width * CGFloat(progress), height: 20)
                     .foregroundColor(.blue)
-                    .frame(maxWidth: .infinity, alignment: .trailing)
-                    .padding(.trailing, 5)
+                    .cornerRadius(5)
+            
+                HStack {
+                    Text("\(Int(progress * 100))%")
+                        .font(.system(size: 7, weight: .bold, design: .rounded))
+                        .foregroundColor(.white)
+                        .padding(.leading)
+                    
+                    Text(appLanguage == "ms" ? "Tahap \(EXPManager.level)" : "Level \(EXPManager.level)")
+                        .font(.system(size: 7, weight: .bold, design: .rounded))
+                        .foregroundColor(.blue)
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                        .padding(.trailing)
+                }
             }
+            .frame(height: 20)
         }
-        .frame(width: 200, height: 10) // Fixed total width
+        .frame(maxWidth: .infinity, minHeight: 20, maxHeight: 20)
     }
 }
 

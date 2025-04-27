@@ -12,12 +12,12 @@ extension ContentView {
     func headerSectionBahagi() -> some View {
         VStack(spacing: 10) {
             
-            Text(appLanguage == "ms" ? "Bahagi" : "Division" )
+            //Text(appLanguage == "ms" ? "Bahagi" : "Division" )
             //Text("Bahagi")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .foregroundColor(.primary)
-                .padding(.top, 230)
+                //.font(.largeTitle)
+                //.fontWeight(.bold)
+                //.foregroundColor(.primary)
+                //.padding(.top, 230)
 
             // Dropdown for Color Selection
             HStack {
@@ -112,64 +112,92 @@ extension ContentView {
 
     
     func bahagiTabView(geometry: GeometryProxy) -> some View {
-        VStack {
+        ZStack {
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color(red: 235/255, green: 250/255, blue: 255/255),
+                    Color.white,
+                    Color(red: 220/255, green: 245/255, blue: 255/255), // Very light blue
+                    Color.white,
+                    Color(red: 255/255, green: 220/255, blue: 230/255)  // Softer pink
+                ]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .edgesIgnoringSafeArea(.all)
+
             VStack {
-                headerSectionBahagi()
-                    .padding(.bottom, 10)
-
-                HStack {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(Color.gray)
-                            .background(Color.gray.opacity(0.2))
-                            .cornerRadius(10)
-                            .frame(maxWidth: .infinity)
-                            .padding(5)
-
-                        VStack {
-                            Text(appLanguage == "ms" ? "Hasil Bahagi (\(detectedVerticalLines) garis):" : "Division Result (\(detectedVerticalLines) line/s):")
-                                .font(.title2)
-                                .fontWeight(.semibold)
-                                .foregroundColor(.primary)
-
-                            Text(String(format: "%.6f", countDivisions()))
-                                .font(.title2)
-                                .fontWeight(.semibold)
+                VStack {
+                    HStack {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [
+                                            Color(red: 1.0, green: 0.8, blue: 0.9), // Soft pink at top
+                                            Color(red: 220/255, green: 245/255, blue: 255/255) // Very light blue at bottom
+                                        ]),
+                                        startPoint: .top,
+                                        endPoint: .bottom
+                                    )
+                                )
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                                )
+                                .shadow(color: Color.black.opacity(0.1), radius: 6, x: 0, y: 3)
+                                .frame(maxWidth: .infinity)
                                 .padding(5)
-                                .background(Color.clear)
-                                .cornerRadius(5)
-                                .frame(width: 350, height: 40)
-                                .multilineTextAlignment(.center)
 
-                            Text(appLanguage == "ms" ? "Pilih warna dan lukis." : "Pick a color and draw.")
-                                .font(.body)
-                                .multilineTextAlignment(.center)
-                                .foregroundColor(.secondary)
-                                .lineLimit(nil)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .frame(maxWidth: .infinity, alignment: .center)
-                                .padding(.horizontal, 20)
+                            VStack {
+                                Text(appLanguage == "ms" ? "Hasil Bahagi (\(detectedVerticalLines) garis):" : "Division Result (\(detectedVerticalLines) line/s):")
+                                    .font(.title2)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(Color.blue.opacity(0.7))
+                                    .shadow(color: Color.blue.opacity(0.2), radius: 5, x: 0, y: 2)
+
+                                Text(String(format: "%.6f", countDivisions()))
+                                    .font(.title2)
+                                    .fontWeight(.semibold)
+                                    .padding(5)
+                                    .background(Color.clear)
+                                    .cornerRadius(5)
+                                    .frame(width: 350, height: 40)
+                                    .multilineTextAlignment(.center)
+                                    .foregroundColor(Color.blue.opacity(0.7))
+                                    .shadow(color: Color.blue.opacity(0.2), radius: 5, x: 0, y: 2)
+
+                                Text(appLanguage == "ms" ? "Pilih warna dan lukis." : "Pick a color and draw.")
+                                    .font(.body)
+                                    .multilineTextAlignment(.center)
+                                    .foregroundColor(.secondary)
+                                    .lineLimit(nil)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                                    .padding(.horizontal, 20)
+                            }
+                            .padding(5)
                         }
-                        .padding(5)
+                        .padding(.horizontal)
                     }
-                    .padding(.horizontal)
+                    headerSectionBahagi()
+                        .padding(.top, 20)
                 }
-            }
-            .padding(.top, geometry.safeAreaInsets.top + 20)
+                .padding(.top, geometry.safeAreaInsets.top + 20)
 
-            Spacer()
+                Spacer()
 
-            drawingCanvas(geometry: geometry)
+                ZStack {
+                    drawingCanvas(geometry: geometry)
+                }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
         }
         .onAppear {
             paths.removeAll()
             colors.removeAll()
             currentPath = Path()
         }
-        .frame(width: geometry.size.width, height: geometry.size.height)
-        .edgesIgnoringSafeArea(.all)
         .preferredColorScheme(.light)
-        .background(Color.white)
     }
 }

@@ -6,19 +6,99 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 extension ContentView {
+    func playSound(success: Bool) {
+        if success {
+            let soundID: SystemSoundID = 1335 // Apple Pay Success-like sound
+            AudioServicesPlaySystemSound(soundID)
+        } else {
+            let soundID: SystemSoundID = 1006 // Strong error thunk
+            AudioServicesPlaySystemSound(soundID)
+            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate) // Vibrate when wrong
+        }
+    }
     func ModeView(geometry: GeometryProxy) -> some View {
-        VStack {
+        ZStack {
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color(red: 235/255, green: 250/255, blue: 255/255),
+                    Color.white,
+                    Color(red: 220/255, green: 245/255, blue: 255/255), // Very light blue
+                    Color.white,
+                    Color(red: 255/255, green: 220/255, blue: 230/255)  // Softer pink
+                ]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .edgesIgnoringSafeArea(.all)
             
-            VStack(spacing: 5) {
-                
-                Text(appLanguage == "ms" ? "Mod Berpandu" : "Guided Mode")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .foregroundColor(.primary)
-                    .padding(.top, 305)
-                
+            VStack {
+                sigaiProgressBar(appLanguage: appLanguage)
+                    .frame(maxWidth: .infinity)
+                VStack {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(
+                                LinearGradient(
+                                    gradient: Gradient(colors: [
+                                        Color(red: 1.0, green: 0.8, blue: 0.9), // Soft pink at top
+                                        Color(red: 210/255, green: 240/255, blue: 255/255) // Slightly stronger light blue at bottom
+                                    ]),
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
+                            .shadow(color: Color.black.opacity(0.1), radius: 6, x: 0, y: 3)
+                            .frame(maxWidth: .infinity)
+                        VStack {
+                            if mode == .multiplication {
+                                Text(appLanguage == "ms" ? "Hasil Darab: \(question)" : "Multiplication Result: \(question)")
+                                    .font(.title2)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(Color.blue.opacity(0.7))
+                                    .shadow(color: Color.blue.opacity(0.2), radius: 5, x: 0, y: 2)
+                                Text("\(countIntersections())")
+                                    .font(.title2)
+                                    .fontWeight(.semibold)
+                                    .background(Color.clear)
+                                    .cornerRadius(5)
+                                    .frame(width: 200, height: 40)
+                                    .multilineTextAlignment(.center)
+                                    .foregroundColor(Color.blue.opacity(0.7))
+                                    .shadow(color: Color.blue.opacity(0.2), radius: 5, x: 0, y: 2)
+                            } else {
+                                Text(appLanguage == "ms" ? "Hasil Bahagi (\(detectedVerticalLines) garis): \(question)" : "Division Result (\(detectedVerticalLines) line/s): \(question)")
+                                    .font(.title2)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(Color.blue.opacity(0.7))
+                                    .shadow(color: Color.blue.opacity(0.2), radius: 5, x: 0, y: 2)
+                                Text(String(format: "%.6f", countDivisions()))
+                                    .font(.title2)
+                                    .fontWeight(.semibold)
+                                    .background(Color.clear)
+                                    .cornerRadius(5)
+                                    .frame(width: 300, height: 40)
+                                    .multilineTextAlignment(.center)
+                                    .foregroundColor(Color.blue.opacity(0.7))
+                                    .shadow(color: Color.blue.opacity(0.2), radius: 5, x: 0, y: 2)
+                            }
+                            Text(appLanguage == "ms" ? "Lukis jawapan." : "Draw your answer.")
+                                .font(.body)
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(.secondary)
+                                .lineLimit(nil)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .padding(.horizontal, 20)
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+                .padding(.horizontal)
+                .padding(.top, geometry.safeAreaInsets.top)
+
                 HStack {
                     Button(action: {
                         let tipsMs = [
@@ -190,90 +270,27 @@ extension ContentView {
                         dismissButton: .default(Text("OK"))
                     )
                 }
-                .padding(.horizontal, 5)
-                
-                HStack {
-                    Spacer()
-                }
-                .padding(.top, 10)
-                .padding(.horizontal, 20)
-                
-                VStack {
-                    sigaiProgressBar(appLanguage: appLanguage)
-                        .frame(maxWidth: .infinity)
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(Color.gray)
-                            .background(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .fill(showFeedback ? (showCorrectOverlay ? Color.green.opacity(0.3) : Color.red.opacity(0.3)) : Color.gray.opacity(0.2))
-                            )
-                            .cornerRadius(10)
-                            .frame(maxWidth: .infinity)
-                            .padding(5)
-                        
-                        VStack {
-                            if mode == .multiplication {
-                                Text(appLanguage == "ms" ? "Hasil Darab: \(question)" : "Multiplication Result: \(question)")
-                                    .font(.title2)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(.primary)
-                                
-                                Text("\(countIntersections())")
-                                    .font(.title2)
-                                    .fontWeight(.semibold)
-                                    .padding(5)
-                                    .background(Color.clear)
-                                    .cornerRadius(5)
-                                    .frame(width: 200, height: 40)
-                                    .multilineTextAlignment(.center)
-                            } else {
-                                Text(appLanguage == "ms" ? "Hasil Bahagi (\(detectedVerticalLines) garis): \(question)" : "Division Result (\(detectedVerticalLines) line/s): \(question)")
-                                    .font(.title2)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(.primary)
-                                
-                                Text(String(format: "%.6f", countDivisions()))
-                                    .font(.title2)
-                                    .fontWeight(.semibold)
-                                    .padding(5)
-                                    .background(Color.clear)
-                                    .cornerRadius(5)
-                                    .frame(width: 300, height: 40)
-                                    .multilineTextAlignment(.center)
-                            }
-                            
-                            Text(appLanguage == "ms" ? "Lukis jawapan." : "Draw your answer.")
-                                .font(.body)
-                                .multilineTextAlignment(.center)
-                                .foregroundColor(.secondary)
-                                .lineLimit(nil)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .frame(maxWidth: .infinity, alignment: .center)
-                                .padding(.horizontal, 20)
-                        }
-                        .padding(5)
-                    }
-                    .padding(.horizontal)
-                }
+                .padding(.horizontal)
+
                 HStack(spacing: 20) {
-                    
                     Button(action: {
                         if mode == .multiplication {
                             if countIntersections() == correctAnswer {
                                 addEXP()
                                 showFeedback = true
-                                showCorrectOverlay = true // Change box to green
+                                showCorrectOverlay = true
+                                playSound(success: true)
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                                     showCorrectOverlay = false
-                                    showFeedback = false  // Reset color
-                                    generateQuestion()    // Change question
+                                    showFeedback = false
+                                    generateQuestion()
                                 }
                             } else {
                                 showFeedback = true
-                                showCorrectOverlay = false // Change box to red
+                                showCorrectOverlay = false
+                                playSound(success: false)
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                    showFeedback = false  // Reset color
+                                    showFeedback = false
                                 }
                             }
                         } else {
@@ -282,71 +299,70 @@ extension ContentView {
                             if temp_division < 0.00001 {
                                 addEXP()
                                 showFeedback = true
-                                showCorrectOverlay = true // Change box to green
+                                showCorrectOverlay = true
+                                playSound(success: true)
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                                     showCorrectOverlay = false
-                                    showFeedback = false  // Reset color
-                                    generateQuestion()    // Change question
+                                    showFeedback = false
+                                    generateQuestion()
                                 }
                             } else {
                                 showFeedback = true
-                                showCorrectOverlay = false // Change box to red
+                                showCorrectOverlay = false
+                                playSound(success: false)
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                    showFeedback = false  // Reset color
+                                    showFeedback = false
                                 }
                             }
                         }
                     }) {
                         HStack {
-                            Image(systemName: "paperplane.fill") // ✈️ Symbol for Submit
-                                .font(.title2)
+                            Image(systemName: "paperplane.fill")
                             Text(appLanguage == "ms" ? "Hantar" : "Submit")
-                                .font(.headline)
                         }
-                        .padding()
-                        .frame(maxWidth: .infinity)
+                        .font(.system(size: 16, weight: .semibold))
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 10)
                         .background(Color.blue)
                         .foregroundColor(.white)
-                        .cornerRadius(8)
+                        .cornerRadius(22)
+                        .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
+                        .frame(height: 45)
                     }
-                    
+
                     Button(action: {
-                        // Clear drawing before generating new question
                         paths.removeAll()
                         colors.removeAll()
                         currentPath = Path()
-                        lockedVerticalLines = nil // Reset locked lines
-                        
-                        generateQuestion() // Generate a new question
+                        isLocked = false
+                        lockedVerticalLines = nil
+                        generateQuestion()
                     }) {
                         HStack {
-                            Image(systemName: "questionmark.circle.fill") // ? Symbol for Submit
-                                .font(.title2)
+                            Image(systemName: "questionmark.circle.fill")
                             Text(appLanguage == "ms" ? "Seterusnya" : "Next")
-                                .font(.headline)
                         }
-                        .multilineTextAlignment(.center)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .padding()
-                        .frame(minWidth: 100, maxWidth: .infinity)
+                        .font(.system(size: 16, weight: .semibold))
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 10)
                         .background(Color.green)
                         .foregroundColor(.white)
-                        .cornerRadius(8)
+                        .cornerRadius(22)
+                        .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
+                        .frame(height: 45)
                     }
                 }
-                .padding(.horizontal, 20)
+                .padding(.horizontal)
+                .padding(.top, 10)
                 
-                // Removed inline feedback message in favor of overlay on drawing canvas
+                Spacer()
+
+                ZStack {
+                        drawingCanvas(geometry: geometry)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    
+                }
             }
-            .padding(.top, geometry.safeAreaInsets.top + 20)
-            
-            Spacer()
-            
-            ZStack {
-                drawingCanvas(geometry: geometry)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-            
         }
         .onAppear {
             generateQuestion()
@@ -354,9 +370,9 @@ extension ContentView {
             colors.removeAll()
             currentPath = Path()
         }
-        .frame(width: geometry.size.width, height: geometry.size.height)
+        //.frame(width: geometry.size.width, height: geometry.size.height)
         .edgesIgnoringSafeArea(.all)
         .preferredColorScheme(.light)
-        .background(Color.white)
+        //.background(Color.white)
     }
 }
