@@ -112,15 +112,20 @@ struct SIGAIHomeView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                     // SIGAI Learning Stages
-                    SectionView(title: appLanguage == "ms" ? "Peringkat Pembelajaran SIGAI" : "SIGAI Learning Stages",
-                                description: appLanguage == "ms" ? "Terdapat 6 fasa dalam SIGAI Darab dan 3 fasa dalam SIGAI Bahagi untuk pemahaman bertahap." :
-                                "There are 6 phases in SIGAI Multiplication and 3 phases in SIGAI Division for progressive learning.")
+                    SectionView(title: appLanguage == "ms" ? "Belajar & Praktis di Mod Belajar" : "Learn & Practice in Learning Mode",
+                                description: appLanguage == "ms" ? "Gunakan Mod Belajar untuk berlatih dan memahami konsep darab dan bahagi dengan lebih mudah." :
+                                "Use Learning Mode to practice and understand multiplication and division concepts more easily.")
                     .frame(maxWidth: .infinity, alignment: .leading)
 
-                    // Success Stories
-                    SectionView(title: appLanguage == "ms" ? "Kejayaan SIGAI" : "SIGAI Success Stories",
-                                description: appLanguage == "ms" ? "SIGAI telah menerima pelbagai anugerah inovasi dan digunakan secara meluas dalam pendidikan." :
-                                "SIGAI has received various innovation awards and is widely used in education.")
+                    // Success Stories - Improved wording and direct navigation to HistoryView
+                    VStack(alignment: .leading, spacing: 10) {
+                        SectionView(
+                            title: appLanguage == "ms" ? "Kejayaan SIGAI" : "SIGAI Success Stories",
+                            description: appLanguage == "ms" ?
+                                "SIGAI telah membantu ramai pelajar berjaya dalam matematik. Ketahui kisah mereka dengan melihat sejarah pembelajaran." :
+                                "SIGAI has helped many students succeed in mathematics. Discover their stories by exploring the learning history."
+                        )
+                    }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     
                 }

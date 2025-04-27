@@ -158,9 +158,9 @@ struct ContentView: View {
     
     func mainContent() -> some View {
         VStack(spacing: 0) {
-            //BannerAdView(adUnitID: "ca-app-pub-3940256099942544/2934735716") //testing ads
+            BannerAdView(adUnitID: "ca-app-pub-3940256099942544/2934735716") //testing ads
             //BannerAdView(adUnitID: "ca-app-pub-5767874163080300/8639376065") //cannot use need to upload at appstore
-                //.frame(maxWidth: .infinity, minHeight: 50, maxHeight: 50)
+                .frame(maxWidth: .infinity, minHeight: 50, maxHeight: 50)
                 //.padding(.bottom, 5)
             TabView(selection: $selectedTab) {
                 SIGAIHomeView()
