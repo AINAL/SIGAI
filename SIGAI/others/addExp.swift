@@ -24,6 +24,9 @@ func calculateSigaiProgress() -> [Bool] {
 }
 
 func sigaiProgressBar(appLanguage: String) -> some View {
+    @Environment(\.colorScheme) var colorScheme
+    @AppStorage("isDarkMode") var isDarkMode: Bool = false
+    
     let progress = EXPManager.expProgress / EXPManager.expThreshold // Normalize to 0-1
 
     return VStack(alignment: .leading) {
@@ -34,12 +37,12 @@ func sigaiProgressBar(appLanguage: String) -> some View {
             ZStack(alignment: .leading) {
                 Rectangle()
                     .frame(height: 18)
-                    .foregroundColor(Color(red: 220/255, green: 245/255, blue: 255/255))
+                    .foregroundColor(isDarkMode ? Color.black : Color(red: 220/255, green: 245/255, blue: 255/255))
                     .cornerRadius(5)
 
                 Rectangle()
                     .frame(width: geo.size.width * CGFloat(progress), height: 20)
-                    .foregroundColor(.blue)
+                    .foregroundColor(isDarkMode ? Color.yellow : .blue)
                     .cornerRadius(5)
             
                 HStack {
@@ -50,7 +53,7 @@ func sigaiProgressBar(appLanguage: String) -> some View {
                     
                     Text(appLanguage == "ms" ? "Tahap \(EXPManager.level)" : "Level \(EXPManager.level)")
                         .font(.system(size: 7, weight: .bold, design: .rounded))
-                        .foregroundColor(.blue)
+                        .foregroundColor(isDarkMode ? Color.yellow : .blue)
                         .frame(maxWidth: .infinity, alignment: .trailing)
                         .padding(.trailing)
                 }
@@ -60,6 +63,7 @@ func sigaiProgressBar(appLanguage: String) -> some View {
         .frame(maxWidth: .infinity, minHeight: 20, maxHeight: 20)
     }
 }
+
 
 func addEXP() {
     withAnimation {

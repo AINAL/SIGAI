@@ -98,6 +98,7 @@ class IAPManager: ObservableObject {
 }
 
 struct SIGAI: View {
+    @AppStorage("isDarkMode") var isDarkMode: Bool = false
     @StateObject private var iapManager = IAPManager()
     @AppStorage("isPremiumUser") private var isPremiumUser: Bool = false
     @State private var userInput: String = ""
@@ -122,7 +123,7 @@ struct SIGAI: View {
                 HStack(spacing: 10) {
                     Text("AI SIGAI")
                         .font(.system(size: 32, weight: .bold, design: .rounded))
-                        .foregroundColor(Color(hex: "#FF4D88"))
+                        .foregroundColor(isDarkMode ? Color.yellow : Color(hex: "#FF4D88"))
                         .shadow(color: Color(hex: "#FF4D88").opacity(0.0), radius: 0, x: 0, y: 0)
                     //Image(systemName: "robot")
                         //.font(.title2)
@@ -147,7 +148,13 @@ struct SIGAI: View {
             .padding(.vertical, 10)
             .background(
                 LinearGradient(
-                    gradient: Gradient(colors: [Color(hex: "#FFD6EC"), Color.white]),
+                    gradient: Gradient(colors: isDarkMode == true ? [
+                        Color(red: 50/255, green: 50/255, blue: 100/255), // Dark Blue
+                        Color(red: 80/255, green: 80/255, blue: 150/255)  // Slightly lighter Dark Blue
+                    ] : [
+                        Color(hex: "#FFD6EC"),
+                        Color.white
+                    ]),
                     startPoint: .top,
                     endPoint: .bottom
                 )
@@ -221,11 +228,12 @@ struct SIGAI: View {
                                 .frame(width: 22)
                             Text("Unlock Unlimited AI")
                                 .font(.system(size: 15, weight: .bold, design: .rounded))
+                                .foregroundColor(isDarkMode ? .white : .black)
                         }
-                        .foregroundColor(.black)
+                        // Foreground color set on Text above
                         .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 44)
                     }
-                    .background(Color(hex: "#B3E5FC"))
+                    .background(isDarkMode ? Color(red: 80/255, green: 80/255, blue: 120/255) : Color(hex: "#B3E5FC"))
                     .cornerRadius(20)
                     .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
                     .scaleEffect(showPurchaseOptions ? 1 : 0.5)
@@ -296,11 +304,12 @@ struct SIGAI: View {
                                 .frame(width: 22)
                             Text("Restore Purchases")
                                 .font(.system(size: 15, weight: .bold, design: .rounded))
+                                .foregroundColor(isDarkMode ? .white : .black)
                         }
                         .foregroundColor(.black)
                         .frame(maxWidth: .infinity, minHeight: 44, maxHeight: 44)
                     }
-                    .background(Color(hex: "#C8E6C9"))
+                  .background(isDarkMode ? Color(red: 60/255, green: 80/255, blue: 60/255) : Color(hex: "#C8E6C9"))
                     .cornerRadius(20)
                     .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
                     .scaleEffect(showPurchaseOptions ? 1 : 0.5)
@@ -335,8 +344,11 @@ struct SIGAI: View {
 
                                         Link(displayText, destination: URL(string: url)!)
                                             .padding()
-                                            .background(isUser ? Color(hex: "#E6F0FF") : Color(hex: "#FFE6E6"))
-                                            .cornerRadius(14)
+                                            .background(
+                                                isUser
+                                                ? (isDarkMode ? Color(red: 200/255, green: 255/255, blue: 240/255) : Color(hex: "#E6F0FF"))
+                                                : (isDarkMode ? Color(red: 50/255, green: 50/255, blue: 100/255) : Color(hex: "#FFE6E6"))
+                                            )                                            .cornerRadius(14)
                                             .foregroundColor(.gray)
                                             .frame(maxWidth: .infinity, alignment: isUser ? .trailing : .leading)
                                             .scaleEffect(isUser ? 1.05 : 1.02)
@@ -364,14 +376,23 @@ struct SIGAI: View {
                                         }
                                     }
                                     .padding()
-                                    .background(isUser ? Color(hex: "#E6F0FF") : Color(hex: "#FFE6E6"))
+                                    
+                                    .background(
+                                        isUser
+                                        ? (isDarkMode ? Color(red: 200/255, green: 255/255, blue: 240/255) : Color(hex: "#E6F0FF"))
+                                        : (isDarkMode ? Color(red: 50/255, green: 50/255, blue: 100/255) : Color(hex: "#FFE6E6"))
+                                    )
                                     .cornerRadius(14)
                                     .frame(maxWidth: .infinity, alignment: isUser ? .trailing : .leading)
                                 }
                                 else {
                                     Text(text)
                                         .padding()
-                                        .background(isUser ? Color(hex: "#E6F0FF") : Color(hex: "#FFE6E6"))
+                                        .background(
+                                            isUser
+                                            ? (isDarkMode ? Color(red: 200/255, green: 255/255, blue: 240/255) : Color(hex: "#E6F0FF"))
+                                            : (isDarkMode ? Color(red: 50/255, green: 50/255, blue: 100/255) : Color(hex: "#FFE6E6"))
+                                        )
                                         .cornerRadius(14)
                                         .foregroundColor(.gray)
                                         .frame(maxWidth: .infinity, alignment: isUser ? .trailing : .leading)
@@ -386,7 +407,7 @@ struct SIGAI: View {
                             HStack {
                                 Text("☁️ Thinking\(typingIndicator)")
                                     .padding()
-                                    .background(Color(hex: "#FFE6E6"))
+                                    .background(isDarkMode ? Color(red: 50/255, green: 50/255, blue: 100/255) : Color(hex: "#FFE6E6"))
                                     .cornerRadius(14)
                                     .foregroundColor(.gray)
                                     .onAppear {
@@ -452,7 +473,7 @@ struct SIGAI: View {
                     Image(systemName: isLoading ? "stop.fill" : "paperplane.fill")
                         .foregroundColor(.white)
                         .padding(10)
-                        .background(isLoading ? Color.gray : Color.pink)
+                        .background(isLoading ? Color.gray : (isDarkMode ? Color(red: 50/255, green: 50/255, blue: 100/255) : Color.pink))
                         .cornerRadius(10)
                         .shadow(color: .gray.opacity(0.2), radius: 4, x: 0, y: 2)
                 }
@@ -467,7 +488,13 @@ struct SIGAI: View {
         .padding(.bottom, 0)
         .background(
             LinearGradient(
-                gradient: Gradient(colors: [Color(hex: "#FFEFF7"), Color.white]),
+                gradient: Gradient(colors: isDarkMode == true ? [
+                    Color.black,
+                    Color.white
+                ] : [
+                    Color(hex: "#FFEFF7"),
+                    Color.white
+                ]),
                 startPoint: .top,
                 endPoint: .bottom
             )

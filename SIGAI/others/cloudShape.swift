@@ -109,18 +109,22 @@ struct CloudShapeF: Shape {
     }
 }
 
-struct WaveShape: Shape {
+struct StarScatterShape: Shape {
     func path(in rect: CGRect) -> Path {
         var path = Path()
-        path.move(to: CGPoint(x: 0, y: rect.height * 0.8))
-        path.addCurve(
-            to: CGPoint(x: rect.width, y: rect.height * 0.8),
-            control1: CGPoint(x: rect.width * 0.3, y: rect.height),
-            control2: CGPoint(x: rect.width * 0.7, y: rect.height * 0.6)
-        )
-        path.addLine(to: CGPoint(x: rect.width, y: rect.height))
-        path.addLine(to: CGPoint(x: 0, y: rect.height))
-        path.closeSubpath()
+
+        let numberOfStars = 30 // Berapa banyak bintang kau nak tabur
+        let minSize: CGFloat = 2
+        let maxSize: CGFloat = 8
+
+        for _ in 0..<numberOfStars {
+            let randomX = CGFloat.random(in: 0...rect.width)
+            let randomY = CGFloat.random(in: 0...(rect.height * 0.6)) // only atas sikit
+            let size = CGFloat.random(in: minSize...maxSize)
+
+            path.addEllipse(in: CGRect(x: randomX, y: randomY, width: size, height: size))
+        }
+
         return path
     }
 }

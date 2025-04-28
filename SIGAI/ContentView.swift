@@ -65,6 +65,16 @@ struct ContentView: View {
             } else {
                 VStack(spacing: 0) {
                     ZStack {
+                        
+                        // BACKGROUND STARS
+                        if isDarkMode {
+                            StarScatterShape()
+                                .fill(Color.yellow.opacity(0.8))
+                                .shadow(color: Color.yellow.opacity(0.4), radius: 4, x: 0, y: 2)
+                                .frame(height: 70)
+                                .offset(x: cloudOffset3)
+                        }
+                        
                         // BACKGROUND CLOUD
                         CloudShapeB()
                             .fill(LinearGradient(
@@ -214,7 +224,7 @@ struct ContentView: View {
                     .tag(4)
             }
             .tint(isDarkMode ? .yellow : .blue)
-            .preferredColorScheme(isDarkMode ? .dark : .light)
+            .preferredColorScheme(.light)
         }
     }
 }

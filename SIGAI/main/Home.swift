@@ -28,10 +28,13 @@ struct SIGAIHomeView: View {
                         .padding(.vertical, 30)
                         .background(
                             LinearGradient(
-                                gradient: Gradient(colors: isDarkMode ?
-                                    [Color(red: 0.2, green: 0.2, blue: 0.2), Color(red: 0.1, green: 0.1, blue: 0.1)] :
-                                    [Color(red: 1.0, green: 0.8, blue: 0.9), Color(red: 210/255, green: 240/255, blue: 255/255)]
-                                ),
+                                gradient: Gradient(colors: isDarkMode ? [
+                                    Color(red: 50/255, green: 50/255, blue: 100/255), // Dark Blue
+                                    Color(red: 80/255, green: 80/255, blue: 150/255)  // Slightly lighter Dark Blue
+                                ] : [
+                                    Color(red: 1.0, green: 0.8, blue: 0.9), // Soft Pink
+                                    Color(red: 210/255, green: 240/255, blue: 255/255) // Light Blue
+                                ]),
                                 startPoint: .top,
                                 endPoint: .bottom
                             )

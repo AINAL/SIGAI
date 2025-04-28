@@ -21,8 +21,16 @@ extension ContentView {
     }
     func ModeView(geometry: GeometryProxy) -> some View {
         ZStack {
-            LinearGradient(
-                gradient: Gradient(colors: [
+            LinearGradient (
+                gradient: Gradient(colors: isDarkMode ? [
+                    Color.black,
+                    Color(red: 230/255, green: 230/255, blue: 230/255),
+                    Color.white,
+                    Color(red: 245/255, green: 245/255, blue: 245/255),
+                    Color.white,
+                    Color(red: 250/255, green: 250/255, blue: 250/255),
+                    Color.white
+                ] : [
                     Color(red: 235/255, green: 250/255, blue: 255/255),
                     Color.white,
                     Color(red: 220/255, green: 245/255, blue: 255/255), // Very light blue
@@ -42,9 +50,12 @@ extension ContentView {
                         RoundedRectangle(cornerRadius: 16)
                             .fill(
                                 LinearGradient(
-                                    gradient: Gradient(colors: [
-                                        Color(red: 1.0, green: 0.8, blue: 0.9), // Soft pink at top
-                                        Color(red: 210/255, green: 240/255, blue: 255/255) // Slightly stronger light blue at bottom
+                                    gradient: Gradient(colors: isDarkMode ? [
+                                        Color(red: 50/255, green: 50/255, blue: 100/255), // Dark Blue
+                                        Color(red: 80/255, green: 80/255, blue: 150/255)  // Slightly lighter Dark Blue
+                                    ] : [
+                                        Color(red: 1.0, green: 0.8, blue: 0.9), // Soft Pink
+                                        Color(red: 210/255, green: 240/255, blue: 255/255) // Light Blue
                                     ]),
                                     startPoint: .top,
                                     endPoint: .bottom
@@ -57,8 +68,8 @@ extension ContentView {
                                 Text(appLanguage == "ms" ? "Hasil Darab: \(question)" : "Multiplication Result: \(question)")
                                     .font(.title2)
                                     .fontWeight(.semibold)
-                                    .foregroundColor(Color.blue.opacity(0.7))
-                                    .shadow(color: Color.blue.opacity(0.2), radius: 5, x: 0, y: 2)
+                                    .foregroundColor(isDarkMode ? Color.yellow.opacity(0.8) : Color.blue.opacity(0.7))
+                                    .shadow(color: (isDarkMode ? Color.yellow.opacity(0.2) : Color.blue.opacity(0.2)), radius: 5, x: 0, y: 2)
                                 Text("\(countIntersections())")
                                     .font(.title2)
                                     .fontWeight(.semibold)
@@ -66,14 +77,14 @@ extension ContentView {
                                     .cornerRadius(5)
                                     .frame(width: 200, height: 40)
                                     .multilineTextAlignment(.center)
-                                    .foregroundColor(Color.blue.opacity(0.7))
-                                    .shadow(color: Color.blue.opacity(0.2), radius: 5, x: 0, y: 2)
+                                    .foregroundColor(isDarkMode ? Color.yellow.opacity(0.8) : Color.blue.opacity(0.7))
+                                    .shadow(color: (isDarkMode ? Color.yellow.opacity(0.2) : Color.blue.opacity(0.2)), radius: 5, x: 0, y: 2)
                             } else {
                                 Text(appLanguage == "ms" ? "Hasil Bahagi (\(detectedVerticalLines) garis): \(question)" : "Division Result (\(detectedVerticalLines) line/s): \(question)")
                                     .font(.title2)
                                     .fontWeight(.semibold)
-                                    .foregroundColor(Color.blue.opacity(0.7))
-                                    .shadow(color: Color.blue.opacity(0.2), radius: 5, x: 0, y: 2)
+                                    .foregroundColor(isDarkMode ? Color.yellow.opacity(0.8) : Color.blue.opacity(0.7))
+                                    .shadow(color: (isDarkMode ? Color.yellow.opacity(0.2) : Color.blue.opacity(0.2)), radius: 5, x: 0, y: 2)
                                 Text(String(format: "%.6f", countDivisions()))
                                     .font(.title2)
                                     .fontWeight(.semibold)
@@ -81,13 +92,14 @@ extension ContentView {
                                     .cornerRadius(5)
                                     .frame(width: 300, height: 40)
                                     .multilineTextAlignment(.center)
-                                    .foregroundColor(Color.blue.opacity(0.7))
-                                    .shadow(color: Color.blue.opacity(0.2), radius: 5, x: 0, y: 2)
+                                    .foregroundColor(isDarkMode ? Color.yellow.opacity(0.8) : Color.blue.opacity(0.7))
+                                    .shadow(color: (isDarkMode ? Color.yellow.opacity(0.2) : Color.blue.opacity(0.2)), radius: 5, x: 0, y: 2)
                             }
                             Text(appLanguage == "ms" ? "Lukis jawapan." : "Draw your answer.")
                                 .font(.body)
                                 .multilineTextAlignment(.center)
-                                .foregroundColor(.secondary)
+                                .foregroundColor(isDarkMode ? Color.white.opacity(0.8) : .secondary)
+                                .shadow(color: isDarkMode ? Color.white.opacity(0.2) : Color.clear, radius: 5, x: 0, y: 2)
                                 .lineLimit(nil)
                                 .fixedSize(horizontal: false, vertical: true)
                                 .frame(maxWidth: .infinity, alignment: .center)
