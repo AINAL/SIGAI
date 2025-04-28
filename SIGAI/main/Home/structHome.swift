@@ -9,6 +9,9 @@ import SwiftUI
 
 // Custom Section View
 struct SectionView: View {
+    @AppStorage("isDarkMode") var isDarkMode: Bool = false
+    @Environment(\.colorScheme) var colorScheme
+
     let title: String
     let description: String
 
@@ -16,11 +19,12 @@ struct SectionView: View {
         VStack(alignment: .leading, spacing: 5) {
             Text(title)
                 .font(.headline)
-                .foregroundColor(.blue)
+                .foregroundColor((isDarkMode == true) ? .yellow : .blue)
 
             Text(description)
                 .font(.subheadline)
-                .foregroundColor(.black)
+                .foregroundColor((isDarkMode == true) ? .white : .black)
+
         }
         .padding()
         .background(Color.gray.opacity(0.1))

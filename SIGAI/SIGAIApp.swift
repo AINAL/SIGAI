@@ -23,6 +23,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct SIGAI_v3App: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @State private var appReady = false
 
     init() {
         MobileAds.shared.start(completionHandler: nil)
@@ -72,8 +73,16 @@ struct SIGAI_v3App: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if appReady {
+                ContentView()
+            } else {
+                Color.clear
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                            appReady = true
+                        }
+                    }
+            }
         }
     }
 }
-

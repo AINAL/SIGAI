@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(\.colorScheme) var colorScheme
     @State var currentTipIndex = 0
     @State var showTipAlert = false
     @State var currentTip = ""
@@ -35,7 +36,7 @@ struct ContentView: View {
     @AppStorage("expProgress") var expProgress: Double = 0.0
     
     @State private var showLanguageMenu = false
-    @State private var isDarkMode = false
+    @AppStorage("isDarkMode") var isDarkMode: Bool = false
     
     @State private var selectedTab = 0
     
@@ -67,7 +68,9 @@ struct ContentView: View {
                         // BACKGROUND CLOUD
                         CloudShapeB()
                             .fill(LinearGradient(
-                                gradient: Gradient(colors: [Color.white.opacity(0.6), Color(red: 224/255, green: 247/255, blue: 250/255).opacity(0.6)]),
+                                gradient: Gradient(colors: isDarkMode ?
+                                                    [Color.gray.opacity(0.5), Color.black.opacity(0.5)] :
+                                                    [Color.white.opacity(0.6), Color(red: 224/255, green: 247/255, blue: 250/255).opacity(0.6)]),
                                 startPoint: .top,
                                 endPoint: .bottom
                             ))
@@ -78,7 +81,9 @@ struct ContentView: View {
                         // MIDDLE CLOUD
                         CloudShapeM()
                             .fill(LinearGradient(
-                                gradient: Gradient(colors: [Color.white, Color(red: 224/255, green: 247/255, blue: 250/255)]),
+                                gradient: Gradient(colors: isDarkMode ?
+                                                    [Color.gray.opacity(0.7), Color.black.opacity(0.7)] :
+                                                    [Color.white, Color(red: 224/255, green: 247/255, blue: 250/255)]),
                                 startPoint: .top,
                                 endPoint: .bottom
                             ))
@@ -89,7 +94,9 @@ struct ContentView: View {
                         // FOREGROUND CLOUD
                         CloudShapeF()
                             .fill(LinearGradient(
-                                gradient: Gradient(colors: [Color.white, Color(red: 224/255, green: 247/255, blue: 250/255)]),
+                                gradient: Gradient(colors: isDarkMode ?
+                                                    [Color.gray.opacity(0.9), Color.black.opacity(0.9)] :
+                                                    [Color.white, Color(red: 224/255, green: 247/255, blue: 250/255)]),
                                 startPoint: .top,
                                 endPoint: .bottom
                             ))
@@ -104,7 +111,7 @@ struct ContentView: View {
                             Button(action: {
                                 showLanguageMenu = true
                             }) {
-                                Image("Sigai-removebg-preview")
+                                Image(isDarkMode ? "Sigai-removebg-preview-2" : "Sigai-removebg-preview")
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 125, height: 105)
@@ -146,7 +153,9 @@ struct ContentView: View {
                 }
                 .background(
                     LinearGradient(
-                        gradient: Gradient(colors: [Color(red: 255/255, green: 200/255, blue: 230/255), Color.black]),
+                        gradient: Gradient(colors: isDarkMode ?
+                                            [Color.black, Color.gray] :
+                                            [Color(red: 255/255, green: 200/255, blue: 230/255), Color.white]),
                         startPoint: .top,
                         endPoint: .bottom
                     )
@@ -158,9 +167,9 @@ struct ContentView: View {
     
     func mainContent() -> some View {
         VStack(spacing: 0) {
-            BannerAdView(adUnitID: "ca-app-pub-3940256099942544/2934735716") //testing ads
+            //BannerAdView(adUnitID: "ca-app-pub-3940256099942544/2934735716") //testing ads
             //BannerAdView(adUnitID: "ca-app-pub-5767874163080300/8639376065") //cannot use need to upload at appstore
-                .frame(maxWidth: .infinity, minHeight: 50, maxHeight: 50)
+                //.frame(maxWidth: .infinity, minHeight: 50, maxHeight: 50)
                 //.padding(.bottom, 5)
             TabView(selection: $selectedTab) {
                 SIGAIHomeView()
@@ -169,7 +178,6 @@ struct ContentView: View {
                         Text(appLanguage == "ms" ? "Laman Utama" : "Home")
                     }
                     .tag(0)
-                    .tint(selectedTab == 0 ? (isDarkMode ? .yellow : .blue) : .gray)
 
                 GeometryReader { geometry in
                     darabTabView(geometry: geometry)
@@ -179,7 +187,6 @@ struct ContentView: View {
                     Text(appLanguage == "ms" ? "Darab" : "Multiply")
                 }
                 .tag(1)
-                .tint(selectedTab == 1 ? (isDarkMode ? .yellow : .blue) : .gray)
 
                 GeometryReader { geometry in
                     ModeView(geometry: geometry)
@@ -189,7 +196,6 @@ struct ContentView: View {
                     Text(appLanguage == "ms" ? "Mod Berpandu" : "Guided Mode" )
                 }
                 .tag(2)
-                .tint(selectedTab == 2 ? (isDarkMode ? .yellow : .blue) : .gray)
 
                 GeometryReader { geometry in
                     bahagiTabView(geometry: geometry)
@@ -199,7 +205,6 @@ struct ContentView: View {
                     Text(appLanguage == "ms" ? "Bahagi" : "Divide" )
                 }
                 .tag(3)
-                .tint(selectedTab == 3 ? (isDarkMode ? .yellow : .blue) : .gray)
 
                 SIGAI()
                     .tabItem {
@@ -207,8 +212,8 @@ struct ContentView: View {
                         Text(appLanguage == "ms" ? "Tanya SIGAI" : "Ask SIGAI")
                     }
                     .tag(4)
-                    .tint(selectedTab == 4 ? (isDarkMode ? .yellow : .blue) : .gray)
             }
+            .tint(isDarkMode ? .yellow : .blue)
             .preferredColorScheme(isDarkMode ? .dark : .light)
         }
     }
