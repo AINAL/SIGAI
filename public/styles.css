@@ -1,9 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
 /* ========== GLOBAL SETTINGS ========== */
 /* 🌍 Fix for full height across all browsers */
 html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #f9fafb; /* Soft, clean background */
 }
 /* Enable Smooth Scrolling for all browsers */
 html {
@@ -35,10 +38,12 @@ footer {
 
 /* General Styles */
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #e8ecef;
-    color: #333;
-    line-height: 1.6;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f9fafb;
+  color: #333;
+  line-height: 1.8;
+  margin: 0;
+  padding: 0;
 }
 
 /* ========== HEADER & NAVIGATION ========== */
@@ -86,6 +91,7 @@ ul li a {
 
 ul li a:hover {
     color: #00d084;
+    text-decoration: underline;
 }
 
 /* ========== HERO SECTION ========== */
@@ -109,18 +115,19 @@ ul li a:hover {
 
 /* Buttons */
 button {
-    background-color: #00d084;
-    color: #fff;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    border-radius: 1.5rem;
-    cursor: pointer;
-    transition: background-color 0.3s;
+  background-color: #00d084;
+  color: #fff;
+  border: none;
+  padding: 0.9rem 2rem;
+  font-size: 1rem;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
 button:hover {
-    background-color: #00a368;
+  background-color: #00a368;
+  transform: translateY(-3px);
 }
 
 /* ========== FEATURES SECTION ========== */
@@ -163,55 +170,79 @@ button:hover {
     align-items: center; /* ✅ Ensures all items inside are centered */
 }
 
+.feature-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
 /* ========== DOWNLOAD SECTION ========== */
 /* Download Section */
 .download {
-    padding: 4rem 2rem;
-    text-align: center;
-    background: linear-gradient(to bottom, #e8ecef, #d1d5db);
-    border-radius: 1rem;
-    margin: 2rem;
+  padding: 6rem 2rem;
+  text-align: center;
+  background: linear-gradient(to bottom, #ffffff, #f4f6f8);
+  border-radius: 20px;
+  margin: 3rem auto;
+  max-width: 1000px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
 }
 
 .download h2 {
-    font-size: 2.5rem;
+  font-size: 2.8rem;
+  margin-bottom: 1rem;
+  color: #2c2c2e;
+  font-weight: bold;
 }
 
 .store-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
 }
 
 .app-store, .play-store {
-    background-color: #2c2c2e;
-    padding: 0.75rem 2rem;
-    border-radius: 1.5rem;
+  background-color: #2c2c2e;
+  padding: 0.8rem 2.5rem;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+  transition: background-color 0.3s ease;
 }
 
 .app-store:hover, .play-store:hover {
-    background-color: #4b4b4d;
+  background-color: #00d084;
+  color: #000;
 }
 
 /* ========== FOOTER SECTION ========== */
-/* Footer Content */
 .footer-content {
     display: flex;
     justify-content: center;
-    gap: 1.5rem;
-    margin-bottom: 0.5rem;
+    align-items: center;
+    gap: 2rem;
+    margin: 2rem auto 1rem;
     flex-wrap: wrap;
+    padding: 2rem;
+    border-radius: 10px;
+    max-width: 100%;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
 }
 
 .footer-content a {
-    color: #d1d1d1;
+    color: #e6e6e6;
     text-decoration: none;
-    font-size: 0.875rem;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: color 0.3s ease;
 }
 
 .footer-content a:hover {
     color: #00d084;
+    text-decoration: underline;
 }
 
 /* ========== PRIVACY POLICY SECTION ========== */
@@ -298,19 +329,19 @@ button:hover {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 12px 24px;
+    padding: 6px 12px;
     font-size: 1rem;
     font-weight: bold;
     text-decoration: none;
     color: white;
     background-color: black;
-    border-radius: 50px;
+    border-radius: 20px;
     border: none;
     transition: all 0.3s ease-in-out;
     position: fixed;
-    top: 20px;
+    top: 30px;
     left: 20px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    box-shadow: 0px 4px 10px rgba(8, 8, 8, 0.15);
     cursor: pointer;
 }
 
@@ -322,32 +353,50 @@ button:hover {
 
 /* Icon before text */
 .back-home::before {
-    content: "X";
+    content: "<";
     font-size: 1.2rem;
     margin-right: 10px;
 }
 
 /* ========== SCREENSHOTS SECTION ========== */
-.screenshots {
-    padding: 4rem 2rem;
-    text-align: center;
-    background-color: #fff;
-    border-radius: 1rem;
-    margin: 2rem;
+ .screenshots {
+  padding: 4rem 2rem;
+  text-align: center;
+  background: linear-gradient(to bottom, #ffffff, #f4f6f8);
+  border-radius: 20px;
+  margin: 3rem auto;
+  max-width: 1000px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+}
+
+.screenshots h2 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: #2c2c2e;
+  font-weight: bold;
 }
 
 .screenshot-gallery {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
 }
 
 .screenshot-gallery img {
-    width: 200px;
-    border-radius: 1rem;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 180px;
+  height: 320px;
+  object-fit: cover;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.screenshot-gallery img:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.15);
 }
 
 /* ✅ Fix Zoom Function */
@@ -603,11 +652,33 @@ button:hover {
 }
 
 .timeline-content h3 {
-  margin: 0 0 0.5rem 0;
+  font-size: 1.8rem;
+  color: #2c2c2e;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  text-align: left;
 }
 
 .timeline-content p {
   margin: 0;
+}
+
+
+/* Buatkan gambar youtube responsive */
+.carousel-item.video-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+  max-width: 600px; /* 🚀 Tambah max-width supaya gambar boleh jadi besar lagi */
+  margin: 0 auto; /* Tengah-tengah kan gambar */
+}
+
+/* Responsive kalau screen kecil */
+@media (max-width: 600px) {
+  .carousel-item.video-item {
+    width: 100%;
+  }
 }
 
 /* ========== RESPONSIVE STYLES ========== */
@@ -697,4 +768,16 @@ button:hover {
     margin-bottom: 0.5rem;
     width: auto;
   }
+}
+
+/* Section Fade-In Animation */
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in-section.is-visible {
+  opacity: 1;
+  transform: none;
 }
