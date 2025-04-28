@@ -67,54 +67,103 @@ struct ContentView: View {
                     ZStack {
                         
                         // BACKGROUND STARS
+                        // Stars
                         if isDarkMode {
-                            StarScatterShape()
-                                .fill(Color.yellow.opacity(0.8))
-                                .shadow(color: Color.yellow.opacity(0.4), radius: 4, x: 0, y: 2)
+                            if horizontalSizeClass == .regular {
+                                StarScatterShapeLong()
+                                    .fill(Color.yellow.opacity(0.8))
+                                    .shadow(color: Color.yellow.opacity(0.4), radius: 4, x: 0, y: 2)
+                                    .frame(height: 70)
+                                    .offset(x: cloudOffset3)
+                            } else {
+                                StarScatterShape()
+                                    .fill(Color.yellow.opacity(0.8))
+                                    .shadow(color: Color.yellow.opacity(0.4), radius: 4, x: 0, y: 2)
+                                    .frame(height: 70)
+                                    .offset(x: cloudOffset3)
+                            }
+                        }
+
+                        // BACKGROUND CLOUD
+                        if horizontalSizeClass == .regular {
+                            CloudShapeBLong()
+                                .fill(LinearGradient(
+                                    gradient: Gradient(colors: isDarkMode ?
+                                                        [Color.gray.opacity(0.5), Color.black.opacity(0.5)] :
+                                                        [Color.white.opacity(0.6), Color(red: 224/255, green: 247/255, blue: 250/255).opacity(0.6)]),
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                ))
+                                .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+                                .frame(height: 50)
+                                .offset(x: cloudOffset1)
+                        } else {
+                            CloudShapeB()
+                                .fill(LinearGradient(
+                                    gradient: Gradient(colors: isDarkMode ?
+                                                        [Color.gray.opacity(0.5), Color.black.opacity(0.5)] :
+                                                        [Color.white.opacity(0.6), Color(red: 224/255, green: 247/255, blue: 250/255).opacity(0.6)]),
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                ))
+                                .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+                                .frame(height: 50)
+                                .offset(x: cloudOffset1)
+                        }
+
+                        // MIDDLE CLOUD
+                        if horizontalSizeClass == .regular {
+                            CloudShapeMLong()
+                                .fill(LinearGradient(
+                                    gradient: Gradient(colors: isDarkMode ?
+                                                        [Color.gray.opacity(0.7), Color.black.opacity(0.7)] :
+                                                        [Color.white, Color(red: 224/255, green: 247/255, blue: 250/255)]),
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                ))
+                                .shadow(color: Color.black.opacity(0.2), radius: 6, x: 0, y: 3)
+                                .frame(height: 60)
+                                .offset(x: cloudOffset2)
+                        } else {
+                            CloudShapeM()
+                                .fill(LinearGradient(
+                                    gradient: Gradient(colors: isDarkMode ?
+                                                        [Color.gray.opacity(0.7), Color.black.opacity(0.7)] :
+                                                        [Color.white, Color(red: 224/255, green: 247/255, blue: 250/255)]),
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                ))
+                                .shadow(color: Color.black.opacity(0.2), radius: 6, x: 0, y: 3)
+                                .frame(height: 60)
+                                .offset(x: cloudOffset2)
+                        }
+
+                        // FOREGROUND CLOUD
+                        if horizontalSizeClass == .regular {
+                            CloudShapeFLong()
+                                .fill(LinearGradient(
+                                    gradient: Gradient(colors: isDarkMode ?
+                                                        [Color.gray.opacity(0.9), Color.black.opacity(0.9)] :
+                                                        [Color.white, Color(red: 224/255, green: 247/255, blue: 250/255)]),
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                ))
+                                .shadow(color: Color.black.opacity(0.3), radius: 8, x: 0, y: 4)
+                                .frame(height: 70)
+                                .offset(x: cloudOffset3)
+                        } else {
+                            CloudShapeF()
+                                .fill(LinearGradient(
+                                    gradient: Gradient(colors: isDarkMode ?
+                                                        [Color.gray.opacity(0.9), Color.black.opacity(0.9)] :
+                                                        [Color.white, Color(red: 224/255, green: 247/255, blue: 250/255)]),
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                ))
+                                .shadow(color: Color.black.opacity(0.3), radius: 8, x: 0, y: 4)
                                 .frame(height: 70)
                                 .offset(x: cloudOffset3)
                         }
-                        
-                        // BACKGROUND CLOUD
-                        CloudShapeB()
-                            .fill(LinearGradient(
-                                gradient: Gradient(colors: isDarkMode ?
-                                                    [Color.gray.opacity(0.5), Color.black.opacity(0.5)] :
-                                                    [Color.white.opacity(0.6), Color(red: 224/255, green: 247/255, blue: 250/255).opacity(0.6)]),
-                                startPoint: .top,
-                                endPoint: .bottom
-                            ))
-                            .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
-                            .frame(height: 50)
-                            .offset(x: cloudOffset1)
-
-                        // MIDDLE CLOUD
-                        CloudShapeM()
-                            .fill(LinearGradient(
-                                gradient: Gradient(colors: isDarkMode ?
-                                                    [Color.gray.opacity(0.7), Color.black.opacity(0.7)] :
-                                                    [Color.white, Color(red: 224/255, green: 247/255, blue: 250/255)]),
-                                startPoint: .top,
-                                endPoint: .bottom
-                            ))
-                            .shadow(color: Color.black.opacity(0.2), radius: 6, x: 0, y: 3)
-                            .frame(height: 60)
-                            .offset(x: cloudOffset2)
-
-                        // FOREGROUND CLOUD
-                        CloudShapeF()
-                            .fill(LinearGradient(
-                                gradient: Gradient(colors: isDarkMode ?
-                                                    [Color.gray.opacity(0.9), Color.black.opacity(0.9)] :
-                                                    [Color.white, Color(red: 224/255, green: 247/255, blue: 250/255)]),
-                                startPoint: .top,
-                                endPoint: .bottom
-                            ))
-                            .shadow(color: Color.black.opacity(0.3), radius: 8, x: 0, y: 4)
-                            .frame(height: 70)
-                            .offset(x: cloudOffset3)
-                        
-                        
 
                         // HStack for Logo and Buttons remains the same
                         HStack {

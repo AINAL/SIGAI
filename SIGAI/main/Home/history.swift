@@ -120,90 +120,118 @@ struct HistoryView: View {
                 .padding(.horizontal)
 
                 // Add images dynamically
-                VStack {
-                    Image("Ayah_mak")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 300, height: 400)
-                        .cornerRadius(10)
-                        .shadow(radius: 5)
-                        .padding()
-                    
-                    Text(appLanguage == "ms" ?
-                        "Itamta Harun dan isterinya, pemenang Tokoh Guru Peringkat Negeri Perak" :
-                        "Itamta Harun and his wife, recipient of the Perak State Teacher Award")
-                        .font(.body)
-                        .fontWeight(.semibold)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 10)
+                HStack {
+                    VStack {
+                        Image("Ayah_mak")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 300, height: 400)
+                            .cornerRadius(10)
+                            .shadow(color: Color.primary.opacity(0.2), radius: 5)
+                            .padding()
+                        
+                        Text(appLanguage == "ms" ?
+                            "Itamta Harun dan isterinya, pemenang Tokoh Guru Peringkat Negeri Perak" :
+                            "Itamta Harun and his wife, recipient of the Perak State Teacher Award")
+                            .font(.body)
+                            .fontWeight(.semibold)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 10)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .background(Color(.systemBackground))
+                    .cornerRadius(12)
+                    .padding()
                 }
 
-                VStack {
-                    Image("Ayah_mak1")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 300, height: 250)
-                        .cornerRadius(10)
-                        .shadow(radius: 5)
-                        .padding()
-                    
-                    Text(appLanguage == "ms" ?
-                        "Demonstrasi Kaedah Sigai di Perpustakaan Kuala Kangsar" :
-                        "Demonstration of the Sigai Method at Kuala Kangsar Library")
-                    
-                        .font(.body)
-                        .fontWeight(.semibold)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 5)
-                    
+                HStack {
+                    VStack {
+                        Image("Ayah_mak1")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 300, height: 250)
+                            .cornerRadius(10)
+                            .shadow(color: Color.primary.opacity(0.2), radius: 5)
+                            .padding()
+                        
+                        Text(appLanguage == "ms" ?
+                            "Demonstrasi Kaedah Sigai di Perpustakaan Kuala Kangsar" :
+                            "Demonstration of the Sigai Method at Kuala Kangsar Library")
+                            .font(.body)
+                            .fontWeight(.semibold)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 5)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .background(Color(.systemBackground))
+                    .cornerRadius(12)
+                    .padding()
                 }
 
-                VStack {
-                    Image("juara")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 300, height: 300)
-                        .cornerRadius(10)
-                        .shadow(radius: 5)
-                        .padding()
-                    
-                    Text(appLanguage == "ms" ? "Sigai Memenangi Anugerah Pendidikan di Taiwan" : "Sigai Wins an Education Award in Taiwan")
-                        .font(.body)
-                        .fontWeight(.semibold)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 5)
+                HStack {
+                    VStack {
+                        Image("juara")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 300, height: 300)
+                            .cornerRadius(10)
+                            .shadow(color: Color.primary.opacity(0.2), radius: 5)
+                            .padding()
+                        
+                        Text(appLanguage == "ms" ? "Sigai Memenangi Anugerah Pendidikan di Taiwan" : "Sigai Wins an Education Award in Taiwan")
+                            .font(.body)
+                            .fontWeight(.semibold)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 5)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .background(Color(.systemBackground))
+                    .cornerRadius(12)
+                    .padding()
                 }
 
-                VStack {
-                    Image("Sigai_card")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 300, height: 180)
-                        .cornerRadius(10)
-                        .shadow(radius: 5)
-                        .padding()
-                    
-                    Text(appLanguage == "ms" ? "Kad Pembelajaran Sigai" : "Sigai Learning Cards")
-                        .font(.body)
-                        .fontWeight(.semibold)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 10)
+                HStack {
+                    VStack {
+                        Image("Sigai_card")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 300, height: 180)
+                            .cornerRadius(10)
+                            .shadow(color: Color.primary.opacity(0.2), radius: 5)
+                            .padding()
+                        
+                        Text(appLanguage == "ms" ? "Kad Pembelajaran Sigai" : "Sigai Learning Cards")
+                            .font(.body)
+                            .fontWeight(.semibold)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 10)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .background(Color(.systemBackground))
+                    .cornerRadius(12)
+                    .padding()
                 }
 
-                VStack {
-                    Image("sigailogo")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 300, height: 200)
-                        .cornerRadius(10)
-                        .shadow(radius: 5)
-                        .padding()
-                    
-                    Text(appLanguage == "ms" ? "Logo Rasmi Sigai" : "Official Sigai Logo")
-                        .font(.body)
-                        .fontWeight(.semibold)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 10)
+                HStack {
+                    VStack {
+                        Image("sigailogo")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 300, height: 200)
+                            .cornerRadius(10)
+                            .shadow(color: Color.primary.opacity(0.2), radius: 5)
+                            .padding()
+                        
+                        Text(appLanguage == "ms" ? "Logo Rasmi Sigai" : "Official Sigai Logo")
+                            .font(.body)
+                            .fontWeight(.semibold)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 10)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .background(Color(.systemBackground))
+                    .cornerRadius(12)
+                    .padding()
                 }
             }
             .padding()

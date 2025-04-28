@@ -348,8 +348,13 @@ struct SIGAI: View {
                                                 isUser
                                                 ? (isDarkMode ? Color(red: 200/255, green: 255/255, blue: 240/255) : Color(hex: "#E6F0FF"))
                                                 : (isDarkMode ? Color(red: 50/255, green: 50/255, blue: 100/255) : Color(hex: "#FFE6E6"))
-                                            )                                            .cornerRadius(14)
-                                            .foregroundColor(.gray)
+                                            )
+                                            .cornerRadius(14)
+                                            .foregroundColor(
+                                                isUser
+                                                ? Color.black
+                                                : (isDarkMode ? Color.white : Color.black)
+                                            )
                                             .frame(maxWidth: .infinity, alignment: isUser ? .trailing : .leading)
                                             .scaleEffect(isUser ? 1.05 : 1.02)
                                             .animation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0.5), value: messages.count)
@@ -364,7 +369,11 @@ struct SIGAI: View {
                                     VStack(alignment: isUser ? .trailing : .leading, spacing: 5) {
                                         if !beforeLink.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                                             Text(beforeLink)
-                                                .foregroundColor(.gray)
+                                                .foregroundColor(
+                                                    isUser
+                                                    ? Color.black
+                                                    : (isDarkMode ? Color.white : Color.black)
+                                                )
                                         }
                                         if let url = URL(string: urlString) {
                                             Link(urlString, destination: url)
@@ -372,11 +381,14 @@ struct SIGAI: View {
                                         }
                                         if !afterLink.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                                             Text(afterLink)
-                                                .foregroundColor(.gray)
+                                                .foregroundColor(
+                                                    isUser
+                                                    ? Color.black
+                                                    : (isDarkMode ? Color.white : Color.black)
+                                                )
                                         }
                                     }
                                     .padding()
-                                    
                                     .background(
                                         isUser
                                         ? (isDarkMode ? Color(red: 200/255, green: 255/255, blue: 240/255) : Color(hex: "#E6F0FF"))
@@ -394,7 +406,11 @@ struct SIGAI: View {
                                             : (isDarkMode ? Color(red: 50/255, green: 50/255, blue: 100/255) : Color(hex: "#FFE6E6"))
                                         )
                                         .cornerRadius(14)
-                                        .foregroundColor(.gray)
+                                        .foregroundColor(
+                                            isUser
+                                            ? Color.black
+                                            : (isDarkMode ? Color.white : Color.black)
+                                        )
                                         .frame(maxWidth: .infinity, alignment: isUser ? .trailing : .leading)
                                         .scaleEffect(isUser ? 1.05 : 1.02)
                                         .animation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0.5), value: messages.count)
@@ -409,7 +425,7 @@ struct SIGAI: View {
                                     .padding()
                                     .background(isDarkMode ? Color(red: 50/255, green: 50/255, blue: 100/255) : Color(hex: "#FFE6E6"))
                                     .cornerRadius(14)
-                                    .foregroundColor(.gray)
+                                    .foregroundColor(isDarkMode ? Color.white : Color.black)
                                     .onAppear {
                                         Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { timer in
                                             if !isLoading {

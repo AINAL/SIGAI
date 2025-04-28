@@ -163,7 +163,7 @@ extension ContentView {
                     headerSection()
                     .padding(.top, 20)
                 }
-                .padding(.top, geometry.safeAreaInsets.top + 20)
+                .padding(.top, geometry.safeAreaInsets.top + 23)
 
                 Spacer()
                 

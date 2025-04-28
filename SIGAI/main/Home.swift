@@ -161,5 +161,6 @@ struct SIGAIHomeView: View {
                 .edgesIgnoringSafeArea(.all)
             )
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }

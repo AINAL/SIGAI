@@ -193,7 +193,7 @@ extension ContentView {
                     headerSectionBahagi()
                         .padding(.top, 20)
                 }
-                .padding(.top, geometry.safeAreaInsets.top + 20)
+                .padding(.top, 23)
 
                 Spacer()
 

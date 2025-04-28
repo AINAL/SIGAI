@@ -19,7 +19,7 @@ SIGAI Bahagi uses vertical lines, dashes, and dots to simplify division.
 
 SIGAI is developed by Hj. Itamta bin Harun, built into app by Ainal Syazwan Itamta on 16 March 2025.
 SIGAI won national and international innovation awards.
-Website: https://sigai-backend.web.app/index.html
+Website: https://sigai.online
 """
 
 // Teaching instructions only
