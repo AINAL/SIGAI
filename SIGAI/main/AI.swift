@@ -584,7 +584,7 @@ struct SIGAI: View {
                     isLoading = false
                     typingTask = Task {
                         isAnimatingText = true
-                        await animateText("❌ Ads not ready please try again", appendToLastMessage: false)
+                        await animateText("❌ Ads not ready please try again", appendToLastMessage: true)
                         isAnimatingText = false
                     }
                 } else {
@@ -592,7 +592,7 @@ struct SIGAI: View {
                     isLoading = false
                     typingTask = Task {
                         isAnimatingText = true
-                        await animateText("✅ Ad watched. You are rewarded with: 10 Questions", appendToLastMessage: false)
+                        await animateText("✅ Ad watched. You are rewarded with: 10 Questions", appendToLastMessage: true)
                         isAnimatingText = false
                     }
                 }
@@ -651,8 +651,8 @@ struct SIGAI: View {
                     isAnimatingText = true
                     messages.append(("", false))
                     await animateText(fullText)
-                    messages.append(("[Watch ad to unlock 10 more questions](watchad)", false))
-                    messages.append(("[Upgrade premium](purchase)", false))
+                    messages.append(("[🚀 Unlock AI premium instantly!](purchase)", false))
+                    messages.append(("[🎁 Watch an ad, get 10 questions!](watchad)", false))
                     isAnimatingText = false
                 }
                 userInput = ""
