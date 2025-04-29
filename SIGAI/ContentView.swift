@@ -34,6 +34,7 @@ struct ContentView: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass // Detects landscape mode
     @AppStorage("appLanguage") var appLanguage: String = "ms" // Default to Malay
     @AppStorage("expProgress") var expProgress: Double = 0.0
+    @AppStorage("isPremiumUser") var isPremiumUser: Bool = false
     
     @State private var showLanguageMenu = false
     @AppStorage("isDarkMode") var isDarkMode: Bool = false
@@ -226,10 +227,6 @@ struct ContentView: View {
     
     func mainContent() -> some View {
         VStack(spacing: 0) {
-            //BannerAdView(adUnitID: "ca-app-pub-3940256099942544/2934735716") //testing ads
-            //BannerAdView(adUnitID: "ca-app-pub-5767874163080300/8639376065") //cannot use need to upload at appstore
-                //.frame(maxWidth: .infinity, minHeight: 50, maxHeight: 50)
-                //.padding(.bottom, 5)
             TabView(selection: $selectedTab) {
                 SIGAIHomeView()
                     .tabItem {
@@ -274,6 +271,11 @@ struct ContentView: View {
             }
             .tint(isDarkMode ? .yellow : .blue)
             .preferredColorScheme(.light)
+            
+            //if !isPremiumUser {
+             //   BannerAdView(adUnitID: "ca-app-pub-5767874163080300/8639376065")
+             //       .frame(maxWidth: .infinity, minHeight: 50, maxHeight: 50)
+            //}
         }
     }
 }

@@ -8,7 +8,7 @@
 import SwiftUI
 import GoogleMobileAds
 
-extension ContentView {
+//extension ContentView {
     struct BannerAdView: UIViewRepresentable {
         let adUnitID: String
 
@@ -24,4 +24,4 @@ extension ContentView {
 
         func updateUIView(_ uiView: BannerView, context: Context) {}
     }
-}
+//}

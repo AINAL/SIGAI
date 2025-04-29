@@ -698,7 +698,7 @@ struct SIGAI: View {
                    let parts = output["parts"] as? [[String: Any]],
                    let responseText = parts.first?["text"] as? String {
                     
-                    var filteredText = responseText.trimmingCharacters(in: .whitespacesAndNewlines)
+                    var filteredText = responseText.replacingOccurrences(of: "**", with: "").trimmingCharacters(in: .whitespacesAndNewlines)
 
                     // Filter bad words
                     let bannedWords = ["fuck", "offensive-word"]
