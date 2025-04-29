@@ -101,7 +101,6 @@ struct SIGAI: View {
     @AppStorage("isDarkMode") var isDarkMode: Bool = false
     @StateObject private var iapManager = IAPManager()
     @AppStorage("isPremiumUser") private var isPremiumUser: Bool = false
-    @AppStorage("adUnlockCount") private var adUnlockCount: Int = 0
     @State private var userInput: String = ""
     @State private var messages: [(String, Bool)] = [] // (Message, isUser)
     @State private var isLoading: Bool = false // Show loading while AI is responding
@@ -142,11 +141,11 @@ struct SIGAI: View {
                 Text(
                     isPremiumUser
                         ? "Unlimited questions (Premium)"
-                        : "\(max(0, (5 + (adUnlockCount * 2)) - aiQuestionCount)) free questions left today"
+                        : "\(10 - aiQuestionCount) free questions left today"
                 )
-                .font(.caption2.weight(.medium))
-                .foregroundColor(Color(hex: "#FFB6C1"))
-                .padding(.bottom, 12)
+                    .font(.caption2.weight(.medium))
+                    .foregroundColor(Color(hex: "#FFB6C1"))
+                    .padding(.bottom, 12)
             }
             .frame(maxWidth: .infinity)
             .padding(.horizontal, 18)
@@ -566,20 +565,41 @@ struct SIGAI: View {
         )
         .onChange(of: rewardedAdManager.adDidReward) { reward in
             if reward {
-                adUnlockCount += 1
+                aiQuestionCount = 0
                 rewardedAdManager.adDidReward = false
             }
         }
     }
 
     func watchAdAndUnlock() {
+        isLoading = true
         rewardedAdManager.loadAd(adUnitID: "ca-app-pub-5767874163080300/4775134744")
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             let rootVC = UIApplication.shared.connectedScenes
                 .compactMap { $0 as? UIWindowScene }
                 .first?.windows.first?.rootViewController
             if let rootVC = rootVC {
+                if !rewardedAdManager.isAdReady {
+                    typingTask?.cancel()
+                    isLoading = false
+                    typingTask = Task {
+                        isAnimatingText = true
+                        await animateText("❌ Ads not ready please try again", appendToLastMessage: false)
+                        isAnimatingText = false
+                    }
+                } else {
+                    typingTask?.cancel()
+                    isLoading = false
+                    typingTask = Task {
+                        isAnimatingText = true
+                        await animateText("✅ Ad watched. You are rewarded with: 10 Questions", appendToLastMessage: false)
+                        isAnimatingText = false
+                    }
+                }
                 rewardedAdManager.showAd(from: rootVC)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    isLoading = false
+                }
             } else {
                 print("❌ No rootViewController available to show rewarded ad.")
             }
@@ -595,7 +615,7 @@ struct SIGAI: View {
         if userInput.lowercased().trimmingCharacters(in: .whitespacesAndNewlines) == "ainal reset" {
             aiQuestionCount = 0
             isPremiumUser = false
-            let fullText = "✅ free 5 questions"
+            let fullText = "✅ free 10 questions"
             typingTask = Task {
                 isAnimatingText = true
                 await animateText(fullText, appendToLastMessage: false)
@@ -625,20 +645,13 @@ struct SIGAI: View {
         }
 
         if !isPremiumUser {
-            let totalAllowed = 5 + (adUnlockCount * 2)
-            if aiQuestionCount >= totalAllowed {
-                // Detect [Watch ad...] tap or watchad trigger
-                if userInput.lowercased().contains("watchad") {
-                    watchAdAndUnlock()
-                    userInput = ""
-                    return
-                }
-                let fullText = "❗ You've used all your free and ad-unlocked questions for today."
+            guard aiQuestionCount < 10 else {
+                let fullText = "❗ You’ve reached your 10 free questions today."
                 typingTask = Task {
                     isAnimatingText = true
                     messages.append(("", false))
                     await animateText(fullText)
-                    messages.append(("[Watch ad to unlock 2 more questions](watchad)", false))
+                    messages.append(("[Watch ad to unlock 10 more questions](watchad)", false))
                     messages.append(("[Upgrade premium](purchase)", false))
                     isAnimatingText = false
                 }
@@ -773,6 +786,7 @@ struct SIGAI: View {
         networkTask?.resume()
     }
 }
+    
 
 // MARK: - Pastel Color Helper
 extension Color {

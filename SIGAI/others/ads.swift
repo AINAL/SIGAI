@@ -29,6 +29,10 @@ class RewardedAdManager: NSObject, FullScreenContentDelegate, ObservableObject {
     @Published var adDidReward: Bool = false
     private var rewardedAd: RewardedAd?
 
+    var isAdReady: Bool {
+        return rewardedAd != nil
+    }
+    
     func loadAd(adUnitID: String) {
         let request = Request()
         RewardedAd.load(with: adUnitID, request: request) { ad, error in
@@ -43,12 +47,12 @@ class RewardedAdManager: NSObject, FullScreenContentDelegate, ObservableObject {
 
     func showAd(from rootViewController: UIViewController) {
         guard let ad = rewardedAd else {
-            print("Ad not ready")
+            print("❌ Ad not ready. Please try again later.")
             return
         }
         ad.present(from: rootViewController) {
             let reward = ad.adReward
-            print("User earned reward: \(reward.amount)")
+            print("✅ Ad watched. You are rewarded with: \(reward.amount)")
             self.adDidReward = true
         }
     }
