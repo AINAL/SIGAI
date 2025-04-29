@@ -115,6 +115,9 @@ struct SIGAI: View {
     @State private var purchaseLoadingIndicator = ""
     @State private var isProcessingPurchase = false
     @State private var isRestoringPurchase = false
+    @State private var isAnimatingText = false
+    @State private var typingTask: Task<Void, Never>? = nil
+    @State private var networkTask: URLSessionDataTask? = nil
 
     var body: some View {
         VStack {
@@ -176,10 +179,14 @@ struct SIGAI: View {
                         isProcessingPurchase = true
                         isLoading = true
                         purchaseLoadingIndicator = ""
-                        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { timer in
-                            if !isLoading {
-                                timer.invalidate()
-                            } else {
+                        typingTask?.cancel()
+                        Task {
+                            // Animate processing indicator
+                            purchaseLoadingIndicator = ""
+                            messages.append(("⏳ Processing", false))
+                            while isLoading {
+                                try? await Task.sleep(nanoseconds: 500_000_000)
+                                if !isLoading { break }
                                 switch purchaseLoadingIndicator {
                                 case "": purchaseLoadingIndicator = "."
                                 case ".": purchaseLoadingIndicator = ".."
@@ -189,7 +196,6 @@ struct SIGAI: View {
                                 case ".....": purchaseLoadingIndicator = "......"
                                 default: purchaseLoadingIndicator = ""
                                 }
-                                
                                 if let lastIdx = messages.indices.last, messages[lastIdx].1 == false {
                                     messages[lastIdx].0 = "⏳ Processing\(purchaseLoadingIndicator)"
                                 } else {
@@ -197,29 +203,18 @@ struct SIGAI: View {
                                 }
                             }
                         }
-                        Task {
+                        typingTask?.cancel()
+                        typingTask = Task {
                             await iapManager.purchase()
                             isPremiumUser = UserDefaults.standard.bool(forKey: "isPremiumUser")
                             isLoading = false
                             isProcessingPurchase = false
-                            // Animate purchase success/failure message character by character
                             let fullText = isPremiumUser
                                 ? "🎉 You've unlocked unlimited AI access!"
                                 : "❌ Purchase failed or cancelled. Please try again."
-                            var animatedText = ""
-                            Timer.scheduledTimer(withTimeInterval: 0.02, repeats: true) { timer in
-                                if animatedText.count < fullText.count {
-                                    let index = fullText.index(fullText.startIndex, offsetBy: animatedText.count)
-                                    animatedText.append(fullText[index])
-                                    if let lastIdx = messages.indices.last, messages[lastIdx].1 == false {
-                                        messages[lastIdx].0 = animatedText
-                                    } else {
-                                        messages.append((animatedText, false))
-                                    }
-                                } else {
-                                    timer.invalidate()
-                                }
-                            }
+                            isAnimatingText = true
+                            await animateText(fullText)
+                            isAnimatingText = false
                         }
                     }) {
                         HStack {
@@ -243,10 +238,14 @@ struct SIGAI: View {
                         isRestoringPurchase = true
                         isLoading = true
                         purchaseLoadingIndicator = ""
-                        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { timer in
-                            if !isLoading {
-                                timer.invalidate()
-                            } else {
+                        typingTask?.cancel()
+                        Task {
+                            // Animate restoring indicator
+                            purchaseLoadingIndicator = ""
+                            messages.append(("⏳ Restoring", false))
+                            while isLoading {
+                                try? await Task.sleep(nanoseconds: 500_000_000)
+                                if !isLoading { break }
                                 switch purchaseLoadingIndicator {
                                 case "": purchaseLoadingIndicator = "."
                                 case ".": purchaseLoadingIndicator = ".."
@@ -256,7 +255,6 @@ struct SIGAI: View {
                                 case ".....": purchaseLoadingIndicator = "......"
                                 default: purchaseLoadingIndicator = ""
                                 }
-                                
                                 if let lastIdx = messages.indices.last, messages[lastIdx].1 == false {
                                     messages[lastIdx].0 = "⏳ Restoring\(purchaseLoadingIndicator)"
                                 } else {
@@ -264,7 +262,8 @@ struct SIGAI: View {
                                 }
                             }
                         }
-                        Task {
+                        typingTask?.cancel()
+                        typingTask = Task {
                             await iapManager.restorePurchases()
                             isPremiumUser = UserDefaults.standard.bool(forKey: "isPremiumUser")
                             switch iapManager.restoreStatus {
@@ -280,22 +279,10 @@ struct SIGAI: View {
                             showRestoreAlert = true
                             isLoading = false
                             isRestoringPurchase = false
-                            // Animate restore message character by character
                             let fullText = restoreMessage
-                            var animatedText = ""
-                            Timer.scheduledTimer(withTimeInterval: 0.02, repeats: true) { timer in
-                                if animatedText.count < fullText.count {
-                                    let index = fullText.index(fullText.startIndex, offsetBy: animatedText.count)
-                                    animatedText.append(fullText[index])
-                                    if let lastIdx = messages.indices.last, messages[lastIdx].1 == false {
-                                        messages[lastIdx].0 = animatedText
-                                    } else {
-                                        messages.append((animatedText, false))
-                                    }
-                                } else {
-                                    timer.invalidate()
-                                }
-                            }
+                            isAnimatingText = true
+                            await animateText(fullText)
+                            isAnimatingText = false
                         }
                     }) {
                         HStack {
@@ -342,22 +329,54 @@ struct SIGAI: View {
                                         let displayText = String(text[text.index(after: openBracket)..<closeBracket])
                                         let url = String(text[text.index(after: openParen)..<closeParen])
 
-                                        Link(displayText, destination: URL(string: url)!)
-                                            .padding()
-                                            .background(
-                                                isUser
-                                                ? (isDarkMode ? Color(red: 200/255, green: 255/255, blue: 240/255) : Color(hex: "#E6F0FF"))
-                                                : (isDarkMode ? Color(red: 50/255, green: 50/255, blue: 100/255) : Color(hex: "#FFE6E6"))
-                                            )
-                                            .cornerRadius(14)
-                                            .foregroundColor(
-                                                isUser
-                                                ? Color.black
-                                                : (isDarkMode ? Color.white : Color.black)
-                                            )
-                                            .frame(maxWidth: .infinity, alignment: isUser ? .trailing : .leading)
-                                            .scaleEffect(isUser ? 1.05 : 1.02)
-                                            .animation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0.5), value: messages.count)
+                                        if url == "purchase" {
+                                            Text(displayText)
+                                                .padding()
+                                                .background(
+                                                    LinearGradient(
+                                                        gradient: Gradient(colors: isDarkMode ? [
+                                                            Color.purple.opacity(0.8),
+                                                            Color.blue.opacity(0.8)
+                                                        ] : [
+                                                            Color(hex: "#FFDEE9"),
+                                                            Color(hex: "#B5FFFC")
+                                                        ]),
+                                                        startPoint: .topLeading,
+                                                        endPoint: .bottomTrailing
+                                                    )
+                                                )
+                                                .cornerRadius(14)
+                                                .foregroundColor(
+                                                    isUser
+                                                    ? Color.black
+                                                    : (isDarkMode ? Color.white : Color.black)
+                                                )
+                                                .frame(maxWidth: .infinity, alignment: isUser ? .trailing : .leading)
+                                                .scaleEffect(isUser ? 1.05 : 1.02)
+                                                .animation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0.5), value: messages.count)
+                                                .onTapGesture {
+                                                    withAnimation {
+                                                        showPurchaseOptions.toggle()
+                                                    }
+                                                }
+                                        } else if let realURL = URL(string: url) {
+                                            Link(displayText, destination: realURL)
+                                                .padding()
+                                                .background(
+                                                    isUser
+                                                    ? (isDarkMode ? Color(red: 200/255, green: 255/255, blue: 240/255) : Color(hex: "#E6F0FF"))
+                                                    : (isDarkMode ? Color(red: 50/255, green: 50/255, blue: 100/255) : Color(hex: "#FFE6E6"))
+                                                )
+                                                .cornerRadius(14)
+                                                .foregroundColor(
+                                                    isUser
+                                                    ? Color.black
+                                                    : (isDarkMode ? Color.white : Color.black)
+                                                )
+                                                .frame(maxWidth: .infinity, alignment: isUser ? .trailing : .leading)
+                                                .scaleEffect(isUser ? 1.05 : 1.02)
+                                                .animation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0.5), value: messages.count)
+                                        }
                                     }
                                 }
                                 // Detect plain URLs and make them clickable (improved splitting version)
@@ -479,10 +498,13 @@ struct SIGAI: View {
                     .frame(minHeight: 44, maxHeight: 48)
 
                 Button(action: {
-                    if isLoading {
-                        // User wants to stop AI response
+                    if isLoading || isAnimatingText {
                         isLoading = false
-                    } else {
+                        typingTask?.cancel()
+                        networkTask?.cancel()
+                        networkTask = nil
+                        isAnimatingText = false
+                    } else if !isAnimatingText {
                         sendMessage()
                     }
                 }) {
@@ -493,7 +515,8 @@ struct SIGAI: View {
                         .cornerRadius(10)
                         .shadow(color: .gray.opacity(0.2), radius: 4, x: 0, y: 2)
                 }
-                .disabled(isLoading && messages.last?.1 == true) // Allow stop button, but block sending new
+                .disabled(isAnimatingText && !isLoading)
+                .opacity((isAnimatingText && !isLoading) ? 0.6 : 1.0)
             }
             .frame(minHeight: 56)
             .padding(.horizontal)
@@ -521,24 +544,16 @@ struct SIGAI: View {
     func sendMessage() {
         guard !userInput.isEmpty else { return }
 
+        typingTask?.cancel()
+
         if userInput.lowercased().trimmingCharacters(in: .whitespacesAndNewlines) == "ainal reset" {
             aiQuestionCount = 0
             isPremiumUser = false
             let fullText = "✅ free 10 questions"
-            messages.append((fullText, false))
-            var animatedText = ""
-            Timer.scheduledTimer(withTimeInterval: 0.02, repeats: true) { timer in
-                if animatedText.count < fullText.count {
-                    let index = fullText.index(fullText.startIndex, offsetBy: animatedText.count)
-                    animatedText.append(fullText[index])
-                    if let lastIdx = messages.indices.last, messages[lastIdx].1 == false {
-                        messages[lastIdx].0 = animatedText
-                    } else {
-                        messages.append((animatedText, false))
-                    }
-                } else {
-                    timer.invalidate()
-                }
+            typingTask = Task {
+                isAnimatingText = true
+                await animateText(fullText, appendToLastMessage: false)
+                isAnimatingText = false
             }
             userInput = ""
             return
@@ -547,20 +562,10 @@ struct SIGAI: View {
             aiQuestionCount = 0
             isPremiumUser = true
             let fullText = "✅ premium user"
-            messages.append((fullText, false))
-            var animatedText = ""
-            Timer.scheduledTimer(withTimeInterval: 0.02, repeats: true) { timer in
-                if animatedText.count < fullText.count {
-                    let index = fullText.index(fullText.startIndex, offsetBy: animatedText.count)
-                    animatedText.append(fullText[index])
-                    if let lastIdx = messages.indices.last, messages[lastIdx].1 == false {
-                        messages[lastIdx].0 = animatedText
-                    } else {
-                        messages.append((animatedText, false))
-                    }
-                } else {
-                    timer.invalidate()
-                }
+            typingTask = Task {
+                isAnimatingText = true
+                await animateText(fullText, appendToLastMessage: false)
+                isAnimatingText = false
             }
             userInput = ""
             return
@@ -575,20 +580,13 @@ struct SIGAI: View {
 
         if !isPremiumUser {
             guard aiQuestionCount < 10 else {
-                let fullText = "❗ You’ve reached your 10 free questions today. Upgrade to continue."
-                var animatedText = ""
-                Timer.scheduledTimer(withTimeInterval: 0.02, repeats: true) { timer in
-                    if animatedText.count < fullText.count {
-                        let index = fullText.index(fullText.startIndex, offsetBy: animatedText.count)
-                        animatedText.append(fullText[index])
-                        if let lastIdx = messages.indices.last, messages[lastIdx].1 == false {
-                            messages[lastIdx].0 = animatedText
-                        } else {
-                            messages.append((animatedText, false))
-                        }
-                    } else {
-                        timer.invalidate()
-                    }
+                let fullText = "❗ You’ve reached your 10 free questions today."
+                typingTask = Task {
+                    isAnimatingText = true
+                    messages.append(("", false))
+                    await animateText(fullText)
+                    messages.append(("[Upgrade premium](purchase)", false))
+                    isAnimatingText = false
                 }
                 userInput = ""
                 return
@@ -600,31 +598,43 @@ struct SIGAI: View {
         messages.append((userInput, true))
         isLoading = true // Show loading indicator
 
-
         // Fetch AI Response
         fetchAIResponse(for: userInput) { response in
             DispatchQueue.main.async {
-                var animatedResponse = ""
-                isLoading = false // Hide loading indicator after starting typing
-
-                Timer.scheduledTimer(withTimeInterval: 0.02, repeats: true) { timer in
-                    if animatedResponse.count < response.count {
-                        let index = response.index(response.startIndex, offsetBy: animatedResponse.count)
-                        animatedResponse.append(response[index])
-                        if messages.indices.contains(messages.count - 1), messages[messages.count - 1].1 == false {
-                            messages[messages.count - 1].0 = animatedResponse
-                        } else {
-                            messages.append((animatedResponse, false))
-                        }
-                    } else {
-                        timer.invalidate()
-                    }
+                self.typingTask?.cancel()
+                self.typingTask = Task {
+                    if Task.isCancelled { return } // ✨ Check kalau cancelled sebelum apa-apa
+                    self.isLoading = false
+                    self.isAnimatingText = true
+                    await self.animateText(response, appendToLastMessage: false)
+                    if Task.isCancelled { return } // ✨ Lagi sekali check masa tengah animate
+                    self.isAnimatingText = false
                 }
             }
         }
 
         // Clear input field
         userInput = ""
+    }
+
+    func animateText(_ fullText: String, appendToLastMessage: Bool = true) async {
+        var animatedText = ""
+        
+        if !appendToLastMessage {
+            await MainActor.run {
+                messages.append(("", false))
+            }
+        }
+        
+        for char in fullText {
+            animatedText.append(char)
+            await MainActor.run {
+                if let lastIdx = messages.indices.last, messages[lastIdx].1 == false {
+                    messages[lastIdx].0 = animatedText
+                }
+            }
+            try? await Task.sleep(nanoseconds: 20_000_000)
+        }
     }
 
     // Function to Call Google Free API (Optimized Version)
@@ -667,7 +677,10 @@ struct SIGAI: View {
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
 
         let session = URLSession(configuration: .default)
-        let task = session.dataTask(with: request) { data, response, error in
+        networkTask = session.dataTask(with: request) { data, response, error in
+            if let error = error as NSError?, error.code == NSURLErrorCancelled {
+                return // Exit early if network task was cancelled
+            }
             if let error = error {
                 completion("Network Error: \(error.localizedDescription)")
                 return
@@ -703,7 +716,7 @@ struct SIGAI: View {
             }
         }
 
-        task.resume()
+        networkTask?.resume()
     }
 }
 

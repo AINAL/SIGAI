@@ -37,13 +37,22 @@ func sigaiProgressBar(appLanguage: String) -> some View {
             ZStack(alignment: .leading) {
                 Rectangle()
                     .frame(height: 18)
-                    .foregroundColor(isDarkMode ? Color.black : Color(red: 220/255, green: 245/255, blue: 255/255))
+                    .foregroundColor(isDarkMode ? Color.black : Color(red: 235/255, green: 250/255, blue: 255/255))
                     .cornerRadius(5)
 
-                Rectangle()
-                    .frame(width: geo.size.width * CGFloat(progress), height: 20)
-                    .foregroundColor(isDarkMode ? Color.yellow : .blue)
-                    .cornerRadius(5)
+                LinearGradient(
+                    gradient: Gradient(colors: isDarkMode ? [
+                        Color.black,
+                        Color.yellow
+                    ] : [
+                        Color(red: 220/255, green: 245/255, blue: 255/255), // soft blue
+                        Color(red: 255/255, green: 220/255, blue: 235/255)  // soft pink
+                    ]),
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+                .frame(width: geo.size.width * CGFloat(progress), height: 20)
+                .cornerRadius(5)
             
                 HStack {
                     Text("\(Int(progress * 100))%")
