@@ -101,6 +101,7 @@ struct SIGAI: View {
     @AppStorage("isDarkMode") var isDarkMode: Bool = false
     @StateObject private var iapManager = IAPManager()
     @AppStorage("isPremiumUser") private var isPremiumUser: Bool = false
+    @AppStorage("adUnlockCount") private var adUnlockCount: Int = 0
     @State private var userInput: String = ""
     @State private var messages: [(String, Bool)] = [] // (Message, isUser)
     @State private var isLoading: Bool = false // Show loading while AI is responding
@@ -118,6 +119,7 @@ struct SIGAI: View {
     @State private var isAnimatingText = false
     @State private var typingTask: Task<Void, Never>? = nil
     @State private var networkTask: URLSessionDataTask? = nil
+    @StateObject var rewardedAdManager = RewardedAdManager()
 
     var body: some View {
         VStack {
@@ -140,11 +142,11 @@ struct SIGAI: View {
                 Text(
                     isPremiumUser
                         ? "Unlimited questions (Premium)"
-                        : "\(10 - aiQuestionCount) free questions left today"
+                        : "\(max(0, (5 + (adUnlockCount * 2)) - aiQuestionCount)) free questions left today"
                 )
-                    .font(.caption2.weight(.medium))
-                    .foregroundColor(Color(hex: "#FFB6C1"))
-                    .padding(.bottom, 12)
+                .font(.caption2.weight(.medium))
+                .foregroundColor(Color(hex: "#FFB6C1"))
+                .padding(.bottom, 12)
             }
             .frame(maxWidth: .infinity)
             .padding(.horizontal, 18)
@@ -359,6 +361,30 @@ struct SIGAI: View {
                                                         showPurchaseOptions.toggle()
                                                     }
                                                 }
+                                        } else if url == "watchad" {
+                                            Text(displayText)
+                                                .padding()
+                                                .background(
+                                                    LinearGradient(
+                                                        gradient: Gradient(colors: isDarkMode ? [
+                                                            Color.purple.opacity(0.8),
+                                                            Color.blue.opacity(0.8)
+                                                        ] : [
+                                                            Color(hex: "#FFDEE9"),
+                                                            Color(hex: "#B5FFFC")
+                                                        ]),
+                                                        startPoint: .topLeading,
+                                                        endPoint: .bottomTrailing
+                                                    )
+                                                )
+                                                .cornerRadius(14)
+                                                .foregroundColor(isDarkMode ? Color.white : Color.black)
+                                                .frame(maxWidth: .infinity, alignment: isUser ? .trailing : .leading)
+                                                .scaleEffect(isUser ? 1.05 : 1.02)
+                                                .animation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0.5), value: messages.count)
+                                                .onTapGesture {
+                                                    watchAdAndUnlock()
+                                                }
                                         } else if let realURL = URL(string: url) {
                                             Link(displayText, destination: realURL)
                                                 .padding()
@@ -538,8 +564,28 @@ struct SIGAI: View {
                 endPoint: .bottom
             )
         )
+        .onChange(of: rewardedAdManager.adDidReward) { reward in
+            if reward {
+                adUnlockCount += 1
+                rewardedAdManager.adDidReward = false
+            }
+        }
     }
 
+    func watchAdAndUnlock() {
+        rewardedAdManager.loadAd(adUnitID: "ca-app-pub-5767874163080300/4775134744")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            let rootVC = UIApplication.shared.connectedScenes
+                .compactMap { $0 as? UIWindowScene }
+                .first?.windows.first?.rootViewController
+            if let rootVC = rootVC {
+                rewardedAdManager.showAd(from: rootVC)
+            } else {
+                print("❌ No rootViewController available to show rewarded ad.")
+            }
+        }
+    }
+    
     // AI Logic for Generating SIGAI Responses using Google Free API
     func sendMessage() {
         guard !userInput.isEmpty else { return }
@@ -549,7 +595,7 @@ struct SIGAI: View {
         if userInput.lowercased().trimmingCharacters(in: .whitespacesAndNewlines) == "ainal reset" {
             aiQuestionCount = 0
             isPremiumUser = false
-            let fullText = "✅ free 10 questions"
+            let fullText = "✅ free 5 questions"
             typingTask = Task {
                 isAnimatingText = true
                 await animateText(fullText, appendToLastMessage: false)
@@ -579,12 +625,20 @@ struct SIGAI: View {
         }
 
         if !isPremiumUser {
-            guard aiQuestionCount < 10 else {
-                let fullText = "❗ You’ve reached your 10 free questions today."
+            let totalAllowed = 5 + (adUnlockCount * 2)
+            if aiQuestionCount >= totalAllowed {
+                // Detect [Watch ad...] tap or watchad trigger
+                if userInput.lowercased().contains("watchad") {
+                    watchAdAndUnlock()
+                    userInput = ""
+                    return
+                }
+                let fullText = "❗ You've used all your free and ad-unlocked questions for today."
                 typingTask = Task {
                     isAnimatingText = true
                     messages.append(("", false))
                     await animateText(fullText)
+                    messages.append(("[Watch ad to unlock 2 more questions](watchad)", false))
                     messages.append(("[Upgrade premium](purchase)", false))
                     isAnimatingText = false
                 }

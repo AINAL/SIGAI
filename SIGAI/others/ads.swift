@@ -8,20 +8,53 @@
 import SwiftUI
 import GoogleMobileAds
 
-//extension ContentView {
-    struct BannerAdView: UIViewRepresentable {
-        let adUnitID: String
 
-        func makeUIView(context: Context) -> BannerView {
-            let banner = BannerView(adSize: AdSizeBanner)
-            banner.adUnitID = adUnitID
-            banner.rootViewController = UIApplication.shared.connectedScenes
-                .compactMap { ($0 as? UIWindowScene)?.keyWindow?.rootViewController }
-                .first
-            banner.load(Request())
-            return banner
-        }
-
-        func updateUIView(_ uiView: BannerView, context: Context) {}
+struct BannerAdView: UIViewRepresentable {
+    let adUnitID: String
+    
+    func makeUIView(context: Context) -> BannerView {
+        let banner = BannerView(adSize: AdSizeBanner)
+        banner.adUnitID = adUnitID
+        banner.rootViewController = UIApplication.shared.connectedScenes
+            .compactMap { ($0 as? UIWindowScene)?.keyWindow?.rootViewController }
+            .first
+        banner.load(Request())
+        return banner
     }
-//}
+    
+    func updateUIView(_ uiView: BannerView, context: Context) {}
+}
+
+class RewardedAdManager: NSObject, FullScreenContentDelegate, ObservableObject {
+    @Published var adDidReward: Bool = false
+    private var rewardedAd: RewardedAd?
+
+    func loadAd(adUnitID: String) {
+        let request = Request()
+        RewardedAd.load(with: adUnitID, request: request) { ad, error in
+            if let error = error {
+                print("Failed to load rewarded ad: \(error.localizedDescription)")
+                return
+            }
+            self.rewardedAd = ad
+            self.rewardedAd?.fullScreenContentDelegate = self
+        }
+    }
+
+    func showAd(from rootViewController: UIViewController) {
+        guard let ad = rewardedAd else {
+            print("Ad not ready")
+            return
+        }
+        ad.present(from: rootViewController) {
+            let reward = ad.adReward
+            print("User earned reward: \(reward.amount)")
+            self.adDidReward = true
+        }
+    }
+
+    func adDidDismissFullScreenContent(_ ad: FullScreenPresentingAd) {
+        print("Rewarded ad dismissed")
+        self.rewardedAd = nil
+    }
+}
