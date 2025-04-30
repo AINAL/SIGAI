@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sigai_flutter/mainfunc/calculate.dart';
 
 class DarabPage extends StatefulWidget {
-  const DarabPage({super.key});
+  final String appLanguage;
+  const DarabPage({super.key, required this.appLanguage});
 
   @override
   State<DarabPage> createState() => _DarabPageState();
@@ -10,10 +11,16 @@ class DarabPage extends StatefulWidget {
 
 class _DarabPageState extends State<DarabPage> {
   bool isDarkMode = false;
-  String appLanguage = 'ms';
+  late String appLanguage;
   Color selectedColor = Colors.grey;
   List<List<Offset?>> strokes = [];
   List<Color> strokeColors = [];
+
+  @override
+  void initState() {
+    super.initState();
+    appLanguage = widget.appLanguage;
+  }
 
   @override
   Widget build(BuildContext context) {

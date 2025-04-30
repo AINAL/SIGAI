@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AiPage extends StatefulWidget {
-  const AiPage({super.key});
+  final String appLanguage;
+  const AiPage({super.key, required this.appLanguage});
 
   @override
   State<AiPage> createState() => _AiPageState();
@@ -12,6 +13,13 @@ class _AiPageState extends State<AiPage> {
   bool isPremiumUser = false;
   int aiQuestionCount = 0;
   bool showPurchaseOptions = false;
+  late String appLanguage;
+
+  @override
+  void initState() {
+    super.initState();
+    appLanguage = widget.appLanguage;
+  }
 
   @override
   Widget build(BuildContext context) {

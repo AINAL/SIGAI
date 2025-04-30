@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final String appLanguage;
+  const HomeScreen({super.key, required this.appLanguage});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -10,8 +11,14 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   bool isPremiumUser = false;
   bool isDarkMode = false;
-  String appLanguage = 'ms';
+  late String appLanguage;
   bool showSetting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    appLanguage = widget.appLanguage;
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -216,6 +216,7 @@ class _ContentViewState extends State<ContentView> with TickerProviderStateMixin
                 currentIndex: selectedTab,
                 onTap: (index) {
                   setState(() {
+                    selectedTab = index == selectedTab ? -1 : index;
                     selectedTab = index;
                   });
                 },
@@ -251,15 +252,15 @@ class _ContentViewState extends State<ContentView> with TickerProviderStateMixin
   Widget _getCurrentTab() {
     switch (selectedTab) {
       case 0:
-        return const HomeScreen();
+        return HomeScreen(key: ValueKey('home-$appLanguage'), appLanguage: appLanguage);
       case 1:
-        return const DarabPage();
+        return DarabPage(key: ValueKey('darab-$appLanguage'), appLanguage: appLanguage);
       case 2:
-        return const ModePage();
+        return ModePage(key: ValueKey('mode-$appLanguage'), appLanguage: appLanguage);
       case 3:
-        return const BahagiPage();
+        return BahagiPage(key: ValueKey('bahagi-$appLanguage'), appLanguage: appLanguage);
       case 4:
-        return const AiPage();
+        return AiPage(key: ValueKey('ai-$appLanguage'), appLanguage: appLanguage);
       default:
         return const SizedBox.shrink();
     }

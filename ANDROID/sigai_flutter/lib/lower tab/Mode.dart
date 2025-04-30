@@ -9,7 +9,8 @@
 import 'package:flutter/material.dart';
 
 class ModePage extends StatefulWidget {
-  const ModePage({super.key});
+  final String appLanguage;
+  const ModePage({super.key, required this.appLanguage});
 
   @override
   State<ModePage> createState() => _ModePageState();
@@ -17,7 +18,7 @@ class ModePage extends StatefulWidget {
 
 class _ModePageState extends State<ModePage> {
   bool isDarkMode = false;
-  String appLanguage = 'ms';
+  late String appLanguage;
   String mode = 'multiplication';
   Color selectedColor = Colors.grey;
   bool isLocked = false;
@@ -43,6 +44,7 @@ class _ModePageState extends State<ModePage> {
   @override
   void initState() {
     super.initState();
+    appLanguage = widget.appLanguage;
     currentTip = appLanguage == 'ms' ? tipsMs[0] : tipsEn[0];
   }
 

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sigai_flutter/mainfunc/calculate.dart';
 
 class BahagiPage extends StatefulWidget {
-  const BahagiPage({super.key});
+  final String appLanguage;
+  const BahagiPage({super.key, required this.appLanguage});
 
   @override
   State<BahagiPage> createState() => _BahagiPageState();
@@ -10,12 +11,18 @@ class BahagiPage extends StatefulWidget {
 
 class _BahagiPageState extends State<BahagiPage> {
   bool isDarkMode = false;
-  String appLanguage = 'ms';
+  late String appLanguage;
   Color selectedColor = Colors.grey;
   int detectedVerticalLines = 0;
   List<List<Offset?>> strokes = [];
   List<Color> strokeColors = [];
   bool isLocked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    appLanguage = widget.appLanguage;
+  }
 
   int getDetectedVerticalLines(List<List<Offset?>> paths) {
     int count = 0;
