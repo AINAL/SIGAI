@@ -759,7 +759,11 @@ struct SIGAI: View {
             }
 
             do {
-                if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+                if let dataString = String(data: data, encoding: .utf8) {
+                    print("🔍 Raw JSON: \(dataString)")
+                }
+                let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+                if let json = json,
                    let candidates = json["candidates"] as? [[String: Any]],
                    let output = candidates.first?["content"] as? [String: Any],
                    let parts = output["parts"] as? [[String: Any]],
@@ -775,6 +779,14 @@ struct SIGAI: View {
 
                     completion(filteredText)
                     
+                } else if let json = json,
+                          let error = json["error"] as? [String: Any],
+                          let message = error["message"] as? String,
+                          message.localizedCaseInsensitiveContains("overloaded") {
+                    if !isPremiumUser {
+                        aiQuestionCount = max(0, aiQuestionCount - 1)
+                    }
+                    completion("🤖 AI terlalu sibuk sekarang. Sila cuba semula nanti.")
                 } else {
                     completion("Error: Unable to parse AI response.")
                 }
