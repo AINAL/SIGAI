@@ -23,21 +23,38 @@ int countIntersections(List<List<Offset?>> paths, List<Color> colors) {
 double countDivisions(List<List<Offset?>> paths, List<Color> colors, {int? lockedVerticalLines}) {
   final int pathCount = paths.length;
 
-  final int totalVerticalLines = lockedVerticalLines ??
-      paths.where((path) {
+  final verticalPathIndices = List.generate(pathCount, (i) => i)
+      .where((i) {
+        final path = paths[i];
         final first = path.firstWhere((p) => p != null, orElse: () => null);
         final last = path.lastWhere((p) => p != null, orElse: () => null);
-        return first != null && last != null && (first.dx - last.dx).abs() < 30.0;
-      }).length;
+        return first != null &&
+            last != null &&
+            (first.dx - last.dx).abs() < 30.0 &&
+            colors[i] != Colors.grey;
+      })
+      .toList();
+
+  final int totalVerticalLines = lockedVerticalLines ?? verticalPathIndices.length;
+  if (totalVerticalLines == 0) return 0;
 
   double divisionSum = 0.0;
-  for (int i = 0; i < totalVerticalLines; i++) {
-    for (int j = 0; j < pathCount; j++) {
-      if (i < colors.length && j < colors.length && pathsIntersect(paths[i], paths[j])) {
-        if (colors[i] == Colors.grey || colors[j] == Colors.grey) continue;
 
-        final factor = getColorMultiplier(colors[i], colors[j]);
-        divisionSum += factor / totalVerticalLines;
+  for (final vi in verticalPathIndices) {
+    for (int j = 0; j < pathCount; j++) {
+      if (j < colors.length &&
+        vi < colors.length &&
+        vi != j &&
+        pathsIntersect(paths[vi], paths[j])) {
+        final cVert = colors[vi];
+        final cHorz = colors[j];
+        if (cVert == Colors.grey || cHorz == Colors.grey) continue;
+
+        final vertFactor = getColorMultiplierBahagi(cVert, cVert);
+        final horzFactor = getColorMultiplierBahagi(cHorz, cHorz);
+        
+        if (vertFactor == 0 || horzFactor == 0) continue;
+        divisionSum += (horzFactor / vertFactor) / totalVerticalLines;
       }
     }
   }
@@ -45,19 +62,28 @@ double countDivisions(List<List<Offset?>> paths, List<Color> colors, {int? locke
   return divisionSum;
 }
 
+
+double getColorMultiplierBahagi(Color color1, Color color2) {
+  final colorValues = {
+    Colors.red: 100,
+    Colors.blue: 10,
+    Colors.green: 1,
+    Colors.yellow: 0.1,
+    Colors.purple: 0.01,
+  };
+
+  return colorValues[color1]?.toDouble() ?? 1.0;
+}
+
 int getColorMultiplier(Color color1, Color color2) {
   final red = Colors.red;
   final blue = Colors.blue;
   final green = Colors.green;
-  final yellow = Colors.yellow;
-  final purple = Colors.purple;
 
   final colorMultipliers = {
-    red:    {red: 1.0, blue: 0.1, green: 0.01, yellow: 0.001, purple: 0.0001},
-    blue:   {red: 10, blue: 1.0, green: 0.1, yellow: 0.01, purple: 0.001},
-    green:  {red: 100, blue: 10, green: 1.0, yellow: 0.1, purple: 0.01},
-    yellow: {red: 1000, blue: 100, green: 10, yellow: 1.0, purple: 0.1},
-    purple: {red: 10000, blue: 1000, green: 100, yellow: 10, purple: 1.0},
+    green:  {red: 100, blue: 10, green: 1.0},
+    blue: {red: 1000, blue: 100, green: 10},
+    red: {red: 10000, blue: 1000, green: 100},
   };
 
   return colorMultipliers[color1]?[color2]?.round() ?? 1;
@@ -92,5 +118,7 @@ bool checkLineIntersection(Offset p1, Offset p2, Offset q1, Offset q2) {
   final cross3 = cross(v2, p1 - q1);
   final cross4 = cross(v2, p2 - q1);
 
-  return (cross1 * cross2 < 0) && (cross3 * cross4 < 0);
+  bool isZero(double x) => x.abs() < 1e-5;
+  return ((cross1 * cross2 <= 0) || isZero(cross1) || isZero(cross2)) &&
+       ((cross3 * cross4 <= 0) || isZero(cross3) || isZero(cross4));
 }

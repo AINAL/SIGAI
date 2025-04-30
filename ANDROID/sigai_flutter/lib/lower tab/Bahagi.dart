@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sigai_flutter/mainfunc/calculate.dart';
 
 class BahagiPage extends StatefulWidget {
   const BahagiPage({super.key});
@@ -12,12 +13,24 @@ class _BahagiPageState extends State<BahagiPage> {
   String appLanguage = 'ms';
   Color selectedColor = Colors.grey;
   int detectedVerticalLines = 0;
-  List<Widget> paths = [];
+  List<List<Offset?>> strokes = [];
+  List<Color> strokeColors = [];
   bool isLocked = false;
 
-  double countDivisions() {
-    return 3.14159; // Placeholder
+  int getDetectedVerticalLines(List<List<Offset?>> paths) {
+    int count = 0;
+    for (int i = 0; i < paths.length; i++) {
+      if (strokeColors[i] == Colors.grey) continue;
+      final path = paths[i];
+      final first = path.firstWhere((p) => p != null, orElse: () => null);
+      final last = path.lastWhere((p) => p != null, orElse: () => null);
+      if (first != null && last != null && (first.dx - last.dx).abs() < 30.0) {
+        count++;
+      }
+    }
+    return count;
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -76,8 +89,8 @@ class _BahagiPageState extends State<BahagiPage> {
           children: [
             Text(
               appLanguage == "ms"
-                  ? "Hasil Bahagi ($detectedVerticalLines garis):"
-                  : "Division Result ($detectedVerticalLines line/s):",
+                  ? "Hasil Bahagi (${getDetectedVerticalLines(strokes)} garis):"
+                  : "Division Result (${getDetectedVerticalLines(strokes)} line/s):",
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -96,7 +109,7 @@ class _BahagiPageState extends State<BahagiPage> {
               height: 40,
               alignment: Alignment.center,
               child: Text(
-                countDivisions().toStringAsFixed(6),
+                countDivisions(strokes, strokeColors).toStringAsFixed(6),
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
@@ -131,11 +144,12 @@ class _BahagiPageState extends State<BahagiPage> {
             icon: const Icon(Icons.undo, size: 32),
             color: Colors.grey,
             onPressed: () {
-              if (paths.isNotEmpty) {
-                setState(() {
-                  paths.removeLast();
-                });
-              }
+              setState(() {
+                if (strokes.isNotEmpty) {
+                  strokes.removeLast();
+                  strokeColors.removeLast();
+                }
+              });
             },
           ),
           PopupMenuButton<Color>(
@@ -171,7 +185,8 @@ class _BahagiPageState extends State<BahagiPage> {
             color: Colors.grey,
             onPressed: () {
               setState(() {
-                paths.clear();
+                strokes.clear();
+                strokeColors.clear();
                 isLocked = false;
               });
             },
@@ -195,14 +210,63 @@ class _BahagiPageState extends State<BahagiPage> {
   }
 
   Widget _buildCanvasPlaceholder() {
-    return Container(
-      margin: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black26),
-        borderRadius: BorderRadius.circular(12),
-        color: Colors.white.withOpacity(0.4),
+    return GestureDetector(
+      onPanUpdate: (details) {
+        setState(() {
+          if (strokes.isEmpty || strokes.last.contains(null)) {
+            strokes.add([details.localPosition]);
+            strokeColors.add(selectedColor);
+          } else {
+            strokes.last.add(details.localPosition);
+          }
+        });
+      },
+      onPanEnd: (details) {
+        setState(() {
+          if (strokes.isNotEmpty) {
+            strokes.last.add(null);
+          }
+        });
+      },
+      child: Container(
+        margin: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black26),
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.white.withOpacity(0.4),
+        ),
+        child: CustomPaint(
+          painter: _BahagiDrawingPainter(strokes, strokeColors),
+          size: Size.infinite,
+        ),
       ),
-      child: const Center(child: Text("Canvas Placeholder")),
     );
   }
+}
+
+class _BahagiDrawingPainter extends CustomPainter {
+  final List<List<Offset?>> strokes;
+  final List<Color> strokeColors;
+
+  _BahagiDrawingPainter(this.strokes, this.strokeColors);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    for (int s = 0; s < strokes.length; s++) {
+      final paint = Paint()
+        ..color = strokeColors[s]
+        ..strokeCap = StrokeCap.round
+        ..strokeWidth = 5.0;
+
+      final points = strokes[s];
+      for (int i = 0; i < points.length - 1; i++) {
+        if (points[i] != null && points[i + 1] != null) {
+          canvas.drawLine(points[i]!, points[i + 1]!, paint);
+        }
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
