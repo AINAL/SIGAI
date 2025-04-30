@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   GestureDetector(
                     onTap: () => setState(() => showSetting = !showSetting),
                     child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                      margin: const EdgeInsets.only(left: 20, right: 20, top: 0, bottom: 10),
                       padding: const EdgeInsets.symmetric(vertical: 30),
                       decoration: BoxDecoration(
                         gradient: headerGradient,
@@ -162,21 +162,34 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildSection({required String title, required String description}) {
+    final bool dark = isDarkMode || Theme.of(context).brightness == Brightness.dark;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.85),
+        color: dark ? Colors.white.withOpacity(0.05) : Colors.white.withOpacity(0.3),
         borderRadius: BorderRadius.circular(10),
         boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5)],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: dark ? Colors.white : Colors.black,
+            ),
+          ),
           const SizedBox(height: 8),
-          Text(description, style: const TextStyle(fontSize: 15)),
+          Text(
+            description,
+            style: TextStyle(
+              fontSize: 15,
+              color: dark ? Colors.white70 : Colors.black,
+            ),
+          ),
         ],
       ),
     );
