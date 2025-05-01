@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'package:sigai_flutter/Home/sejarah.dart';
+import 'package:sigai_flutter/Home/setting.dart';
+import 'package:sigai_flutter/Home/sigai.dart' show openPDFfromAssets;
+import 'package:sigai_flutter/Home/tutorial.dart';
+import 'package:flutter/services.dart';
+
 class HomeScreen extends StatefulWidget {
   final String appLanguage;
   const HomeScreen({super.key, required this.appLanguage});
@@ -19,6 +25,8 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     appLanguage = widget.appLanguage;
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -155,7 +163,17 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 6),
       child: ElevatedButton.icon(
-        onPressed: () {},
+        onPressed: () {
+          if (label.contains('Tutorial')) {
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const TutorialView()));
+          } else if (label.contains('Sejarah') || label.contains('History')) {
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const HistoryView()));
+          } else if (label.contains('SIGAI')) {
+            openPDFfromAssets(context);
+          } else {
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsView()));
+          }
+        },
         icon: Icon(icon),
         label: Text(label),
         style: ElevatedButton.styleFrom(
