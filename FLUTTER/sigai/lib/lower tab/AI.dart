@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:sigai_flutter/AI/getAIresponse.dart' show RemoteConfigAPIKey;
+import 'package:sigai_flutter/AI/training.dart';
 import 'package:http/http.dart' as http;
 
 class AiPage extends StatefulWidget {
@@ -228,7 +229,7 @@ Future<String> getAIResponse(String prompt) async {
       'contents': [
         {
           'parts': [
-            {'text': prompt}
+            {'text': "$systemMessageAll\n\n$prompt"}
           ]
         }
       ]

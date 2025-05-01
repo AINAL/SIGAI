@@ -96,3 +96,5 @@ flutter:
   assets:
     - assets/sigai_light.png
     - assets/sigai_dark.png
+    - assets/splashview_lightmode.png
+    - assets/splashview_darkmode.png

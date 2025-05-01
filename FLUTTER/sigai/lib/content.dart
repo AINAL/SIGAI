@@ -71,14 +71,6 @@ class _ContentViewState extends State<ContentView> with TickerProviderStateMixin
       home: Scaffold(
         body: Stack(
           children: [
-            if (showSplash)
-              const Center(
-                child: Text(
-                  "SIGAI",
-                  style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
-                ),
-              )
-            else
               Column(
                 children: [
                   Stack(
