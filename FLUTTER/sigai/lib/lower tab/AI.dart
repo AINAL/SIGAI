@@ -212,27 +212,34 @@ class _AiPageState extends State<AiPage> {
 }
 
 Future<String> getAIResponse(String prompt) async {
-  // Dummy API call simulation — replace this with real HTTP request to your AI backend
-  await Future.delayed(const Duration(seconds: 1));
   final apiKey = await RemoteConfigAPIKey.getAPIKey();
   if (apiKey == null) return 'API Key not found. Please set it in settings.';
 
-  final url = Uri.parse('https://your-api-endpoint.com/chat'); // Ganti dengan endpoint sebenar
+  final url = Uri.parse(
+    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=$apiKey',
+  );
+
   final response = await http.post(
     url,
     headers: {
-      'Authorization': 'Bearer $apiKey',
       'Content-Type': 'application/json',
     },
     body: jsonEncode({
-      'prompt': prompt,
+      'contents': [
+        {
+          'parts': [
+            {'text': prompt}
+          ]
+        }
+      ]
     }),
   );
 
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);
-    return data['response'] ?? 'No response from AI.';
+    final text = data['candidates']?[0]?['content']?['parts']?[0]?['text'];
+    return text ?? 'Empty response from Gemini.';
   } else {
-    return 'Error: ${response.statusCode} ${response.reasonPhrase}';
+    return 'Error ${response.statusCode}: ${response.reasonPhrase}';
   }
 }
