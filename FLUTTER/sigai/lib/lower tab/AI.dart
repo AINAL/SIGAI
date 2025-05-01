@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:sigai_flutter/AI/getAIresponse.dart' show RemoteConfigAPIKey;
+import 'package:sigai_flutter/AI/ads_reward.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sigai_flutter/AI/training.dart';
 import 'package:http/http.dart' as http;
@@ -300,10 +301,18 @@ class _AiPageState extends State<AiPage> {
                                         style: const TextStyle(decoration: TextDecoration.underline, fontWeight: FontWeight.bold, color: Colors.blue),
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () {
-                                            // Handle watch ad action
-                                            ScaffoldMessenger.of(context).showSnackBar(
-                                              const SnackBar(content: Text('Tonton Iklan clicked')),
-                                            );
+                                            // Call rewarded ad
+                                            final adManager = RewardedAdManager();
+                                            adManager.loadAd(() {
+                                              adManager.showAd(() {
+                                                setState(() {
+                                                  aiQuestionCount = aiQuestionCount > 0 ? aiQuestionCount - 1 : 0;
+                                                });
+                                                SharedPreferences.getInstance().then((prefs) {
+                                                  prefs.setInt('aiQuestionCount', aiQuestionCount);
+                                                });
+                                              });
+                                            });
                                           },
                                       ),
                                       TextSpan(
