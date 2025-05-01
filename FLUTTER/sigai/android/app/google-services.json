@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "341686309422",
+    "firebase_url": "https://sigai-backend-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "sigai-backend",
+    "storage_bucket": "sigai-backend.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:341686309422:android:403704e30d006dd53d05bf",
+        "android_client_info": {
+          "package_name": "com.ainal.sigai"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnZ-yoAtjXKFSPLLDTL7mvwVCnp7UjnnI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
