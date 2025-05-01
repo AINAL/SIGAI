@@ -1,2 +1,0 @@
-/Users/ainalsyazwanitamta/Desktop/SIGAI/ANDROID/sigai_flutter/android/app/.cxx/Debug/2j3k2h3b/armeabi-v7a/CMakeFiles/edit_cache.dir
-/Users/ainalsyazwanitamta/Desktop/SIGAI/ANDROID/sigai_flutter/android/app/.cxx/Debug/2j3k2h3b/armeabi-v7a/CMakeFiles/rebuild_cache.dir

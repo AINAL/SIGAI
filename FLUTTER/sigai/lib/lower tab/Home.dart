@@ -4,7 +4,7 @@ import 'package:sigai_flutter/Home/sejarah.dart';
 import 'package:sigai_flutter/Home/setting.dart';
 import 'package:sigai_flutter/Home/sigai.dart' show openPDFfromAssets;
 import 'package:sigai_flutter/Home/tutorial.dart';
-import 'package:flutter/services.dart';
+import 'package:sigai_flutter/Home/ads_banner.dart';
 
 class HomeScreen extends StatefulWidget {
   final String appLanguage;
@@ -130,12 +130,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         : 'SIGAI has helped many students succeed in mathematics. Discover their stories by exploring the learning history.',
                   ),
                   if (!isPremiumUser)
-                    Container(
-                      height: 50,
-                      margin: const EdgeInsets.only(top: 20),
-                      color: Colors.grey[300],
-                      alignment: Alignment.center,
-                      child: const Text('Banner Ad Placeholder'),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 23),
+                      child: AdsBanner(),
                     ),
                 ],
               ),

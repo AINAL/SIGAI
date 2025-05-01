@@ -9,6 +9,8 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
 class AnimatedDots extends StatefulWidget {
+  const AnimatedDots({super.key});
+
   @override
   _AnimatedDotsState createState() => _AnimatedDotsState();
 }

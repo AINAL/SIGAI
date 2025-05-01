@@ -7,8 +7,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter_beep/flutter_beep.dart';
-import 'package:vibration/vibration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sigai_flutter/mainfunc/calculate.dart' show countDivisions, countIntersections;
 import 'package:sigai_flutter/mainfunc/progressBar.dart' show QuestionProgressBar;
@@ -431,7 +429,6 @@ class _ModePageState extends State<ModePage> with WidgetsBindingObserver {
 
     if (isCorrect) {
       correctAnswers++;
-      FlutterBeep.beep();
       _saveProgress();
 
       final int maxQuestions = 5 + (level * 3);
@@ -477,7 +474,6 @@ class _ModePageState extends State<ModePage> with WidgetsBindingObserver {
         _saveProgress();
       });
     } else {
-      Vibration.vibrate(duration: 200);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(

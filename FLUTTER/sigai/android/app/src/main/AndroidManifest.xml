@@ -3,6 +3,10 @@
         android:label="sigai"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-5767874163080300~2638568759"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
