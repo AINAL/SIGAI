@@ -7,6 +7,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:sigai_flutter/mainfunc/calculate.dart';
+import 'package:sigai_flutter/mainfunc/progressBar.dart' show QuestionProgressBar;
+import 'package:sigai_flutter/mainfunc/questions.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class ModePage extends StatefulWidget {
@@ -17,7 +20,7 @@ class ModePage extends StatefulWidget {
   State<ModePage> createState() => _ModePageState();
 }
 
-class _ModePageState extends State<ModePage> {
+class _ModePageState extends State<ModePage> with WidgetsBindingObserver {
   bool isDarkMode = false;
   late String appLanguage;
   String mode = 'multiplication';
@@ -25,6 +28,11 @@ class _ModePageState extends State<ModePage> {
   bool isLocked = false;
   List<List<Offset?>> strokes = [];
   List<Color> strokeColors = [];
+  int questionDigits = 1;
+
+  int level = 1;
+
+  GeneratedQuestion? currentQuestion;
 
   String currentTip = "";
   int currentTipIndex = 0;
@@ -43,18 +51,52 @@ class _ModePageState extends State<ModePage> {
     "Press 'Next' to skip to the next question"
   ];
 
+  int correctAnswers = 0;
+  int totalQuestions = 0;
+
   @override
   void initState() {
     super.initState();
     appLanguage = widget.appLanguage;
+    _loadProgress();
     currentTip = appLanguage == 'ms' ? tipsMs[0] : tipsEn[0];
+    currentQuestion = generateQuestion(mode: mode, digits: questionDigits);
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  void _loadProgress() async {
+    final prefs = await SharedPreferences.getInstance();
+    final loadedLevel = prefs.getInt('mode_level') ?? 1;
+    final loadedCorrect = prefs.getInt('mode_correctAnswers') ?? 0;
+    final loadedTotal = prefs.getInt('mode_totalQuestions') ?? 0;
+    final loadedMode = prefs.getString('mode_type') ?? 'multiplication';
+    final loadedDigits = prefs.getInt('mode_digits') ?? 1;
+    final loadedLocked = prefs.getBool('mode_isLocked') ?? false;
+    setState(() {
+      level = loadedLevel;
+      correctAnswers = loadedCorrect;
+      totalQuestions = loadedTotal;
+      mode = loadedMode;
+      questionDigits = loadedDigits;
+      isLocked = loadedLocked;
+    });
+  }
+
+  void _saveProgress() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt('mode_level', level);
+    prefs.setInt('mode_correctAnswers', correctAnswers);
+    prefs.setInt('mode_totalQuestions', totalQuestions);
+    prefs.setString('mode_type', mode);
+    prefs.setInt('mode_digits', questionDigits);
+    prefs.setBool('mode_isLocked', isLocked);
   }
 
   @override
   Widget build(BuildContext context) {
     final bool dark = isDarkMode || Theme.of(context).brightness == Brightness.dark;
     final gradientColors = dark
-        ? [Colors.black, Colors.white, Colors.grey, Colors.white, Colors.grey[200]!]
+        ? [Colors.black,  const Color.fromARGB(255, 57, 56, 56), const Color.fromARGB(255, 130, 130, 130), Colors.white,]
         : [
             const Color(0xFFEBFAFF),
             Colors.white,
@@ -62,6 +104,10 @@ class _ModePageState extends State<ModePage> {
             Colors.white,
             const Color(0xFFFFDCE6),
           ];
+
+    final int maxQuestions = 5 + (level * 3);
+    final double progress = correctAnswers / maxQuestions;
+    //print("PROGRESS = $progress, correct = $correctAnswers, level = $level");
 
     return Scaffold(
       body: Container(
@@ -75,6 +121,15 @@ class _ModePageState extends State<ModePage> {
         child: SafeArea(
           child: Column(
             children: [
+            SizedBox(
+              width: double.infinity,
+              child: QuestionProgressBar(
+                correctAnswers: correctAnswers,
+                totalQuestions: totalQuestions,
+                level: level,
+                progress: progress,
+              ),
+            ),
               _buildResultDisplay(),
               const SizedBox(height: 16),
               _buildTopControls(),
@@ -128,19 +183,15 @@ class _ModePageState extends State<ModePage> {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.undo, size: 32, color: Colors.grey),
+            icon: const Icon(Icons.undo, size: 32),
+            color: Colors.grey,
             onPressed: () {
-              if (strokes.isNotEmpty) {
-                setState(() {
-                  if (strokes.last.isNotEmpty) {
-                    strokes.last.removeLast();
-                    if (strokes.last.isEmpty) {
-                      strokes.removeLast();
-                      strokeColors.removeLast();
-                    }
-                  }
-                });
-              }
+              setState(() {
+                if (strokes.isNotEmpty) {
+                  strokes.removeLast();
+                  strokeColors.removeLast();
+                }
+              });
             },
           ),
   
@@ -253,7 +304,7 @@ class _ModePageState extends State<ModePage> {
     final bool dark = isDarkMode || Theme.of(context).brightness == Brightness.dark;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
       child: SizedBox(
         width: double.infinity,
         child: Container(
@@ -271,6 +322,16 @@ class _ModePageState extends State<ModePage> {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
+              if (currentQuestion != null)
+                Text(
+                  currentQuestion!.questionText,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: dark ? Colors.white : Colors.black87,
+                  ),
+                ),
+              const SizedBox(height: 6),
               Text(
                 mode == 'division'
                     ? (appLanguage == "ms"
@@ -285,7 +346,7 @@ class _ModePageState extends State<ModePage> {
                   color: dark ? Colors.yellow.shade200 : Colors.blue.shade300,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
               Text(
                 mode == 'division'
                     ? result.toStringAsFixed(6)
@@ -296,7 +357,7 @@ class _ModePageState extends State<ModePage> {
                   color: dark ? Colors.yellow.shade200 : Colors.blue.shade300,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
               Text(
                 appLanguage == "ms" ? "Lukis jawapan." : "Draw your answer.",
                 style: TextStyle(
@@ -320,7 +381,7 @@ class _ModePageState extends State<ModePage> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           ElevatedButton.icon(
-            onPressed: () {},
+            onPressed: _submitAnswer,
             icon: const Icon(Icons.send),
             label: Text(appLanguage == 'ms' ? 'Hantar' : 'Submit'),
             style: ElevatedButton.styleFrom(
@@ -331,7 +392,15 @@ class _ModePageState extends State<ModePage> {
             ),
           ),
           ElevatedButton.icon(
-            onPressed: () {},
+            onPressed: () {
+              setState(() {
+                strokes.clear();
+                strokeColors.clear();
+                isLocked = false;
+                currentQuestion = generateQuestion(mode: mode, digits: questionDigits);
+              });
+              _saveProgress();
+            },
             icon: const Icon(Icons.navigate_next),
             label: Text(appLanguage == 'ms' ? 'Seterusnya' : 'Next'),
             style: ElevatedButton.styleFrom(
@@ -344,6 +413,94 @@ class _ModePageState extends State<ModePage> {
         ],
       ),
     );
+  }
+
+  void _submitAnswer() {
+    final double result = mode == 'division'
+        ? countDivisions(strokes, strokeColors)
+        : countIntersections(strokes, strokeColors).toDouble();
+
+    final double expected = currentQuestion?.expectedAnswer ?? -1;
+    final bool isCorrect = (result - expected).abs() < 0.001;
+    totalQuestions++;
+    _saveProgress();
+
+    if (isCorrect) {
+      correctAnswers++;
+      _saveProgress();
+
+      final int maxQuestions = 5 + (level * 3);
+
+      if (correctAnswers >= maxQuestions) {
+        setState(() {
+          level++;
+          correctAnswers = 0;
+          totalQuestions = 0;
+        });
+        _saveProgress();
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(appLanguage == 'ms'
+              ? "Tahniah! Anda naik ke Level $level"
+              : "Congratulations! You’ve reached Level $level"),
+            backgroundColor: Colors.orange,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            isCorrect
+                ? (appLanguage == 'ms' ? "Betul! Soalan seterusnya..." : "Correct! Next question...")
+                : (appLanguage == 'ms' ? "Salah. Cuba lagi!" : "Wrong. Try again!"),
+          ),
+          backgroundColor: isCorrect ? Colors.green : Colors.red,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+
+      Future.delayed(const Duration(milliseconds: 500), () {
+        setState(() {
+          strokes.clear();
+          strokeColors.clear();
+          isLocked = false;
+          currentQuestion = generateQuestion(mode: mode, digits: questionDigits);
+        });
+        _saveProgress();
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            isCorrect
+                ? (appLanguage == 'ms' ? "Betul! Soalan seterusnya..." : "Correct! Next question...")
+                : (appLanguage == 'ms' ? "Salah. Cuba lagi!" : "Wrong. Try again!"),
+          ),
+          backgroundColor: isCorrect ? Colors.green : Colors.red,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+  @override
+  void dispose() {
+    _saveProgress();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.detached) {
+      _saveProgress();
+    } else if (state == AppLifecycleState.resumed) {
+      _loadProgress();
+    }
   }
 }
 

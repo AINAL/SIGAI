@@ -26,7 +26,7 @@ class _DarabPageState extends State<DarabPage> {
   Widget build(BuildContext context) {
     final bool dark = isDarkMode || Theme.of(context).brightness == Brightness.dark;
     final gradientColors = dark
-        ? [Colors.black, Colors.white, Colors.grey, Colors.white, Colors.grey[200]!]
+        ? [Colors.black,  const Color.fromARGB(255, 57, 56, 56), const Color.fromARGB(255, 130, 130, 130), Colors.white,]
         : [
             const Color(0xFFEBFAFF),
             Colors.white,
@@ -209,9 +209,7 @@ class _DarabPageState extends State<DarabPage> {
       child: Container(
         margin: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.black26),
           borderRadius: BorderRadius.circular(12),
-          color: Colors.white.withOpacity(0.4),
         ),
         child: CustomPaint(
           painter: _DrawingPainter(strokes, strokeColors),
