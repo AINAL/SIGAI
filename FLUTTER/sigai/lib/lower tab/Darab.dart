@@ -48,9 +48,9 @@ class _DarabPageState extends State<DarabPage> {
           child: Column(
             children: [
               _buildResultHeader(dark),
-              const SizedBox(height: 20),
+              const SizedBox(height: 8),
               _buildControlBar(),
-              const SizedBox(height: 10),
+              const SizedBox(height: 4),
               Expanded(child: _buildCanvasPlaceholder()),
             ],
           ),

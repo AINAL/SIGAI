@@ -36,37 +36,12 @@ class _TutorialViewState extends State<TutorialView> {
         children: [
           Text(isMalay ? _tutorialMs : _tutorialEn),
           const SizedBox(height: 24),
-          ..._buildExampleImages(isMalay),
+          
         ],
       ),
     );
   }
 
-  List<Widget> _buildExampleImages(bool isMalay) {
-    final examples = [
-      ['IMG_1726', '2 x 2'],
-      ['IMG_1727', '21 x 2'],
-      ['IMG_1728', '202 x 112'],
-      ['IMG_1729', '4 / 2'],
-      ['IMG_1730', '15 / 3'],
-      ['IMG_1731', '144 / 12'],
-      ['IMG_1732', '211 / 111'],
-    ];
-
-    return examples.map((e) {
-      return Column(
-        children: [
-          Image.asset('assets/${e[0]}.jpg', height: 300),
-          const SizedBox(height: 8),
-          Text(
-            isMalay ? 'Darab ${e[1]}' : (e[1]!.contains('/') ? 'Divide ${e[1]}' : 'Multiply ${e[1]}'),
-            style: const TextStyle(fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 24),
-        ],
-      );
-    }).toList();
-  }
 }
 
 const String _tutorialMs = '''

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -49,72 +48,10 @@ class _HistoryViewState extends State<HistoryView> {
               textAlign: TextAlign.justify,
             ),
             const SizedBox(height: 24),
-            ..._buildImageWithCaption(
-              context: context,
-              image: 'assets/images/Ayah_mak.png',
-              captionMs: 'Itamta Harun dan isterinya, pemenang Tokoh Guru Peringkat Negeri Perak',
-              captionEn: 'Itamta Harun and his wife, recipient of the Perak State Teacher Award',
-            ),
-            ..._buildImageWithCaption(
-              context: context,
-              image: 'assets/images/Ayah_mak1.png',
-              captionMs: 'Demonstrasi Kaedah Sigai di Perpustakaan Kuala Kangsar',
-              captionEn: 'Demonstration of the Sigai Method at Kuala Kangsar Library',
-            ),
-            ..._buildImageWithCaption(
-              context: context,
-              image: 'assets/images/juara.png',
-              captionMs: 'Sigai Memenangi Anugerah Pendidikan di Taiwan',
-              captionEn: 'Sigai Wins an Education Award in Taiwan',
-            ),
-            ..._buildImageWithCaption(
-              context: context,
-              image: 'assets/images/Sigai_card.png',
-              captionMs: 'Kad Pembelajaran Sigai',
-              captionEn: 'Sigai Learning Cards',
-            ),
-            ..._buildImageWithCaption(
-              context: context,
-              image: 'assets/images/sigailogo.png',
-              captionMs: 'Logo Rasmi Sigai',
-              captionEn: 'Official Sigai Logo',
-            ),
           ],
         ),
       ),
     );
-  }
-
-  List<Widget> _buildImageWithCaption({
-    required BuildContext context,
-    required String image,
-    required String captionMs,
-    required String captionEn,
-  }) {
-    return [
-      const SizedBox(height: 24),
-      Center(
-        child: Column(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.asset(
-                image,
-                width: 300,
-                height: 300,
-                fit: BoxFit.cover,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              appLanguage == 'ms' ? captionMs : captionEn,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    ];
   }
 }
 
