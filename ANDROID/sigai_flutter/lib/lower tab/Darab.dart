@@ -92,20 +92,21 @@ class _DarabPageState extends State<DarabPage> {
               ),
             ),
             const SizedBox(height: 8),
-            Container(
-              width: 200,
+            SizedBox(
+              width: double.infinity,
               height: 40,
-              alignment: Alignment.center,
-              child: Text(
-                (() {
-                  final count = countIntersections(strokes, strokeColors);
-                  print("Intersection Count: $count");
-                  return count.toString();
-                })(),
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  color: dark ? Colors.yellow.shade200 : Colors.blue.shade300,
+              child: Center(
+                child: Text(
+                  (() {
+                    final count = countIntersections(strokes, strokeColors);
+                    print("Intersection Count: $count");
+                    return count.toString();
+                  })(),
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                    color: dark ? Colors.yellow.shade200 : Colors.blue.shade300,
+                  ),
                 ),
               ),
             ),

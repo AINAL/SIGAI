@@ -111,16 +111,17 @@ class _BahagiPageState extends State<BahagiPage> {
               ),
             ),
             const SizedBox(height: 8),
-            Container(
-              width: 300,
+            SizedBox(
+              width: double.infinity,
               height: 40,
-              alignment: Alignment.center,
-              child: Text(
-                countDivisions(strokes, strokeColors).toStringAsFixed(6),
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  color: dark ? Colors.yellow.shade200 : Colors.blue.shade300,
+              child: Center(
+                child: Text(
+                  countDivisions(strokes, strokeColors).toStringAsFixed(6),
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                    color: dark ? Colors.yellow.shade200 : Colors.blue.shade300,
+                  ),
                 ),
               ),
             ),
