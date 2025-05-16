@@ -2,10 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key></key>
-	<string></string>
-	<key>Ads</key>
-	<string></string>
 	<key>API_KEY</key>
 	<string>AIzaSyBHVhGm_QX9zaGoafNt-lbEIsPVrJKgaRI</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,23 +9,23 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.ainal.SIGAI-v3</string>
+	<string>com.ainal.SIGAI</string>
 	<key>PROJECT_ID</key>
 	<string>sigai-backend</string>
 	<key>STORAGE_BUCKET</key>
 	<string>sigai-backend.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
-	<false/>
+	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false/>
+	<false></false>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>IS_GCM_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true/>
+	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:341686309422:ios:98cc49bd9b0120bb3d05bf</string>
+	<string>1:341686309422:ios:592ba02e0d3acce53d05bf</string>
 	<key>DATABASE_URL</key>
 	<string>https://sigai-backend-default-rtdb.asia-southeast1.firebasedatabase.app</string>
 </dict>

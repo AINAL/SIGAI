@@ -706,96 +706,57 @@ struct SIGAI: View {
 
     // Function to Call Google Free API (Optimized Version)
     func fetchAIResponse(for question: String, completion: @escaping (String) -> Void) {
-        guard let apiKey = apiKeychain.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
-            completion("Error: Invalid API Key")
-            return
-        }
-
-        let urlString = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=\(apiKey)"
-
-        guard let url = URL(string: urlString) else {
-            completion("Error: Invalid API URL")
-            return
-        }
-
-        let systemLanguage = (appLanguage == "ms") ? "use Bahasa Melayu" : "use English"
-        let cleanedQuestion = question
-            .replacingOccurrences(of: "**", with: "")
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-
-        // Pull full systemMessage from training.swift
-        let fullSystemPrompt = systemMessageIntro + systemMessageTeachingGuide + systemMessageMultiplicationExamples + systemMessageDivisionExamples + systemMessageBackground
-
-        let prompt = "\(systemLanguage)\n\n\(fullSystemPrompt)\n\nUser: \(cleanedQuestion)"
-
-        let body: [String: Any] = [
-            "contents": [
-                ["parts": [["text": prompt]]]
-            ],
-            "generationConfig": [
-                "temperature": 0.2,
-                "maxOutputTokens": 800
-            ]
-        ]
-
+        let url = URL(string: "https://us-central1-sigai-backend.cloudfunctions.net/askAI")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try? JSONSerialization.data(withJSONObject: ["prompt": question])
 
-        let session = URLSession(configuration: .default)
-        networkTask = session.dataTask(with: request) { data, response, error in
-            if let error = error as NSError?, error.code == NSURLErrorCancelled {
-                return // Exit early if network task was cancelled
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            DispatchQueue.main.async {
+                isLoading = false
             }
-            if let error = error {
-                completion("Network Error: \(error.localizedDescription)")
-                return
-            }
-
             guard let data = data else {
-                completion("Error: No data received.")
+                DispatchQueue.main.async {
+                    completion("❌ No response from AI.")
+                }
                 return
             }
 
-            do {
-                if let dataString = String(data: data, encoding: .utf8) {
-                    print("🔍 Raw JSON: \(dataString)")
-                }
-                let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
-                if let json = json,
-                   let candidates = json["candidates"] as? [[String: Any]],
-                   let output = candidates.first?["content"] as? [String: Any],
-                   let parts = output["parts"] as? [[String: Any]],
-                   let responseText = parts.first?["text"] as? String {
-                    
-                    var filteredText = responseText.replacingOccurrences(of: "**", with: "").trimmingCharacters(in: .whitespacesAndNewlines)
-
-                    // Filter bad words
-                    let bannedWords = ["fuck", "offensive-word"]
-                    if bannedWords.contains(where: { filteredText.localizedCaseInsensitiveContains($0) }) {
-                        filteredText = "This response has been filtered for safety."
-                    }
-
-                    completion(filteredText)
-                    
-                } else if let json = json,
-                          let error = json["error"] as? [String: Any],
-                          let message = error["message"] as? String,
-                          message.localizedCaseInsensitiveContains("overloaded") {
-                    if !isPremiumUser {
-                        aiQuestionCount = max(0, aiQuestionCount - 1)
-                    }
-                    completion("🤖 AI terlalu sibuk sekarang. Sila cuba semula nanti.")
-                } else {
-                    completion("Error: Unable to parse AI response.")
-                }
-            } catch {
-                completion("Error: Failed to decode AI response.")
+            struct AIResponse: Decodable {
+                let result: String?
+                let error: String?
             }
-        }
 
-        networkTask?.resume()
+            if let decoded = try? JSONDecoder().decode(AIResponse.self, from: data) {
+                if let result = decoded.result {
+                    let cleaned = result
+                        .replacingOccurrences(of: "```json", with: "")
+                        .replacingOccurrences(of: "```", with: "")
+                        .replacingOccurrences(of: "**", with: "")
+                        .trimmingCharacters(in: .whitespacesAndNewlines)
+
+                    DispatchQueue.main.async {
+                        completion(cleaned)
+                    }
+                } else if let error = decoded.error {
+                    DispatchQueue.main.async {
+                        completion("❌ \(error)")
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        completion("❌ AI returned empty response.")
+                    }
+                }
+            } else {
+                let debugString = String(data: data, encoding: .utf8) ?? "Invalid UTF8"
+                print("❌ Decoding failed. Raw response:")
+                print(debugString)
+                DispatchQueue.main.async {
+                    completion("❌ AI response decode error.")
+                }
+            }
+        }.resume()
     }
 }
     
