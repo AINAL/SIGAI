@@ -24,8 +24,5 @@ jobs:
     - name: Authenticate with Firebase
       run: firebase use --add sigai-backend --token "${{ secrets.FIREBASE_TOKEN }}"
 
-    - name: Set cleanup policy to avoid storage cost
-      run: firebase functions:artifacts:setpolicy --keep 20d --token "${{ secrets.FIREBASE_TOKEN }}"
-
     - name: Deploy to Firebase
       run: firebase deploy --token "${{ secrets.FIREBASE_TOKEN }}"
