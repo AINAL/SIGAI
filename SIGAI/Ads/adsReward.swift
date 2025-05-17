@@ -8,23 +8,6 @@
 import SwiftUI
 import GoogleMobileAds
 
-
-struct BannerAdView: UIViewRepresentable {
-    let adUnitID: String
-    
-    func makeUIView(context: Context) -> BannerView {
-        let banner = BannerView(adSize: AdSizeBanner)
-        banner.adUnitID = adUnitID
-        banner.rootViewController = UIApplication.shared.connectedScenes
-            .compactMap { ($0 as? UIWindowScene)?.keyWindow?.rootViewController }
-            .first
-        banner.load(Request())
-        return banner
-    }
-    
-    func updateUIView(_ uiView: BannerView, context: Context) {}
-}
-
 class RewardedAdManager: NSObject, FullScreenContentDelegate, ObservableObject {
     @Published var adDidReward: Bool = false
     private var rewardedAd: RewardedAd?
@@ -33,15 +16,28 @@ class RewardedAdManager: NSObject, FullScreenContentDelegate, ObservableObject {
         return rewardedAd != nil
     }
     
-    func loadAd(adUnitID: String) {
+    func loadAd() {
+        let adUnitID = "ca-app-pub-5767874163080300/4775134744"
         let request = Request()
         RewardedAd.load(with: adUnitID, request: request) { ad, error in
             if let error = error {
-                print("Failed to load rewarded ad: \(error.localizedDescription)")
+                print("❌ Failed to load rewarded ad: \(error.localizedDescription)")
+                // Try fallback test ad
+                let testAdUnitID = "ca-app-pub-3940256099942544/1712485313"
+                RewardedAd.load(with: testAdUnitID, request: request) { testAd, testError in
+                    if let testError = testError {
+                        print("Fallback rewarded ad failed to load: \(testError.localizedDescription)")
+                        return
+                    }
+                    self.rewardedAd = testAd
+                    self.rewardedAd?.fullScreenContentDelegate = self
+                    print("✅ Fallback test rewarded ad loaded.")
+                }
                 return
             }
             self.rewardedAd = ad
             self.rewardedAd?.fullScreenContentDelegate = self
+            print("✅ Rewarded ad loaded.")
         }
     }
 

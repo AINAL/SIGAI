@@ -48,6 +48,8 @@ struct SIGAI_v3App: App {
             } else {
                 Color.clear
                     .onAppear {
+                        MobileAds.shared.start(completionHandler: nil)
+                        RewardedAdManager().loadAd()
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                             appReady = true
                         }

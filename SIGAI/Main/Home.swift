@@ -164,7 +164,7 @@ struct SIGAIHomeView: View {
                 )
                 
                 //if !isPremiumUser {
-                    BannerAdView(adUnitID: "ca-app-pub-5767874163080300/8639376065")
+                    BannerAdView()
                         .frame(maxWidth: .infinity, minHeight: 50, maxHeight: 50)
                         .background(Color.clear)
                 //}

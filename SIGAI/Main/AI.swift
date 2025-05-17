@@ -573,7 +573,7 @@ struct SIGAI: View {
 
     func watchAdAndUnlock() {
         isLoading = true
-        rewardedAdManager.loadAd(adUnitID: "ca-app-pub-5767874163080300/4775134744")
+        rewardedAdManager.loadAd()
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             let rootVC = UIApplication.shared.connectedScenes
                 .compactMap { $0 as? UIWindowScene }
