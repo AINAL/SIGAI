@@ -17,7 +17,11 @@ struct BannerAdView: UIViewRepresentable {
     func makeUIView(context: Context) -> BannerView {
         let banner = BannerView(adSize: AdSizeBanner)
         context.coordinator.banner = banner
+        #if DEBUG
+        banner.adUnitID = "ca-app-pub-3940256099942544/2934735716"
+        #else
         banner.adUnitID = "ca-app-pub-5767874163080300/8639376065"
+        #endif
         banner.rootViewController = UIApplication.shared.connectedScenes
             .compactMap { ($0 as? UIWindowScene)?.keyWindow?.rootViewController }
             .first
@@ -39,8 +43,10 @@ struct BannerAdView: UIViewRepresentable {
         func bannerView(_ bannerView: BannerView, didFailToReceiveAdWithError error: Error) {
             print("❌ Failed to load banner ad: \(error.localizedDescription)")
             // fallback to test ad
+            #if DEBUG
             bannerView.adUnitID = "ca-app-pub-3940256099942544/2934735716"
             bannerView.load(Request())
+            #endif
         }
     }
 }

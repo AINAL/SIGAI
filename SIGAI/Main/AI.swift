@@ -97,16 +97,23 @@ class IAPManager: ObservableObject {
     }
 }
 
+enum AIMessage {
+    case text(String)
+    case chart(x: Int, y: Int)
+}
+
 struct SIGAI: View {
     @AppStorage("isDarkMode") var isDarkMode: Bool = false
     @StateObject private var iapManager = IAPManager()
     @AppStorage("isPremiumUser") private var isPremiumUser: Bool = false
     @State private var userInput: String = ""
-    @State private var messages: [(String, Bool)] = [] // (Message, isUser)
+    @State private var messages: [(AIMessage, Bool)] = [] // (Message, isUser)
     @State private var isLoading: Bool = false // Show loading while AI is responding
     @AppStorage("appLanguage") private var appLanguage: String = "ms" // Default language is Malay
     @AppStorage("aiQuestionCount") private var aiQuestionCount: Int = 0
     @AppStorage("lastQuestionDate") private var lastQuestionDate: String = ""
+
+    // @State private var aiChartData: (x: Int, y: Int)? = nil
 
     @State private var showRestoreAlert = false
     @State private var restoreMessage = ""
@@ -184,7 +191,7 @@ struct SIGAI: View {
                         Task {
                             // Animate processing indicator
                             purchaseLoadingIndicator = ""
-                            messages.append(("⏳ Processing", false))
+                            messages.append((.text("⏳ Processing"), false))
                             while isLoading {
                                 try? await Task.sleep(nanoseconds: 500_000_000)
                                 if !isLoading { break }
@@ -198,9 +205,9 @@ struct SIGAI: View {
                                 default: purchaseLoadingIndicator = ""
                                 }
                                 if let lastIdx = messages.indices.last, messages[lastIdx].1 == false {
-                                    messages[lastIdx].0 = "⏳ Processing\(purchaseLoadingIndicator)"
+                                    messages[lastIdx].0 = .text("⏳ Processing\(purchaseLoadingIndicator)")
                                 } else {
-                                    messages.append(("⏳ Processing\(purchaseLoadingIndicator)", false))
+                                    messages.append((.text("⏳ Processing\(purchaseLoadingIndicator)"), false))
                                 }
                             }
                         }
@@ -243,7 +250,7 @@ struct SIGAI: View {
                         Task {
                             // Animate restoring indicator
                             purchaseLoadingIndicator = ""
-                            messages.append(("⏳ Restoring", false))
+                            messages.append((.text("⏳ Restoring"), false))
                             while isLoading {
                                 try? await Task.sleep(nanoseconds: 500_000_000)
                                 if !isLoading { break }
@@ -257,9 +264,9 @@ struct SIGAI: View {
                                 default: purchaseLoadingIndicator = ""
                                 }
                                 if let lastIdx = messages.indices.last, messages[lastIdx].1 == false {
-                                    messages[lastIdx].0 = "⏳ Restoring\(purchaseLoadingIndicator)"
+                                    messages[lastIdx].0 = .text("⏳ Restoring\(purchaseLoadingIndicator)")
                                 } else {
-                                    messages.append(("⏳ Restoring\(purchaseLoadingIndicator)", false))
+                                    messages.append((.text("⏳ Restoring\(purchaseLoadingIndicator)"), false))
                                 }
                             }
                         }
@@ -314,123 +321,165 @@ struct SIGAI: View {
                     VStack(alignment: .leading, spacing: 12) {
                         ForEach(messages.indices, id: \.self) { index in
                             let message = messages[index]
-                            let text = message.0
                             let isUser = message.1
-                            HStack {
-                                if !isUser { Spacer() }
-                                // Use soft pastel bubble for all AI messages (including ❗️, ✅, etc)
-                                if text.contains("[") && text.contains("](") {
-                                    if let openBracket = text.firstIndex(of: "["),
-                                       let closeBracket = text.firstIndex(of: "]"),
-                                       let openParen = text.firstIndex(of: "("),
-                                       let closeParen = text.firstIndex(of: ")"),
-                                       closeBracket < openParen,
-                                       openParen < closeParen {
+                            switch message.0 {
+                            case .text(let text):
+                                HStack {
+                                    if !isUser { Spacer() }
+                                    // Use soft pastel bubble for all AI messages (including ❗️, ✅, etc)
+                                    if text.contains("[") && text.contains("](") {
+                                        if let openBracket = text.firstIndex(of: "["),
+                                           let closeBracket = text.firstIndex(of: "]"),
+                                           let openParen = text.firstIndex(of: "("),
+                                           let closeParen = text.firstIndex(of: ")"),
+                                           closeBracket < openParen,
+                                           openParen < closeParen {
 
-                                        let displayText = String(text[text.index(after: openBracket)..<closeBracket])
-                                        let url = String(text[text.index(after: openParen)..<closeParen])
+                                            let displayText = String(text[text.index(after: openBracket)..<closeBracket])
+                                            let url = String(text[text.index(after: openParen)..<closeParen])
 
-                                        if url == "purchase" {
-                                            Text(displayText)
-                                                .padding()
-                                                .background(
-                                                    LinearGradient(
-                                                        gradient: Gradient(colors: isDarkMode ? [
-                                                            Color.purple.opacity(0.8),
-                                                            Color.blue.opacity(0.8)
-                                                        ] : [
-                                                            Color(hex: "#FFDEE9"),
-                                                            Color(hex: "#B5FFFC")
-                                                        ]),
-                                                        startPoint: .topLeading,
-                                                        endPoint: .bottomTrailing
+                                            if url == "purchase" {
+                                                Text(displayText)
+                                                    .padding()
+                                                    .background(
+                                                        LinearGradient(
+                                                            gradient: Gradient(colors: isDarkMode ? [
+                                                                Color.purple.opacity(0.8),
+                                                                Color.blue.opacity(0.8)
+                                                            ] : [
+                                                                Color(hex: "#FFDEE9"),
+                                                                Color(hex: "#B5FFFC")
+                                                            ]),
+                                                            startPoint: .topLeading,
+                                                            endPoint: .bottomTrailing
+                                                        )
                                                     )
-                                                )
-                                                .cornerRadius(14)
-                                                .foregroundColor(
-                                                    isUser
-                                                    ? Color.black
-                                                    : (isDarkMode ? Color.white : Color.black)
-                                                )
-                                                .frame(maxWidth: .infinity, alignment: isUser ? .trailing : .leading)
-                                                .scaleEffect(isUser ? 1.05 : 1.02)
-                                                .animation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0.5), value: messages.count)
-                                                .onTapGesture {
-                                                    withAnimation {
-                                                        showPurchaseOptions.toggle()
+                                                    .cornerRadius(14)
+                                                    .foregroundColor(
+                                                        isUser
+                                                        ? Color.black
+                                                        : (isDarkMode ? Color.white : Color.black)
+                                                    )
+                                                    .frame(maxWidth: .infinity, alignment: isUser ? .trailing : .leading)
+                                                    .scaleEffect(isUser ? 1.05 : 1.02)
+                                                    .animation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0.5), value: messages.count)
+                                                    .onTapGesture {
+                                                        withAnimation {
+                                                            showPurchaseOptions.toggle()
+                                                        }
                                                     }
-                                                }
-                                        } else if url == "watchad" {
-                                            Text(displayText)
-                                                .padding()
-                                                .background(
-                                                    LinearGradient(
-                                                        gradient: Gradient(colors: isDarkMode ? [
-                                                            Color.purple.opacity(0.8),
-                                                            Color.blue.opacity(0.8)
-                                                        ] : [
-                                                            Color(hex: "#FFDEE9"),
-                                                            Color(hex: "#B5FFFC")
-                                                        ]),
-                                                        startPoint: .topLeading,
-                                                        endPoint: .bottomTrailing
+                                            } else if url == "watchad" {
+                                                Text(displayText)
+                                                    .padding()
+                                                    .background(
+                                                        LinearGradient(
+                                                            gradient: Gradient(colors: isDarkMode ? [
+                                                                Color.purple.opacity(0.8),
+                                                                Color.blue.opacity(0.8)
+                                                            ] : [
+                                                                Color(hex: "#FFDEE9"),
+                                                                Color(hex: "#B5FFFC")
+                                                            ]),
+                                                            startPoint: .topLeading,
+                                                            endPoint: .bottomTrailing
+                                                        )
                                                     )
-                                                )
-                                                .cornerRadius(14)
-                                                .foregroundColor(isDarkMode ? Color.white : Color.black)
-                                                .frame(maxWidth: .infinity, alignment: isUser ? .trailing : .leading)
-                                                .scaleEffect(isUser ? 1.05 : 1.02)
-                                                .animation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0.5), value: messages.count)
-                                                .onTapGesture {
-                                                    watchAdAndUnlock()
-                                                }
-                                        } else if let realURL = URL(string: url) {
-                                            Link(displayText, destination: realURL)
-                                                .padding()
-                                                .background(
-                                                    isUser
-                                                    ? (isDarkMode ? Color(red: 200/255, green: 255/255, blue: 240/255) : Color(hex: "#E6F0FF"))
-                                                    : (isDarkMode ? Color(red: 50/255, green: 50/255, blue: 100/255) : Color(hex: "#FFE6E6"))
-                                                )
-                                                .cornerRadius(14)
-                                                .foregroundColor(
-                                                    isUser
-                                                    ? Color.black
-                                                    : (isDarkMode ? Color.white : Color.black)
-                                                )
-                                                .frame(maxWidth: .infinity, alignment: isUser ? .trailing : .leading)
-                                                .scaleEffect(isUser ? 1.05 : 1.02)
-                                                .animation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0.5), value: messages.count)
+                                                    .cornerRadius(14)
+                                                    .foregroundColor(isDarkMode ? Color.white : Color.black)
+                                                    .frame(maxWidth: .infinity, alignment: isUser ? .trailing : .leading)
+                                                    .scaleEffect(isUser ? 1.05 : 1.02)
+                                                    .animation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0.5), value: messages.count)
+                                                    .onTapGesture {
+                                                        watchAdAndUnlock()
+                                                    }
+                                            } else if let realURL = URL(string: url) {
+                                                Link(displayText, destination: realURL)
+                                                    .padding()
+                                                    .background(
+                                                        isUser
+                                                        ? (isDarkMode ? Color(red: 200/255, green: 255/255, blue: 240/255) : Color(hex: "#E6F0FF"))
+                                                        : (isDarkMode ? Color(red: 50/255, green: 50/255, blue: 100/255) : Color(hex: "#FFE6E6"))
+                                                    )
+                                                    .cornerRadius(14)
+                                                    .foregroundColor(
+                                                        isUser
+                                                        ? Color.black
+                                                        : (isDarkMode ? Color.white : Color.black)
+                                                    )
+                                                    .frame(maxWidth: .infinity, alignment: isUser ? .trailing : .leading)
+                                                    .scaleEffect(isUser ? 1.05 : 1.02)
+                                                    .animation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0.5), value: messages.count)
+                                            }
                                         }
                                     }
-                                }
-                                // Detect plain URLs and make them clickable (improved splitting version)
-                                else if let urlRange = text.range(of: #"https?:\/\/\S+"#, options: .regularExpression) {
-                                    let beforeLink = String(text[..<urlRange.lowerBound])
-                                    let urlString = String(text[urlRange])
-                                    let afterLink = String(text[urlRange.upperBound...])
+                                    // Detect plain URLs and make them clickable (improved splitting version)
+                                    else if let urlRange = text.range(of: #"https?:\/\/\S+"#, options: .regularExpression) {
+                                        let beforeLink = String(text[..<urlRange.lowerBound])
+                                        let urlString = String(text[urlRange])
+                                        let afterLink = String(text[urlRange.upperBound...])
 
-                                    VStack(alignment: isUser ? .trailing : .leading, spacing: 5) {
-                                        if !beforeLink.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                                            Text(beforeLink)
-                                                .foregroundColor(
-                                                    isUser
-                                                    ? Color.black
-                                                    : (isDarkMode ? Color.white : Color.black)
-                                                )
+                                        VStack(alignment: isUser ? .trailing : .leading, spacing: 5) {
+                                            if !beforeLink.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                                Text(beforeLink)
+                                                    .foregroundColor(
+                                                        isUser
+                                                        ? Color.black
+                                                        : (isDarkMode ? Color.white : Color.black)
+                                                    )
+                                            }
+                                            if let url = URL(string: urlString) {
+                                                Link(urlString, destination: url)
+                                                    .foregroundColor(.blue)
+                                            }
+                                            if !afterLink.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                                Text(afterLink)
+                                                    .foregroundColor(
+                                                        isUser
+                                                        ? Color.black
+                                                        : (isDarkMode ? Color.white : Color.black)
+                                                    )
+                                            }
                                         }
-                                        if let url = URL(string: urlString) {
-                                            Link(urlString, destination: url)
-                                                .foregroundColor(.blue)
-                                        }
-                                        if !afterLink.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                                            Text(afterLink)
-                                                .foregroundColor(
-                                                    isUser
-                                                    ? Color.black
-                                                    : (isDarkMode ? Color.white : Color.black)
-                                                )
-                                        }
+                                        .padding()
+                                        .background(
+                                            isUser
+                                            ? (isDarkMode ? Color(red: 200/255, green: 255/255, blue: 240/255) : Color(hex: "#E6F0FF"))
+                                            : (isDarkMode ? Color(red: 50/255, green: 50/255, blue: 100/255) : Color(hex: "#FFE6E6"))
+                                        )
+                                        .cornerRadius(14)
+                                        .frame(maxWidth: .infinity, alignment: isUser ? .trailing : .leading)
+                                    }
+                                    else {
+                                        Text(text)
+                                            .padding()
+                                            .background(
+                                                isUser
+                                                ? (isDarkMode ? Color(red: 200/255, green: 255/255, blue: 240/255) : Color(hex: "#E6F0FF"))
+                                                : (isDarkMode ? Color(red: 50/255, green: 50/255, blue: 100/255) : Color(hex: "#FFE6E6"))
+                                            )
+                                            .cornerRadius(14)
+                                            .foregroundColor(
+                                                isUser
+                                                ? Color.black
+                                                : (isDarkMode ? Color.white : Color.black)
+                                            )
+                                            .frame(maxWidth: .infinity, alignment: isUser ? .trailing : .leading)
+                                            .scaleEffect(isUser ? 1.05 : 1.02)
+                                            .animation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0.5), value: messages.count)
+                                    }
+                                    if isUser { Spacer() }
+                                }
+                                .id(index)
+                            case .chart(let x, let y):
+                                HStack {
+                                    if isUser { Spacer() }
+                                    VStack(alignment: .center) {
+                                        LineIntersectionView(x: x, y: y)
+                                            .padding(.bottom, 4)
+
+                                        Text("\(x) × \(y) = \(x * y)")
+                                            .font(.subheadline)
+                                            .foregroundColor(.gray)
                                     }
                                     .padding()
                                     .background(
@@ -439,29 +488,11 @@ struct SIGAI: View {
                                         : (isDarkMode ? Color(red: 50/255, green: 50/255, blue: 100/255) : Color(hex: "#FFE6E6"))
                                     )
                                     .cornerRadius(14)
-                                    .frame(maxWidth: .infinity, alignment: isUser ? .trailing : .leading)
+                                    .foregroundColor(isDarkMode ? .white : .black)
+                                    if !isUser { Spacer() }
                                 }
-                                else {
-                                    Text(text)
-                                        .padding()
-                                        .background(
-                                            isUser
-                                            ? (isDarkMode ? Color(red: 200/255, green: 255/255, blue: 240/255) : Color(hex: "#E6F0FF"))
-                                            : (isDarkMode ? Color(red: 50/255, green: 50/255, blue: 100/255) : Color(hex: "#FFE6E6"))
-                                        )
-                                        .cornerRadius(14)
-                                        .foregroundColor(
-                                            isUser
-                                            ? Color.black
-                                            : (isDarkMode ? Color.white : Color.black)
-                                        )
-                                        .frame(maxWidth: .infinity, alignment: isUser ? .trailing : .leading)
-                                        .scaleEffect(isUser ? 1.05 : 1.02)
-                                        .animation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0.5), value: messages.count)
-                                }
-                                if isUser { Spacer() }
+                                .id(index)
                             }
-                            .id(index)
                         }
                         if isLoading && !isProcessingPurchase && !isRestoringPurchase {
                             HStack {
@@ -547,6 +578,7 @@ struct SIGAI: View {
             .padding(.horizontal)
             .padding(.top, 10)
             //.padding(.bottom, 90)
+
         }
         .padding(.top, 0)
         .padding(.bottom, 0)
@@ -649,10 +681,10 @@ struct SIGAI: View {
                 let fullText = "❗ You’ve reached your 10 free questions today."
                 typingTask = Task {
                     isAnimatingText = true
-                    messages.append(("", false))
+                    messages.append((.text(""), false))
                     await animateText(fullText)
-                    messages.append(("[🚀 Unlock AI premium instantly!](purchase)", false))
-                    messages.append(("[🎁 Watch an ad, get 10 questions!](watchad)", false))
+                    messages.append((.text("[🚀 Unlock AI premium instantly!](purchase)"), false))
+                    messages.append((.text("[🎁 Watch an ad, get 10 questions!](watchad)"), false))
                     isAnimatingText = false
                 }
                 userInput = ""
@@ -662,7 +694,7 @@ struct SIGAI: View {
         }
 
         // Add user message
-        messages.append((userInput, true))
+        messages.append((.text(userInput), true))
         isLoading = true // Show loading indicator
 
         // Fetch AI Response
@@ -689,7 +721,7 @@ struct SIGAI: View {
         
         if !appendToLastMessage {
             await MainActor.run {
-                messages.append(("", false))
+                messages.append((.text(""), false))
             }
         }
         
@@ -697,7 +729,7 @@ struct SIGAI: View {
             animatedText.append(char)
             await MainActor.run {
                 if let lastIdx = messages.indices.last, messages[lastIdx].1 == false {
-                    messages[lastIdx].0 = animatedText
+                    messages[lastIdx].0 = .text(animatedText)
                 }
             }
             try? await Task.sleep(nanoseconds: 20_000_000)
@@ -735,6 +767,16 @@ struct SIGAI: View {
                         .replacingOccurrences(of: "```", with: "")
                         .replacingOccurrences(of: "**", with: "")
                         .trimmingCharacters(in: .whitespacesAndNewlines)
+
+                    // Check if cleaned is a valid JSON with x and y
+                    if let jsonData = cleaned.data(using: .utf8),
+                       let resultDict = try? JSONDecoder().decode([String: Int].self, from: jsonData),
+                       let x = resultDict["x"], let y = resultDict["y"] {
+                        DispatchQueue.main.async {
+                            self.messages.append((.chart(x: x, y: y), false))
+                        }
+                        return
+                    }
 
                     DispatchQueue.main.async {
                         completion(cleaned)

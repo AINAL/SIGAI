@@ -41,6 +41,8 @@ struct ContentView: View {
     
     @State private var selectedTab = 0
     
+    @State private var showLockedAlert = false
+    
     enum MathMode {
         case multiplication
         case division
@@ -235,11 +237,42 @@ struct ContentView: View {
                     }
                     .tag(0)
 
-                GeometryReader { geometry in
-                    darabTabView(geometry: geometry)
+                Group {
+                    if isPremiumUser {
+                        GeometryReader { geometry in
+                            darabTabView(geometry: geometry)
+                        }
+                    } else {
+                        ZStack {
+                            LinearGradient(
+                                gradient: Gradient(colors: isDarkMode ?
+                                                   [Color.black, Color.white] :
+                                                   [Color(red: 200/255, green: 230/255, blue: 255), Color(red: 210/255, green: 240/255, blue: 255/255), .white]),
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                            .ignoresSafeArea()
+                            Color.clear
+                                .onAppear {
+                                    showLockedAlert = true
+                                }
+                        }
+                        .alert(isPresented: $showLockedAlert) {
+                            Alert(
+                                title: Text("Premium Feature"),
+                                message: Text("This feature is locked. Upgrade to Premium to access."),
+                                primaryButton: .default(Text("Upgrade"), action: {
+                                    // Trigger IAP
+                                }),
+                                secondaryButton: .cancel(Text("OK"), action: {
+                                    selectedTab = 0
+                                })
+                            )
+                        }
+                    }
                 }
                 .tabItem {
-                    Image(systemName: "multiply")
+                    Image(systemName: (!isPremiumUser ? "lock.fill" : "multiply"))
                     Text(appLanguage == "ms" ? "Darab" : "Multiply")
                 }
                 .tag(1)
@@ -249,16 +282,47 @@ struct ContentView: View {
                 }
                 .tabItem {
                     Image(systemName: "book.fill")
-                    Text(appLanguage == "ms" ? "Mod Berpandu" : "Guided Mode" )
+                    Text(appLanguage == "ms" ? "Mod Berpandu" : "Guided Mode")
                 }
                 .tag(2)
 
-                GeometryReader { geometry in
-                    bahagiTabView(geometry: geometry)
+                Group {
+                    if isPremiumUser {
+                        GeometryReader { geometry in
+                            bahagiTabView(geometry: geometry)
+                        }
+                    } else {
+                        ZStack {
+                            LinearGradient(
+                                gradient: Gradient(colors: isDarkMode ?
+                                                   [Color.black, Color.white] :
+                                                   [Color(red: 200/255, green: 230/255, blue: 255), Color(red: 210/255, green: 240/255, blue: 255/255), .white]),
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                            .ignoresSafeArea()
+                            Color.clear
+                                .onAppear {
+                                    showLockedAlert = true
+                                }
+                        }
+                        .alert(isPresented: $showLockedAlert) {
+                            Alert(
+                                title: Text("Premium Feature"),
+                                message: Text("This feature is locked. Upgrade to Premium to access."),
+                                primaryButton: .default(Text("Upgrade"), action: {
+                                    // Trigger IAP
+                                }),
+                                secondaryButton: .cancel(Text("OK"), action: {
+                                    selectedTab = 0
+                                })
+                            )
+                        }
+                    }
                 }
                 .tabItem {
-                    Image(systemName: "divide")
-                    Text(appLanguage == "ms" ? "Bahagi" : "Divide" )
+                    Image(systemName: (!isPremiumUser ? "lock.fill" : "divide"))
+                    Text(appLanguage == "ms" ? "Bahagi" : "Divide")
                 }
                 .tag(3)
 
@@ -277,5 +341,46 @@ struct ContentView: View {
              //       .frame(maxWidth: .infinity, minHeight: 50, maxHeight: 50)
             //}
         }
+    }
+
+    @ViewBuilder
+    func lockedTabView() -> some View {
+        VStack(spacing: 20) {
+            Image(systemName: "lock.fill")
+                .font(.system(size: 40))
+                .foregroundColor(.white)
+                .padding()
+                .background(Circle().fill(Color.orange.opacity(0.8)))
+
+            Text("Unlock this feature with Premium.")
+                .font(.title2)
+                .fontWeight(.semibold)
+                .multilineTextAlignment(.center)
+
+            Button(action: {
+                // Trigger upgrade flow here
+            }) {
+                Text("Upgrade Now")
+                    .fontWeight(.bold)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.orange)
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
+                    .padding(.horizontal)
+            }
+        }
+        .padding()
+        .background(
+            LinearGradient(
+                gradient: Gradient(colors: colorScheme == .dark ?
+                                   [Color.black, Color.white] :
+                                   [Color(red: 200/255, green: 230/255, blue: 255), Color.white]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        )
+        .cornerRadius(20)
+        .padding()
     }
 }

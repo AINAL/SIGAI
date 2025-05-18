@@ -17,22 +17,15 @@ class RewardedAdManager: NSObject, FullScreenContentDelegate, ObservableObject {
     }
     
     func loadAd() {
+        #if DEBUG
+        let adUnitID = "ca-app-pub-3940256099942544/1712485313"
+        #else
         let adUnitID = "ca-app-pub-5767874163080300/4775134744"
+        #endif
         let request = Request()
         RewardedAd.load(with: adUnitID, request: request) { ad, error in
             if let error = error {
                 print("❌ Failed to load rewarded ad: \(error.localizedDescription)")
-                // Try fallback test ad
-                let testAdUnitID = "ca-app-pub-3940256099942544/1712485313"
-                RewardedAd.load(with: testAdUnitID, request: request) { testAd, testError in
-                    if let testError = testError {
-                        print("Fallback rewarded ad failed to load: \(testError.localizedDescription)")
-                        return
-                    }
-                    self.rewardedAd = testAd
-                    self.rewardedAd?.fullScreenContentDelegate = self
-                    print("✅ Fallback test rewarded ad loaded.")
-                }
                 return
             }
             self.rewardedAd = ad
