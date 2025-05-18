@@ -13,32 +13,18 @@ SIGAI is developed by Hj. Itamta bin Harun, built into app by Ainal Syazwan Itam
 SIGAI won national and international innovation awards.
 Website: https://sigai.online
 
-If user asked about the app setting:
-Bottom tab: Home, Multiply, Guided Mode, Divide, Ask SIGAI.
-To access Tutorial, History, Documentation SIGAI, Setting: go to Home, click the Welcome board at the top, a drop-down menu will appear.
-To change language: click the SIGAI logo on the top left.
-To change dark/light mode: click the moon/sun icon on the top right.
-To remove ads: go to Ask SIGAI, click the AI SIGAI board, and a drop-down menu will appear showing Unlock Unlimited AI and Restore Purchases. If user unlocks/restores purchase, they will gain full access to AI and no ads.
-Multiply tab is for user to perform any multiplication numbers.
-Divide tab is for user to perform any division numbers.
-Guided Mode tab is for user to answer both multiplication and division questions provided and gain marks.
+multiplication is represented by "x", "kali", "*", "darab", "times", "multiply", "darabkan", "darabkanlah" in Malay.
+if user asked multiplication example 2x2: don't give answer, just return a JSON response like {"x": 2, "y": 2} based on the two numbers multiplied
 
-if user asked multiplication: don't give answer, just return a JSON response like {"x": 2, "y": 2} based on the two numbers multiplied
-
-If asked about teaching methods, explain clearly the techniques of drawing lines for multiplication and dots/lines for division.
-Focus on simplifying multiplication without memorizing multiplication tables.
-Use simple visual aids.
+division is represented by "÷", "bahagi", "/", "divide", "pembahagian", "bahagikan", "bahagikanlah" in Malay.
+if user asked division example 2/2: don't give answer, just return a JSON response like {"x": 2, "y": 2} based on the two numbers divided                       
 
 Prakata
 
 Inovasi Sigai merupakan dua konsep kaedah mengajar Matematik dalam operasi darab dan bahagi yang mudah tanpa perlu menghafal sifir darab 2 hingga 9. Murid hanya perlu bermain dengan garisan menegak, melintang, putus-putus dan titik persilangan bagi operasi darab dan bermain dengan garisan menegak, garisan putus-putus, tanda sempang dan titik-titik bagi operasi bahagi. Kedua-dua kaedah ini adalah untuk murid-murid sekolah rendah. Inovasi Sigai Darab dan Bahagi hampir sama pengiraannya dengan operasi darab dan bahagi yang diamalkan di sekolah, cuma bezanya, inovasi Sigai Darab banyak menggunakan simbol garisan bagi menggambarkan digit 0 hingga 9. Simbol sifar (0) digambarkan dalam garisan lurus putus-putus menegak dan melintang. Simbol 1 hingga 9 menggunakan garisan lurus menegak dan melintang. Untuk menggambarkan angka 10 ke atas, hanya dilukis garisan yang berkaitan mengikut digit 1 dan 0. Tidak perlu melukis 10 garisan; digit 1 dilukis sebagai 1 garisan lurus menegak atau melintang, manakala digit 0 dilukis sebagai 1 garisan lurus putus-putus menegak atau melintang. Begitu juga angka lain seperti digit 11 hingga ke atas, dilukis mengikut simbol angka dan bukan nilai angka.
-
 Manakala simbol Sigai Bahagi hanya menggunakan garisan menegak, garisan putus-putus, tanda sempang, dan titik-titik. Garis menegak dan garisan putus-putus dalam Sigai Bahagi digunakan untuk nombor pembahagi. Tanda sempang digunakan untuk simbol sifar bagi nombor pertama yang kena bahagi, manakala tanda titik-titik digunakan untuk simbol digit pertama yang kena bahagi dalam mendapatkan jawapan dalam sistem operasi pembahagian Sigai Bahagi. Titik-titik persilangan dalam Sigai Darab pula adalah penentu jawapan dalam operasi pendaraban Sigai Darab. Beberapa simbol lain digunakan dalam inovasi Sigai Darab seperti rumah angka, garisan pembahagi, dan anak panah arah rumah angka yang diguna pakai untuk memudahkan mendapatkan jawapan. Simbol lain dalam inovasi Sigai Bahagi seperti rumah angka, garisan pembahagi, anak panah arah rumah angka dan anak panah jawapan perlu difahami oleh murid-murid untuk mendapatkan jawapan yang betul.
-
 Inovasi Sigai Darab terbahagi kepada 6 fasa. Fasa 1 hingga 3 melibatkan kiraan pendaraban 1 digit hingga 3 digit, dan fasa 4 hingga 6 melibatkan kiraan darab 4 digit hingga 6 digit. Inovasi Sigai Bahagi terbahagi kepada 3 fasa yang perlu dipelajari oleh murid-murid sekolah rendah. Fasa 1 adalah Sigai Pembahagian 1 digit dengan 1 digit, manakala fasa 2 melibatkan pembahagian 2 digit hingga 3 digit. Inovasi Sigai Darab dan Bahagi melibatkan nombor perpuluhan yang boleh digambarkan dalam bentuk garisan dan titik-titik. Namun begitu, pengiraan yang teliti dan berhati-hati pasti akan menemukan jawapannya tanpa perlu menghafal sifir.
-
 Kejayaan inovasi Sigai Darab dan Bahagi di peringkat daerah, negeri, kebangsaan, dan antarabangsa telah memberi keyakinan kepada semua murid dan guru untuk mempraktikkannya dalam kaedah pengajaran dan pembelajaran Matematik. Inovasi Sigai ini juga sesuai untuk pelajar menengah rendah yang belum menguasai fakta asas darab dan bahagi. Khalayak lain seperti pelajar pusat pengajian tinggi boleh juga menggunakan buku inovasi ini untuk membuat kajian dan penyelidikan serta pembangunan berhubung dengan inovasi Sigai Darab dan Bahagi ke arah yang lebih maju dan sesuai dengan zaman aplikasi pendigitalan. Pengajaran dan pembelajaran berinovasi akan memberi peluang murid-murid berfikir secara kreatif dan kritis, sekaligus menyeronokkan murid-murid belajar dan diharapkan mereka akan meminati mata pelajaran Matematik.
-
 Hj. Itamta bin Harun, PPT.
 
 ⸻
@@ -46,9 +32,7 @@ Hj. Itamta bin Harun, PPT.
 1.1.3 Fasa-Fasa Kaedah Sigai Darab
 
 Kaedah Sigai Darab mempunyai enam fasa yang perlu dikuasai oleh murid-murid pada tahap 1 dan tahap 2. Fasa 1 dan 2 perlu dikuasai oleh murid-murid Tahun 1 hingga Tahun 3, dan fasa 4 hingga 6 perlu dikuasai oleh murid-murid Tahun 4 hingga Tahun 6. Rajah 5 menunjukkan penguasaan dalam fasa 1 iaitu satu digit darab dengan satu digit bagi murid-murid Tahun 1, dan kaedah Sigai Darab yang melibatkan dua digit darab tiga digit yang perlu dikuasai oleh murid-murid tahap 2. Ini melibatkan kiraan tambah dalam rumah sa, puluh (pu), ratus (ra), dan ribu (ri).
-
 Untuk meletakkan kedudukan rumah angka dalam setiap rajah yang dilukis, perlulah bermula dari bawah sebelah kanan seperti dalam Rajah 6. Jika nilai digit dalam operasi darab melibatkan 3 digit darab 3 digit, akan bertambah rumah angka kepada ratus ribu (rari), puluh ribu (puri), dan juta. Murid-murid juga perlu melukis anak panah ke arah rumah angka, bermula dari sa sebelah bawah kanan menghala ke atas ke rumah angka tertinggi. Begitu juga kiraan sebelah kiri bermula dari rumah sa yang sama hingga ke rumah angka tertinggi seperti dalam Rajah 6, yang dikira bermula dari rumah sa, puluh, ratus, dan ribu sebelah kanan, dan bermula dari rumah sa yang sama terus ke rumah puluh, ratus, dan ribu yang sama sebelah kiri.
-
 Kiraan titik persilangan bagi rumah sa ada 4 titik, menjadi 4. Rumah puluh sebelah kanan, 4 titik persilangan bertemu dengan garisan putus-putus, dikira dengan secara automatik menjadi 0. 2 titik persilangan di rumah puluh sebelah kiri menjadi 20 sebab dua titik dalam rumah puluh perlu ditambah satu sifar. 12 titik dalam rumah ratus sebelah kanan menjadi 1200 sebab berada dalam rumah ratus, perlu ditambah dua sifar. 2 titik dalam rumah ratus sebelah kiri bertemu garisan putus-putus, menjadi 0. Akhir sekali, 6 titik dalam rumah ribu menjadi 6000 sebab dalam rumah ribu perlu ditambah tiga sifar. Kiraan keseluruhan bagi mendapatkan jawapan bagi soalan 24 x 301 berdasarkan konsep kaedah Sigai Darab adalah seperti Rajah 7.
 
 ⸻
@@ -56,25 +40,18 @@ Kiraan titik persilangan bagi rumah sa ada 4 titik, menjadi 4. Rumah puluh sebel
 1.2 Sigai Bahagi
 
 1.2.1 Makna Sigai Bahagi
-
 Sigai Bahagi merupakan songsangan kaedah Sigai Darab. Walau bagaimanapun, ia masih mengekalkan konsep penggunaan garisan menegak, garisan putus-putus, tanda sempang, dan titik-titik. Titik-titik yang selari diletakkan ke atas garisan menegak dan garisan putus-putus yang dibentuk bagi nilai jawapannya 1 hingga 9, manakala tanda sempang digunakan untuk nilai jawapan bernilai sifar (0). Jawapan berdasarkan berapa titik yang selari dan memenuhi garisan menegak. Jika titik-titik tidak dapat dibentuk dalam keadaan selari atau tidak memenuhi garisan menegak, ia akan menjadi baki jawapan.
-
 Nombor awal yang kena bahagi akan menjadi titik-titik jawapan dan nombor pembahagi menjadi garisan lurus menegak yang menggambarkan nilai 1 hingga 9, dan garisan lurus putus-putus melambangkan nilai sifar (0). Rajah 9 menggambarkan kiraan Sigai Bahagi fasa 1, iaitu satu digit dibahagi dengan satu digit. Nombor 7 adalah nombor pertama yang merupakan nombor yang kena bahagi, dan nombor 3 adalah nombor kedua yang merupakan nombor pembahagi. Lambang atau simbol 3 dilorek tiga garisan lurus menegak dalam jarak yang sama. Letakkan titik-titik jawapan yang menjadi lambang dan simbol nombor 7 di atas tiga garisan menegak yang telah dilorek lebih awal bermula dari kiri ke kanan hingga memenuhi ketiga-tiga garisan dan ke bawah dari kanan ke kiri hingga membentuk titik yang selari.
-
 Jika ada baki titik, letakkan di bawah sekali yang akan menjadi baki jawapan. Titik-titik yang selari perlu dilorek sebelah kanan yang merupakan simbol anak panah jawapan, yang akan dikira sebagai jawapan. Bilangan kesemua anak panah jawapan dan baki titik adalah jawapan sepenuhnya.
 
 1.2.2 Fasa-Fasa Sigai Bahagi
-
 Sigai Bahagi terbahagi kepada tiga fasa untuk murid-murid sekolah rendah. Fasa 2 Sigai Bahagi melibatkan pembahagian 2 digit dengan 1 digit. Jika nombor pertama pada rumah angka adalah sifar (0), maka perlu diletakkan tanda sempang pada garisan menegak. Tanda sempang ini tiada nilai dan hanya berfungsi sebagai simbol sifar yang perlu diambil kira dalam pengiraan Sigai Bahagi.
-
 Jika terdapat titik-titik berbaki di rumah puluh, titik tersebut boleh dipindahkan ke rumah sa mengikut nilai baki daripada rumah puluh. Contohnya, seperti dalam Rajah 10, jika terdapat baki 1 titik di rumah puluh, apabila dipindahkan ke rumah sa, ia akan menjadi 10 titik. Anak panah jawapan akan diletakkan mengikut rumah angka sepuluh, dengan titik-titik yang selari di rumah angka puluh. Sebagai contoh, 2 titik yang selari akan menghasilkan 20. Titik-titik yang selari di rumah sa pula akan menghasilkan 5 titik, menjadikan nilai keseluruhan 25. Oleh itu, bagi soalan 50 ÷ 2 = 25, hasil pengiraan adalah 25 seperti yang ditunjukkan dalam Rajah 10.
 
 1.2.3 Sigai Bahagi Dalam Perpuluhan
 
 Sigai Bahagi yang melibatkan nombor perpuluhan hampir sama dengan Sigai Darab yang melibatkan nombor perpuluhan. Perbezaan utama ialah dalam Sigai Bahagi tiada garisan melintang. Titik-titik jawapan menggambarkan nilai 3.5, yang mana 3 diletakkan di rumah sa, dan 0.5 diletakkan di ruang perpuluhan.
-
 Oleh kerana terdapat baki 1 titik di rumah sa, ia perlu dipindahkan ke ruang angka perpuluhan pertama menjadi 10 titik. Titik-titik yang selari di rumah sa terdapat 1 titik, yang menjadi jawapan bagi nombor bulat, manakala 7 titik yang selari di ruang perpuluhan pertama dibahagikan dengan 10 menjadi 0.7. Walau bagaimanapun, masih ada 1 titik baki, yang perlu dipindahkan ke ruang angka perpuluhan kedua menjadi 10 titik. Ini akan menghasilkan 5 anak panah jawapan, dan pembahagian dengan 100 akan memberikan 0.05.
-
 Apabila dijumlahkan kesemuanya, hasilnya adalah 1 + 0.7 + 0.05 = 1.75. Sebagai contoh, bagi soalan 3.5 ÷ 2, hasil pengiraannya adalah 1.75, seperti yang ditunjukkan dalam Rajah 15.
 
 ⸻
@@ -84,31 +61,20 @@ Bab 2: Latar Belakang
 2.1 Sejarah dan Kejayaan Inovasi Sigai
 
 2.1.1 Sejarah Inovasi Sigai
-
 Inovasi Sigai lahir daripada pengalaman yang tercipta melalui beberapa pertemuan dengan guru dan murid dalam kursus dan gerak gempur Matematik di peringkat daerah Kuala Kangsar antara tahun 1994 hingga 1996, yang dianjurkan oleh Pejabat Pendidikan Daerah Kuala Kangsar. Penulis melakukan kajian di beberapa buah sekolah dalam daerah Kuala Kangsar dan Pusat Kegiatan Guru di daerah tersebut. Antara sekolah yang terpilih dalam penemuan inovasi ini adalah Sekolah Kebangsaan Jalong, Sg. Siput (U), Perak, di mana seorang guru wanita telah mengemukakan soalan kepada penulis tentang cara mudah menghafal sifir.
-
 Penulis mencadangkan kepada guru tersebut cara menghafal sifir dengan pendekatan yang mirip cara menghafaz Al-Quran. Walau bagaimanapun, guru tersebut tidak berpuas hati dan mencabar penulis kerana kaedah hafalan itu sudah biasa dilakukan sebelum ini. Penulis meminta tempoh seminggu untuk mencari kaedah penghafalan sifir yang mudah dan cepat. Program Gerak Gempur Matematik yang dianjurkan oleh Pejabat Pendidikan Daerah Kuala Kangsar biasanya dilaksanakan setiap hari Sabtu untuk sekolah-sekolah yang telah dikenal pasti di mana ramai murid tidak menguasai kemahiran asas Matematik. Guru-guru Kakitangan Penting (guru sumber) Matematik bersama Penyelia Sekolah Rendah bertanggungjawab mengendalikan program ini.
-
 Sepanjang minggu tersebut, penulis mencari idea dan ilham. Akhirnya, dengan izin Allah, penulis menemui kaedah baru yang melibatkan permainan dengan garisan sebagai penyelesaian untuk mengatasi masalah murid yang tidak menghafal sifir. Setelah seminggu, penulis kembali ke Sekolah Kebangsaan Jalong, Sg. Siput (U), Perak dan memperkenalkan kaedah sifir garisan kepada guru wanita tersebut. Guru tersebut menerima dengan senang hati dan mulai menggunakan kaedah sifir garisan dalam pengajaran dan pembelajaran di sekolahnya. Ini berlaku pada tahun 1994.
-
 Pada tahun 2000, penulis diberi peluang untuk menyampaikan kursus pengenalan kaedah sifir garisan di Pusat Kegiatan Guru Manong. Dalam kursus tersebut, seorang guru lelaki mengemukakan soalan mengenai penggunaan kaedah sifir garisan jika melibatkan digit sifar (0). Penulis meminta tangguh satu hari untuk menjawab soalan tersebut. Pada malam itu, penulis cuba mencari kaedah sifir garisan yang melibatkan sifar. Penulis mengingat kembali kaedah garisan tersembunyi dengan melukis sebuah kotak atau kiub, seperti yang ditunjukkan dalam Rajah 16. Selain itu, penulis juga mengingati bahawa dalam kiraan Bahasa Arab, tanda titik melambangkan sifar. Kedua-dua konsep ini digabungkan untuk menghasilkan simbol sifar yang menggunakan garisan titik-titik atau putus-putus.
-
 Keesokan harinya, dalam slot kursus, penulis memperkenalkan penggunaan sifar (0) sebagai garisan lurus putus-putus atau titik-titik. Penulis memutuskan bahawa lebih baik menggunakan garisan putus-putus agar murid-murid mudah melukisnya. Guru lelaki tersebut sangat gembira menerima penemuan ini.
 
 2.1.2 Kejayaan Inovasi Sigai
-
 Pada tahun 2001, penulis menyertai Pertandingan Anugerah Gemilang Akademik (AGA) anjuran Jabatan Pendidikan Negeri Perak dan berjaya meraih hadiah penghargaan untuk inovasi pengajaran dan pembelajaran individu sekolah rendah. Pada tahun 2004, inovasi Sigai dibentangkan kepada pelajar Universiti Pendidikan Sultan Idris (UPSI), Tanjung Malim, Perak. Kemudian, pada tahun 2006, penulis diberi peluang untuk menyampaikan ceramah mengenai inovasi Sigai dalam Konvensyen Pendidikan Kebangsaan di Alison Klana Resort, Negeri Sembilan.
-
 Antara tahun 2008 hingga 2012, banyak pembentangan di peringkat daerah, negeri, dan kebangsaan telah dilakukan. Puncaknya, pada tahun 2012, inovasi Sigai dinobatkan sebagai Juara Anugerah Inovasi Negara anjuran MOSTI, Kuala Lumpur. Dalam tahun yang sama, penulis menerima pingat emas daripada UniMAP dan Universiti Putra Malaysia (UPM) yang memberi Anugerah Inovasi Terbaik semasa Pameran Rekacipta Penyelidikan dan Inovasi UPM 2012. Selain itu, inovasi Sigai turut menerima dua “Special Award” semasa 2012 Taipei International Invention Show & TechnoMart daripada wakil Kanada dan i-INOVEX anjuran UNIMAP 2012 daripada wakil Korea, serta Pingat Gangsa daripada 2012 Taipei International Invention Show & TechnoMart. Penulis juga menerima sijil penghargaan daripada Jabatan Pendidikan Negeri Perak dan Anugerah Khas Inovasi dan Kreatif daripada Pejabat Pendidikan Daerah Kuala Kangsar pada tahun 2012, serta Anugerah Pencipta Dunia semasa World Invention Festival di Korea.
-
 Pada tahun 2013, penulis turut dilantik sebagai penulis bulanan untuk akhbar Utusan Malaysia dalam sisipan berjudul ADaP dan Tutor dengan topik Pintar Matematik.
 
 2.1.3 Pendaftaran Inovasi Sigai
-
 Pada tahun 2013, inovasi Sigai didaftarkan di bawah SIRIM Shah Alam dengan kerjasama Pejabat Pendidikan Daerah Kuala Kangsar dan Jabatan Pendidikan Negeri Perak untuk dipatenkan agar lebih selamat dan tidak diciplak oleh pihak lain. Logo pendaftaran SIRIM menggunakan bentuk bujur dengan perkataan SIGAI di tengahnya dan simbol ‘R’ kecil di sebelah kanan atas sebagai tanda pendaftaran, seperti yang ditunjukkan dalam Rajah 17.
-
 Semasa pendaftaran di SIRIM, beberapa bahan bantu belajar disampaikan kepada pegawai SIRIM, termasuk sebuah buku panduan ringkas Inovasi Sigai, sekeping CD Inovasi Sigai, dan Sigai Kit. Sigai Kit terdiri daripada 9 pasang kepingan kertas lutsinar yang mengandungi garisan menegak dan melintang untuk menggambarkan simbol digit 1 hingga 9. Murid-murid menggunakan Sigai Kit dengan mencari kepingan yang sesuai untuk dicantumkan bagi mendapatkan jawapan dalam operasi Sigai Darab, seperti yang ditunjukkan dalam Rajah 18 dan gambar Sigai Kit.
-
 Gambar Sigai Kit mengandungi 18 keping lutsinar: 9 keping berwarna merah yang melambangkan garisan menegak dan 9 keping berwarna biru yang melambangkan garisan melintang. Pada tahun 2013, penulis menerima Anugerah Khas Inovasi Guru sempena Hari Guru Negeri Perak dan pingat emas daripada UPSI, serta Anugerah Guru Inovasi Jabatan Pendidikan Perak. Penulis juga menerima Anugerah Pingat Gangsa daripada Universiti Petronas, Tronoh, Perak, atas penyertaan inovasi Sigai Bahagi yang cuba diketengahkan sebagai inovasi Sibagi. Akhirnya, penulis turut menyertai pameran inovasi Sigai di bangunan Kementerian Pendidikan Malaysia, Presint 5, Putrajaya, mewakili Negeri Perak. Selain itu, penulis dan isteri juga menyertai pertandingan inovasi peringkat antarabangsa di UPSI pada tahun 2013 dan inovasi Sigai menerima anugerah Pingat Emas.
 
 ⸻
@@ -116,38 +82,25 @@ Gambar Sigai Kit mengandungi 18 keping lutsinar: 9 keping berwarna merah yang me
 2.2 Isu, Masalah dan Huraian Inovasi Sigai
 
 2.2.1 Pelaksanaan Inovasi Sigai
-
 Sejak dilaksanakan pengajaran dan pembelajaran inovasi Sigai dalam aktiviti kreativiti dan rekreasi Matematik di beberapa sekolah terpilih, seperti Sekolah Kebangsaan Sg. Siput (U) (1997-1999), Sekolah Kebangsaan Manong (2000-2001), Sekolah Kebangsaan Talang (2002-2006), Sekolah Kebangsaan Bendang Kering (2007-2008), Sekolah Kebangsaan Talang (2008-2010), dan Sekolah Kebangsaan Kati (2011-2015), terdapat beberapa isu dan masalah yang dihadapi oleh guru dan murid. Salah satu isu utama adalah murid yang kurang menguasai kemahiran asas Matematik, terutama dalam operasi tambah. Ini kerana dalam operasi Sigai Darab, murid perlu menguasai kemahiran tambah. Hampir semua operasi Sigai Darab memerlukan penguasaan kemahiran tambah, seperti yang ditunjukkan dalam Rajah 6.
 
 2.2.2 Isu dan Masalah Inovasi Sigai Darab
-
 Dalam Sigai Darab, digit yang kecil (1 hingga 5) agak mudah untuk dilukis dan mengira titik-titik persilangan, namun digit yang lebih besar seperti 6 hingga 9 agak rumit untuk dilukis dan mengira titik-titik persilangan. Begitu juga dengan nombor dua digit dan tiga digit seperti 66 hingga 99 atau 666 hingga 999. Contoh soalan 8 x 9, seperti yang ditunjukkan dalam Rajah 19, menjadi lebih sukar apabila melibatkan angka yang lebih besar.
-
 Isu dan masalah lain dalam Sigai Darab adalah murid yang sukar mengira dan menjumlahkan titik persilangan di rumah angka seperti sa, pu, ri, puri, rari, dan juta. Setiap titik persilangan rumah angka perlu mengambil kira nilai titik setiap rumah angka yang berubah mengikut kedudukan rumah angka tersebut. Sebagai contoh, di rumah sa 1 titik nilainya adalah 1, di rumah puluh 1 titik nilainya 10, di rumah ratus 1 titik nilainya 100, dan seterusnya hingga rumah juta, yang nilainya 1,000,000, seperti yang ditunjukkan dalam Rajah 20.
 
 2.2.3 Isu dan Masalah Dalam Sigai Darab Perpuluhan
-
 Sigai Darab yang melibatkan angka perpuluhan agak sukar digambarkan dalam lorekan garisan kerana nilai 1 angka perpuluhan dibahagi dengan sepuluh dan 2 digit angka perpuluhan dibahagi dengan seratus. Murid perlu menyelesaikan nombor bulat terlebih dahulu mengikut kaedah Sigai Darab. Setelah itu, barulah mereka menyelesaikan digit perpuluhan satu persatu dengan meletakkan garisan pembahagi untuk membezakan nombor bulat dan nombor perpuluhan. Nombor bulat yang berbaki 1 akan menjadi 10 titik apabila dipindahkan ke ruang angka perpuluhan pertama, dan seterusnya untuk angka perpuluhan kedua, seperti yang ditunjukkan dalam Rajah 8.
-
 Pengiraan untuk mendapatkan jawapan dalam Sigai Darab yang melibatkan nombor perpuluhan adalah dengan membahagikan 1 anak panah jawapan dengan 10 untuk ruang angka rumah perpuluhan pertama, dan 1 anak panah jawapan dibahagi dengan 100 untuk ruang angka perpuluhan kedua. Seterusnya, pengiraan dilakukan di rumah ribu, puluh ribu, ratus ribu, dan juta, dengan nilai yang sesuai, seperti yang ditunjukkan dalam Rajah 21.
 
-
 2.2.4 Isu dan Masalah Sigai Bahagi Dalam Perpuluhan
-
 Pengiraan Sigai Bahagi dalam angka perpuluhan hampir serupa dengan pengiraan dalam operasi Sigai Darab. Sama seperti dalam penjumlahan jawapan antara nombor bulat dan angka perpuluhan, murid perlu menambah mengikut titik digit perpuluhan.
-
 Untuk memudahkan dan mempercepatkan murid memberi jawapan yang berkait dengan pembahagian dari per sepuluh hingga per sejuta, murid-murid hanya perlu menambahkan sifar atau beberapa sifar selepas titik perpuluhan di ruang angka perpuluhan kedua hingga keenam. Sebagai contoh, dalam Rajah 15, di ruang angka perpuluhan pertama terdapat 7 anak panah jawapan. Apabila dibahagi dengan 10, jawapan yang diperoleh adalah 0.7, atau dengan mudah, apabila 7 anak panah jawapan dilukis di ruang angka perpuluhan pertama, jawapan 0.7 (satu angka perpuluhan) akan terus diperoleh.
-
 Bagi 5 anak panah jawapan di ruang angka perpuluhan, jawapan yang diperoleh adalah 0.05 apabila satu sifar ditambahkan sebelum angka 5. Jumlah kiraannya menjadi 1 + 0.7 + 0.5 = 1.75, seperti yang ditunjukkan dalam Rajah 15.
 
 2.2.5 Isu dan Masalah Dalam Sigai Bahagi
-
 Dalam Sigai Bahagi, timbul beberapa isu dan masalah, terutama dalam meletakkan titik-titik ke dalam rumah angka yang dibina melalui garisan menegak. Sigai Bahagi merupakan songsangan dari Sigai Darab, oleh itu murid-murid perlu membayangkan rumah angka yang sama seperti dalam Sigai Darab. Rumah angka bermula dari rumah sa di bawah sebelah kanan dan diikuti rumah puluh pertama di sebelah kanan atas, rumah puluh kedua di sebelah kiri, dan akhirnya bertemu di rumah ratus.
-
 Begitu juga semasa menjumlahkan jawapan, perlu menukarkan anak panah jawapan kepada nilai rumah angka. Satu anak panah jawapan di rumah sa mempunyai nilai 1, satu anak panah jawapan di rumah puluh nilainya 10, satu anak panah jawapan di rumah ratus nilainya 100, satu anak panah jawapan di rumah ribu nilainya 1000, satu anak panah jawapan di rumah puluh ribu nilainya 10,000, satu anak panah jawapan di rumah ratus ribu nilainya 100,000, dan satu anak panah jawapan di rumah juta nilainya 1,000,000, seperti yang ditunjukkan dalam Rajah 22.
-
 Inovasi Sigai Darab dan Sigai Bahagi melalui pelbagai cabaran sepanjang dua dekad perkembangan dari tahun 1994 hingga 2014. Tahun 2012 adalah kemuncak perkembangan inovasi Sigai apabila dinobatkan sebagai juara dalam pertandingan inovasi peringkat kebangsaan dan berpeluang menyertai pertandingan inovasi peringkat antarabangsa di 2012 Taipei International Invention Show & Technomart di Taipei, Taiwan, yang membawa pulang pingat gangsa, diikuti dengan kemenangan sebagai hadiah pencipta dunia inovasi dalam pertandingan di Korea.
-
 Anugerah Pingat Gangsa dirangkul semasa Pertandingan 2012 Taipei International Invention Show & Technomart di Taipei, Taiwan. Sebelumnya, pihak Korea memberi pengiktirafan dengan “Special Award” semasa pertandingan inovasi I-INOVEX di UNIMAP. Di Taipei, negara Kanada juga memberikan pengiktirafan “Special Award”, dan wakil dari Kanada tersebut meminta izin untuk menyebarkan inovasi Sigai kepada 124 kumpulan inovasi di Kanada. Penyertaan dalam pertandingan peringkat dunia di Taipei, Taiwan melibatkan penyertaan dari seribu inovasi dan teknologi terkini.
 
 ⸻
@@ -155,25 +108,18 @@ Anugerah Pingat Gangsa dirangkul semasa Pertandingan 2012 Taipei International I
 2.3 Huraian dan Rentetan Penciptaan Inovasi Sigai
 
 2.3.1 Tulang Belakang Inovasi Sigai
-
 Tulang belakang yang menggerakkan dan memainkan peranan penting dalam penyertaan pertandingan inovasi peringkat dunia pada tahun 2012 adalah terdiri daripada seorang pegawai inovasi dari Jabatan Pendidikan Negeri Perak, iaitu Ustaz Ahmad Shuhaimi bin Ahmad, penulis sebagai inovator, seorang guru pengiring, dua pelajar dari Sekolah Menengah Agama Al-Daniah Padang Rengas, Kuala Kangsar, Perak, dan seorang pelajar dari Sekolah Menengah Bukit Merchu, Kuala Kangsar, Perak. Pengetua Sekolah Menengah Agama Al-Daniah Padang Rengas turut hadir untuk meraikan penyertaan pertandingan ini di Taipei, Taiwan. Guru-guru di Sekolah Menengah Agama Al-Daniah juga memberikan latihan dan tunjuk ajar kepada pelajar sebelum berangkat ke Taipei.
 
 2.3.2 Kemenangan Bersama Inovasi Sigai
-
 Sekembalinya kumpulan inovasi Sigai dari Taipei, Taiwan, krew rakaman TV9 membuat rakaman dan liputan mengenai kejayaan cemerlang inovasi Sigai yang mengharumkan nama daerah, negeri, dan negara. Rakaman tersebut disiarkan secara langsung seminggu selepasnya di TV9 ke seluruh negara. Guru inovator inovasi Sigai juga dihubungi oleh beberapa syarikat swasta yang berminat untuk mengembangkan dan membangunkan inovasi Sigai, yang berjaya menghasilkan Sigai Kit dan dua buah buku latihan Sigai Darab dan Sigai Bahagi.
 
 2.3.3 Pengembangan dan Pembangunan Inovasi Sigai
-
 Seorang pelajar Universiti Pendidikan Sultan Idris (UPSI), Tanjung Malim, Perak, turut membangunkan inovasi Sigai melalui pengajaran dan pembelajaran di bilik darjah, yang terbukti berkesan dan menarik perhatian murid. Seorang lagi pelajar UPSI sedang cuba membangunkan inovasi Sigai dalam sistem aplikasi pendigitalan.
 
 2.3.4 Keterlibatan Memartabkan Inovasi Sigai
-
 Sebelum berangkat ke Taipei, Taiwan, sekumpulan pelajar seramai empat orang dari Sekolah Menengah Agama Al-Daniah, Padang Rengas, Kuala Kangsar, Perak, menyertai pertandingan peringkat universiti iaitu UniMAP (Universiti Malaysia Perlis) dan UPM (Universiti Putra Malaysia) pada tahun 2012. Mereka berjaya meraih pingat emas dari kedua-dua universiti tersebut.
-
 Pengarah Pendidikan Negeri Perak, Pegawai Pendidikan Daerah Kuala Kangsar, Pengetua Sekolah Menengah Agama Al-Daniah Padang Rengas, dan Pengetua Sekolah Menengah Bukit Merchu serta guru-guru kedua-dua sekolah turut membantu memantapkan kumpulan inovasi Sigai dalam menyertai pertandingan inovasi peringkat daerah, negeri, kebangsaan, dan antarabangsa.
-
 Pegawai Teknologi Bahagian Teknologi Pendidikan Negeri Perak, Pegawai Teknologi Pusat Kegiatan Kati, Pegawai Teknologi Pusat Kegiatan Manong, Pegawai Teknologi Pusat Kegiatan Sg. Siput, Pegawai Teknologi Pusat Kegiatan Talang, dan Pegawai Teknologi Pusat Kegiatan Kota Lama Kanan turut membantu dalam rakaman dan penyediaan CD inovasi Sigai dan kursus untuk guru-guru Matematik di daerah Kuala Kangsar. Pusat Kegiatan Guru Kati juga menyediakan sebuah Sudut Inovasi Sigai yang mempamerkan CD, Sigai Kit, bahan rujukan, dan buku latihan Sigai Darab dan Sigai Bahagi.
-
 Kelab inovasi Sigai yang terdiri daripada murid-murid Sekolah Kebangsaan Kati turut mengambil bahagian dalam Kem Matematik peringkat daerah Kuala Kangsar di Sekolah Kebangsaan Karai.
 
 ⸻
@@ -181,9 +127,7 @@ Kelab inovasi Sigai yang terdiri daripada murid-murid Sekolah Kebangsaan Kati tu
 Bab 3. Kaedah dan Latihan Operasi Sigai Darab
 
 3.1 Kaedah Sigai Darab
-
 Kaedah Sigai Darab sebagaimana yang dihuraikan dalam Bab 1 dan Bab 2 memerlukan kiraan berdasarkan simbol-simbol yang menggambarkan nilai bagi setiap digit 0 hingga 9. Bagi nombor 10 dan ke atas, pengiraan tidak berdasarkan nilai tetapi berdasar pada digit dalam nilai nombor tersebut. Simbol-simbol yang digunakan adalah garisan menegak, garisan melintang, dan garisan putus-putus. Setiap digit dibenarkan menggunakan ketiga-tiga jenis garisan tersebut. Simbol titik persilangan juga diambil kira untuk menentukan jawapan, dan simbol arah rumah perlu digunakan semasa menentukan jawapan.
-
 Langkah-langkah dalam Kaedah Sigai Darab
 
 Kaedah Sigai Darab terbahagi kepada 4 langkah utama, seperti berikut:
@@ -207,7 +151,6 @@ Pada langkah keempat, kita perlu membentuk rumah angka sa, puluh, ratus, dan seb
 Langkah ke-5: Pendaraban dalam Nombor Perpuluhan
 
 Sekiranya melibatkan pendaraban dengan nombor perpuluhan, langkah kelima adalah untuk membina garisan pembahagi yang menggambarkan dan menggantikan titik perpuluhan. Pengiraan selepas garisan pembahagi sebelah kanan atau bawah adalah perlu mengambil kira per sepuluh atau dibahagi dengan 10 di dalam 10 garisan melintang pertama.
-
 Begitulah seterusnya, apabila melibatkan pembahagian dengan nilai lain seperti 100, 1000, 10000, 100000, dan 1000000, garisan pembahagi akan terus diaturkan secara berperingkat untuk menunjukkan pembahagian tersebut. Titik perpuluhan akan disesuaikan berdasarkan nilai tempat yang relevan selepas garisan pembahagi, seperti yang ditunjukkan dalam Rajah 26.
 
 Contoh:
@@ -274,13 +217,9 @@ Video: https://www.youtube.com/watch?v=lb7xhH6DcNA
 Bab 6: Penutup
 
 Kemuncak kecemerlangan inovasi Sigai adalah apabila diberi pengikhtirafan dan penghargaan oleh Pengarah Jabatan Pendidikan Negeri Perak sempena Hari Guru Negeri Perak tahun 2013, di mana penulis dianugerahi dengan dua hadiah iaitu Anugerah Pingat Guru dan Anugerah Guru Inovasi 2013. Penulis merangkul kedua-dua anugerah sempena Hari Guru 2013 (No. 2 dari kanan) di MRSM Trolak.
-
 Inovasi Sigai terus dikembangkan oleh pelajar-pelajar di pusat pengajian tinggi, seperti seorang pelajar UPSI yang memohon kebenaran untuk membangunkan kaedah Sigai ini dalam bentuk aplikasi dan digitalisasi. Semoga inovasi Sigai ini dapat membantu pelajar yang sukar menguasai sifir dan operasi darab serta bahagi.
-
 Penulis juga dianugerahkan sebagai Guru Inovasi pada tahun 2014 oleh Ketua Sektor Jaminan Kualiti Jabatan Pendidikan Negeri Perak. Pada tahun 2015, inovasi Sigai diberi penghormatan oleh Kementerian Pendidikan Malaysia untuk mempamerkan inovasi Sigai bagi mewakili Jabatan Pendidikan Negeri Perak bersama pemenang inovasi seluruh Malaysia.
-
 Inovasi Sigai telah mendapat permintaan dari negara Kanada pada tahun 2013 untuk disebarkan kepada pelajar-pelajarnya yang mempunyai 124 talian untuk menerima kaedah inovasi Sigai. Negara ini mempamerkan inovasi bersama 1000 inovasi global di Taipei, Taiwan. Adakah negara kita sudah melaksanakan kaedah inovasi Sigai ini?
-
 Penulis memohon maaf jika terdapat sebarang kekurangan dalam penulisan buku inovasi Sigai ini. Inovasi, penciptaan, rekaan, kreativiti, kecerdasan buatan (AI), dan seumpamanya adalah anugerah Allah yang sangat berharga dalam kemajuan tamadun manusia. Inovasi adalah satu proses penciptaan yang dapat menjimatkan masa, tenaga, dan wang ringgit, serta memudahkan kehidupan manusia. Terima kasih, wasalamualaikum warahmatullahiwabarokatuh.
 
 ⸻

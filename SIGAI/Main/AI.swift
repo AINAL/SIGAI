@@ -4,6 +4,7 @@ import StoreKit
 
 @MainActor
 class IAPManager: ObservableObject {
+    static let shared = IAPManager(autoStart: true)
     @Published var products: [Product] = []
     @Published var purchased = false
 
@@ -19,11 +20,13 @@ class IAPManager: ObservableObject {
 
     private let productID = "sigai.free.ai"
 
-    init() {
-        Task {
-            await requestProducts()
-            await updatePurchasedStatus()
-            await listenForTransactions()
+    init(autoStart: Bool = true) {
+        if autoStart {
+            Task {
+                await requestProducts()
+                await updatePurchasedStatus()
+                await listenForTransactions()
+            }
         }
     }
 
@@ -100,6 +103,7 @@ class IAPManager: ObservableObject {
 enum AIMessage {
     case text(String)
     case chart(x: Int, y: Int)
+    case division(x: Int, y: Int)
 }
 
 struct SIGAI: View {
@@ -492,6 +496,28 @@ struct SIGAI: View {
                                     if !isUser { Spacer() }
                                 }
                                 .id(index)
+                            case .division(x: let x, y: let y):
+                                HStack {
+                                    if isUser { Spacer() }
+                                    VStack(alignment: .center) {
+                                        ChartBahagiView(x: y, y: x)
+                                            .padding(.bottom, 4)
+
+                                        Text("\(x) ÷ \(y) = \(x / max(y, 1))")
+                                            .font(.subheadline)
+                                            .foregroundColor(.gray)
+                                    }
+                                    .padding()
+                                    .background(
+                                        isUser
+                                        ? (isDarkMode ? Color(red: 200/255, green: 255/255, blue: 240/255) : Color(hex: "#E6F0FF"))
+                                        : (isDarkMode ? Color(red: 50/255, green: 50/255, blue: 100/255) : Color(hex: "#FFE6E6"))
+                                    )
+                                    .cornerRadius(14)
+                                    .foregroundColor(isDarkMode ? .white : .black)
+                                    if !isUser { Spacer() }
+                                }
+                                .id(index)
                             }
                         }
                         if isLoading && !isProcessingPurchase && !isRestoringPurchase {
@@ -742,7 +768,9 @@ struct SIGAI: View {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try? JSONSerialization.data(withJSONObject: ["prompt": question])
+        let langPrefix = appLanguage == "ms" ? "Jawab dalam bahasa Melayu: " : "Answer in English: "
+        let fullPrompt = langPrefix + question
+        request.httpBody = try? JSONSerialization.data(withJSONObject: ["prompt": fullPrompt])
 
         URLSession.shared.dataTask(with: request) { data, response, error in
             DispatchQueue.main.async {
@@ -772,8 +800,17 @@ struct SIGAI: View {
                     if let jsonData = cleaned.data(using: .utf8),
                        let resultDict = try? JSONDecoder().decode([String: Int].self, from: jsonData),
                        let x = resultDict["x"], let y = resultDict["y"] {
+                        let q = question.lowercased()
+                        let isDivision = q.contains("÷") || q.contains("bahagi") || q.contains("/") || q.contains("divide")
+                        let isMultiplication = q.contains("x") || q.contains("kali") || q.contains("*") || q.contains("multiply")
                         DispatchQueue.main.async {
-                            self.messages.append((.chart(x: x, y: y), false))
+                            if isDivision {
+                                self.messages.append((.division(x: x, y: y), false))
+                            } else if isMultiplication {
+                                self.messages.append((.chart(x: x, y: y), false))
+                            } else {
+                                self.messages.append((.text("🤖 Unsure if darab or bahagi"), false))
+                            }
                         }
                         return
                     }

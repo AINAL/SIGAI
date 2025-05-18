@@ -1,12 +1,13 @@
 //
-//  chart.swift
+//  chartBahagi.swift
 //  SIGAI
 //
 //  Created by Ainal syazwan Itamta on 18/05/2025.
 //
+
 import SwiftUI
 
-struct LineIntersectionView: View {
+struct ChartBahagiView: View {
     var x: Int
     var y: Int
     let baseSpacing: CGFloat = 40
@@ -19,43 +20,42 @@ struct LineIntersectionView: View {
     let dynamicPadding: CGFloat = 16
 
     var body: some View {
-        ScrollView([.horizontal, .vertical], showsIndicators: false) {
+        let baseDots = y / max(x, 1)
+        let remainder = y % max(x, 1)
+        let maxDots = baseDots + (remainder > 0 ? 1 : 0)
+        let totalHeight = spacing * CGFloat(maxDots + 1)
+
+        return ScrollView([.horizontal, .vertical], showsIndicators: false) {
             ZStack {
-                // Draw vertical lines
+                // Solid vertical lines
                 ForEach(0..<x, id: \.self) { i in
                     Path { path in
                         let xPos = spacing * CGFloat(i + 1)
                         path.move(to: CGPoint(x: xPos, y: spacing))
-                        path.addLine(to: CGPoint(x: xPos, y: spacing * CGFloat(y)))
+                        path.addLine(to: CGPoint(x: xPos, y: totalHeight))
                     }
                     .stroke(verticalLineColor, lineWidth: 2)
                 }
 
-                // Draw horizontal lines
-                ForEach(0..<y, id: \.self) { j in
-                    Path { path in
-                        let yPos = spacing * CGFloat(j + 1)
-                        path.move(to: CGPoint(x: spacing, y: yPos))
-                        path.addLine(to: CGPoint(x: spacing * CGFloat(x), y: yPos))
-                    }
-                    .stroke(horizontalLineColor, lineWidth: 2)
-                }
-
-                // Draw intersection points
+                // Dots placed along each vertical line
                 ForEach(0..<x, id: \.self) { i in
-                    ForEach(0..<y, id: \.self) { j in
+                    let dots = baseDots + (i < remainder ? 1 : 0)
+                    ForEach(0..<dots, id: \.self) { j in
                         let xPos = spacing * CGFloat(i + 1)
-                        let yPos = spacing * CGFloat(j + 1)
+                        let yPos = spacing * CGFloat(maxDots - j)
                         Circle()
-                            .fill(Color.purple)
+                            .fill(horizontalLineColor)
                             .frame(width: 8, height: 8)
                             .position(x: xPos, y: yPos)
                     }
                 }
             }
-            .frame(width: spacing * CGFloat(x + 1), height: spacing * CGFloat(y + 1))
+            .frame(width: spacing * CGFloat(x + 1), height: spacing * CGFloat(maxDots + 1))
         }
-        .frame(width: 280, height: 280)
+        .frame(
+            width: min(spacing * CGFloat(x + 2), 320),
+            height: min(spacing * CGFloat(maxDots + 2), 320)
+        )
         .padding(.horizontal, 8)
     }
 }

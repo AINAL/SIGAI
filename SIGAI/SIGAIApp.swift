@@ -50,6 +50,14 @@ struct SIGAI_v3App: App {
                     .onAppear {
                         MobileAds.shared.start(completionHandler: nil)
                         RewardedAdManager().loadAd()
+
+                        // Preload IAP products
+                        Task {
+                            await IAPManager.shared.requestProducts()
+                            await IAPManager.shared.updatePurchasedStatus()
+                            await IAPManager.shared.listenForTransactions()
+                        }
+
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                             appReady = true
                         }

@@ -42,6 +42,7 @@ struct ContentView: View {
     @State private var selectedTab = 0
     
     @State private var showLockedAlert = false
+    @State private var isPurchasing = false
     
     enum MathMode {
         case multiplication
@@ -258,16 +259,27 @@ struct ContentView: View {
                                 }
                         }
                         .alert(isPresented: $showLockedAlert) {
-                            Alert(
-                                title: Text("Premium Feature"),
-                                message: Text("This feature is locked. Upgrade to Premium to access."),
-                                primaryButton: .default(Text("Upgrade"), action: {
-                                    // Trigger IAP
-                                }),
-                                secondaryButton: .cancel(Text("OK"), action: {
-                                    selectedTab = 0
-                                })
-                            )
+                            if isPurchasing {
+                                return Alert(title: Text("Processing..."), message: Text("Please wait"), dismissButton: nil)
+                            } else {
+                                return Alert(
+                                    title: Text("Premium Feature"),
+                                    message: Text("This feature is locked. Upgrade to Premium to access."),
+                                    primaryButton: .default(Text("Upgrade"), action: {
+                                        isPurchasing = true
+                                        Task {
+                                            await IAPManager.shared.purchase()
+                                            isPurchasing = false
+                                            if !isPremiumUser {
+                                                selectedTab = 0
+                                            }
+                                        }
+                                    }),
+                                    secondaryButton: .cancel(Text("Cancel"), action: {
+                                        selectedTab = 0
+                                    })
+                                )
+                            }
                         }
                     }
                 }
@@ -307,16 +319,27 @@ struct ContentView: View {
                                 }
                         }
                         .alert(isPresented: $showLockedAlert) {
-                            Alert(
-                                title: Text("Premium Feature"),
-                                message: Text("This feature is locked. Upgrade to Premium to access."),
-                                primaryButton: .default(Text("Upgrade"), action: {
-                                    // Trigger IAP
-                                }),
-                                secondaryButton: .cancel(Text("OK"), action: {
-                                    selectedTab = 0
-                                })
-                            )
+                            if isPurchasing {
+                                return Alert(title: Text("Processing..."), message: Text("Please wait"), dismissButton: nil)
+                            } else {
+                                return Alert(
+                                    title: Text("Premium Feature"),
+                                    message: Text("This feature is locked. Upgrade to Premium to access."),
+                                    primaryButton: .default(Text("Upgrade"), action: {
+                                        isPurchasing = true
+                                        Task {
+                                            await IAPManager.shared.purchase()
+                                            isPurchasing = false
+                                            if !isPremiumUser {
+                                                selectedTab = 0
+                                            }
+                                        }
+                                    }),
+                                    secondaryButton: .cancel(Text("Cancel"), action: {
+                                        selectedTab = 0
+                                    })
+                                )
+                            }
                         }
                     }
                 }
