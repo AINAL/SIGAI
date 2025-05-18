@@ -503,7 +503,10 @@ struct SIGAI: View {
                                         ChartBahagiView(x: y, y: x)
                                             .padding(.bottom, 4)
 
-                                        Text("\(x) ÷ \(y) = \(x / max(y, 1))")
+                                        // Compute quotient and remainder for label
+                                        let quotient = x / max(y, 1)
+                                        let remainder = x % max(y, 1)
+                                        Text("\(x) ÷ \(y) = \(quotient) remainder \(remainder)")
                                             .font(.subheadline)
                                             .foregroundColor(.gray)
                                     }
