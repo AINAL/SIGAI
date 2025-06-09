@@ -10,11 +10,13 @@ import FirebaseCore
 import FirebaseDatabase
 import FirebaseAuth
 import GoogleMobileAds
+import FirebaseAnalytics
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         FirebaseApp.configure()
+        Analytics.logEvent(AnalyticsEventAppOpen, parameters: nil)
         MobileAds.shared.start(completionHandler: nil)
         return true
     }
